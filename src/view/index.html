@@ -14,57 +14,62 @@
       href="../assets/css/bootstrap.min.css"
     />
 
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Foontawesome CSS -->
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css" />
     <title>Hello World!</title>
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="phoneForm/phoneForm.html"
-                >Nuevo Cliente</a
-              >
-            </li>
+    <div class="container">
+      <div class="row text-center">
+        <h2>Menu</h2>
+        <div id="menu-box">
+          <a href="clientForm/clientForm.html">
+            <div id="item" class="col-sm-6 col-md-6">
+              <div class="container-block">
+                <div class="block1">
+                  <i class="fa fa-address-card-o"></i>
+                </div>
+                <div class="block2">
+                  <span>Regsitrar cliente</span>
+                  <p>
+                    Guardar información de un cliente que viene por primera vez
+                  </p>
+                </div>
+              </div>
+            </div>
+          </a>
 
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nuevo Dispositvo</a>
-            </li>
+          <a href="phoneForm/phoneForm.html">
+            <div id="item" class="col-sm-6 col-md-3">
+              <div class="container-block">
+                <div class="block1">
+                  <i class="fa fa-tablet"></i>
+                </div>
+                <div class="block2">
+                  <span>Registrar dispositivos</span>
+                  <p>Celulares,Parlantes,Computadoras</p>
+                </div>
+              </div>
+            </div>
+          </a>
 
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nueva Prestación</a>
-            </li>
-          </ul>
-          <form class="d-flex">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
+          <div id="item" class="col-sm-6 col-md-4">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-keyboard-o"></i>
+              </div>
+              <div class="block2">
+                <span>Nueva prestación</span>
+                <p>Asigna un equipo a un cliente para arreglo</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
-
+    </div>
     <script
       src="../assets/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
