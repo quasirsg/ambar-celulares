@@ -4,49 +4,81 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+
     <link rel="stylesheet" href="style.css" />
-    <title>Form Validator</title>
+    <title>Ingreso de un cliente</title>
   </head>
   <body>
     <div class="container">
-      <nav class="navbar navbar-light bg-light">
-        <div class="container">
-          <a class="navbar-brand" href="../index.html">
-            <img
-              src="../../assets/png/arrow.png"
-              alt=""
-              width="30"
-              height="24"
-            />
-          </a>
+      <a href="../index.html">
+        <div class="container-block">
+          <div class="block1">
+            <i class="fa fa-arrow-left"></i>
+          </div>
         </div>
-      </nav>
+      </a>
 
-      <form id="form" class="form">
-        <h2>Register With Us</h2>
+      <form id="saveClient" class="form">
+        <h2>Registrar Cliente</h2>
         <div class="form-control">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Enter username" />
-          <small>Error message</small>
+          <label for="dni">
+            <span>DNI</span>
+            <input
+              type="text"
+              id="dni"
+              placeholder="Ingrese un DNI"
+              maxlength="8"
+            />
+            <ul class="input-requirements">
+              <li>Un dni debe ser menor a los 9 digitos</li>
+              <li>Un dni solo tiene numeros</li>
+            </ul>
+          </label>
         </div>
         <div class="form-control">
-          <label for="email">Email</label>
-          <input type="text" id="email" placeholder="Enter email" />
-          <small>Error message</small>
+          <label for="name">
+            <span>Nombre </span>
+            <input
+              type="text"
+              id="name"
+              placeholder="Ingrese un nombre"
+              maxlength="30"
+            />
+            <ul class="input-requirements">
+              <li>Un nombre solo contiene letras</li>
+            </ul>
+          </label>
         </div>
         <div class="form-control">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter password" />
-          <small>Error message</small>
+          <label for="surname"
+            ><span>Apellido</span>
+            <input
+              type="text"
+              id="surname"
+              placeholder="Ingrese un apellido"
+              maxlength="30"
+            />
+            <ul class="input-requirements">
+              <li>Un nombre solo contiene letras</li>
+            </ul>
+          </label>
         </div>
         <div class="form-control">
-          <label for="password2">Confirm Password</label>
-          <input
-            type="password"
-            id="password2"
-            placeholder="Enter password again"
-          />
-          <small>Error message</small>
+          <label for="phoneNumber"
+            ><span>Nro.Teléfono</span>
+            <input
+              type="text"
+              id="phoneNumber"
+              placeholder="Ingrese un numero de telefono"
+              maxlength="10"
+            />
+            <ul class="input-requirements">
+              <li>
+                Un numero de telefono solo contiene numeros y tiene 10 digitos
+              </li>
+            </ul>
+          </label>
         </div>
         <button type="submit">Submit</button>
       </form>

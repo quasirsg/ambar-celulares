@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 
 :root {
   --success-color: #2ecc71;
@@ -11,7 +11,7 @@
 
 body {
   background-color: #f9fafb;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,6 +29,38 @@ body {
 h2 {
   text-align: center;
   margin: 0 0 20px;
+}
+.container-block {
+  -webkit-transition: all 0.4s ease-in;
+  -moz-transition: all 0.4s ease-in;
+  -ms-transition: all 0.4s ease-in;
+  -o-transition: all 0.4s ease-in;
+  transition: all 0.4s ease-in;
+  border-radius: 5px;
+  padding: 12px 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.block1 i {
+  -webkit-transition: all 0.4s ease-in;
+  -moz-transition: all 0.4s ease-in;
+  -ms-transition: all 0.4s ease-in;
+  -o-transition: all 0.4s ease-in;
+  transition: all 0.4s ease-in;
+  font-size: 31px;
+  color: #616161;
+}
+
+#item:focus .block1 i,
+#item:active .block1 i,
+#item:hover .block1 i {
+  -webkit-transition: all 0.4s ease-in;
+  -moz-transition: all 0.4s ease-in;
+  -ms-transition: all 0.4s ease-in;
+  -o-transition: all 0.4s ease-in;
+  transition: all 0.4s ease-in;
+  color: #00acc1;
 }
 
 .form {
@@ -92,4 +124,40 @@ h2 {
   padding: 10px;
   margin-top: 20px;
   width: 100%;
+}
+
+.form .input-requirements {
+  text-align: left;
+  list-style: disc;
+  max-width: 400px;
+  margin: 10px auto;
+  color: rgb(150, 150, 150);
+}
+
+.form .input-requirements li.invalid {
+  color: #e74c3c;
+}
+.form .input-requirements li.valid {
+  color: #2ecc71;
+}
+
+.form .input-requirements li.valid:after {
+  display: inline-block;
+  padding-left: 10px;
+  content: "\2713";
+}
+
+/* Hide and show related .input-requirements when interacting with input */
+
+.form input:not([type="submit"]) + .input-requirements {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 1s ease-out;
+}
+
+.form input:not([type="submit"]):focus + .input-requirements,
+.form input:not([type="submit"]):hover + .input-requirements,
+.form input:not([type="submit"]):active + .input-requirements {
+  max-height: 1000px; /* any large number (bigger then the .input-requirements list) */
+  transition: max-height 1s ease-in;
 }
