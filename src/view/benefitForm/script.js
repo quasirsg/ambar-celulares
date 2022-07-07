@@ -85,74 +85,98 @@ CustomValidation.prototype = {
 
 ---------------------------- */
 
-const dniValidityChecks = [
+const imeiValidityChecks = [
   {
     isInvalid: function (input) {
-      return input.value.length > 8;
-    },
-    invalidityMessage: "Un dni debe ser menor a los 9 digitos",
-    element: document.querySelector(
-      'label[for="dni"] .input-requirements li:nth-child(1)'
-    ),
-  },
-  {
-    isInvalid: function (input) {
-      const regex = /^[0-9]{7,8}$/;
+      const regex = /^[0-9]{15,15}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un dni solo tiene numeros",
+    invalidityMessage: "Un imei contiene 15 digitos",
     element: document.querySelector(
-      'label[for="dni"] .input-requirements li:nth-child(2)'
+      'label[for="imei"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
 
-const nameValidityChecks = [
+const entryDateValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
+      const regex =
+        /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un nombre solo contiene letras",
+    invalidityMessage: "dd/mm/yyyy",
     element: document.querySelector(
-      'label[for="name"] .input-requirements li:nth-child(1)'
+      'label[for="entryDate"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
+/* ----------------------------
 
-const surnameValidityChecks = [
-  {
-    isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
-      const caracters = input.value;
-      const test = regex.test(caracters);
-      return test ? false : true;
-    },
-    invalidityMessage: "Un apellido solo contiene letras",
-    element: document.querySelector(
-      'label[for="surname"] .input-requirements li:nth-child(1)'
-    ),
-  },
-];
+	Select
 
-const phoneNumberValidtyChecks = [
-  {
-    isInvalid: function (input) {
-      const regex = /^[0-9]{10,10}$/;
-      const caracters = input.value;
-      const test = regex.test(caracters);
-      return test ? false : true;
-    },
-    invalidityMessage: "Un numero de telefono solo contiene numeros",
-    element: document.querySelector(
-      'label[for="phoneNumber"] .input-requirements li:nth-child(1)'
-    ),
-  },
-];
+---------------------------- */
+$(".dropdown").click(function () {
+  $(this).attr("tabindex", 1).focus();
+  $(this).toggleClass("active");
+  $(this).find(".dropdown-menu").slideToggle(300);
+});
+$(".dropdown").focusout(function () {
+  $(this).removeClass("active");
+  $(this).find(".dropdown-menu").slideUp(300);
+});
+$(".dropdown .dropdown-menu li").click(function () {
+  $(this).parents(".dropdown").find("span").text($(this).text());
+  $(this).parents(".dropdown").find("input").attr("value", $(this).attr("id"));
+});
+
+/* ----------------------------
+
+Multi Select
+
+---------------------------- */
+$(".dropdown-multi dt a").on("click", function () {
+  $(".dropdown-multi dd ul").slideToggle("fast");
+});
+
+$(".dropdown-multi dd ul li a").on("click", function () {
+  $(".dropdown-multi dd ul").hide();
+});
+
+function getSelectedValue(id) {
+  return $("#" + id)
+    .find("dt a span.value")
+    .html();
+}
+
+$(document).bind("click", function (e) {
+  var $clicked = $(e.target);
+  if (!$clicked.parents().hasClass("dropdown-multi"))
+    $(".dropdown-multi dd ul").hide();
+});
+
+$('.mutliSelect input[type="checkbox"]').on("click", function () {
+  var title = $(this) //step 1
+      .closest(".mutliSelect")
+      .find('input[type="checkbox"]')
+      .val(),
+    title = $(this).val() + ",";
+
+  if ($(this).is(":checked")) {
+    var html = '<span title="' + title + '">' + title + "</span>";
+    $(".multiSel").append(html); // here value (step 2)
+    $(".hida").hide();
+  } else {
+    $('span[title="' + title + '"]').remove();
+    var ret = $(".hida");
+    $(".dropdown-multi dt a").append(ret);
+  }
+});
+
 /* ----------------------------
 
 	Setup CustomValidation
@@ -161,24 +185,27 @@ const phoneNumberValidtyChecks = [
 	Also sets which array of validity checks to use for that input
 
 ---------------------------- */
+const clientInput = document.getElementById("client");
+const deviceInput = document.getElementById("device");
+const imeiInput = document.getElementById("imei");
+const descriptionInput = document.getElementById("description");
+const entryDateInput = document.getElementById("entryDate");
+const spans = document.getElementById("spanOfMulti");
 
-const dniInput = document.getElementById("dni");
-const nameInput = document.getElementById("name");
-const surnameInput = document.getElementById("surname");
-const phoneNumberInput = document.getElementById("phoneNumber");
+const checkboxes = Array.from(document.getElementsByClassName("cheboxes"));
+[
+  clientInput,
+  deviceInput,
+  imeiInput,
+  entryDateInput,
+  descriptionInput,
+  entryDateInput,
+].forEach((e) => (e.CustomValidation = new CustomValidation(e)));
 
-dniInput.CustomValidation = new CustomValidation(dniInput);
-dniInput.CustomValidation.validityChecks = dniValidityChecks;
+checkboxes.forEach((e) => (e.CustomValidation = new CustomValidation(e)));
 
-nameInput.CustomValidation = new CustomValidation(nameInput);
-nameInput.CustomValidation.validityChecks = nameValidityChecks;
-
-surnameInput.CustomValidation = new CustomValidation(surnameInput);
-surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
-
-phoneNumberInput.CustomValidation = new CustomValidation(phoneNumberInput);
-phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
-
+imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
+entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
 /* ----------------------------
 
 	Event Listeners
@@ -200,4 +227,5 @@ submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
   validate();
+  console.log(spans);
 });
