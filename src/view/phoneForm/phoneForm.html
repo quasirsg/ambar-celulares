@@ -22,21 +22,6 @@
       <form id="saveClient" class="form">
         <h2>Registrar Dispositivo</h2>
         <div class="form-control">
-          <label for="modelo">
-            <span>Modelo</span>
-            <input
-              type="text"
-              id="modelo"
-              placeholder="Ingrese el modelo del dispositivo"
-              maxlength="15"
-            />
-            <ul class="input-requirements">
-              <li>Un modelo solo contiene letras y numeros</li>
-              <!-- <li>Un dni solo tiene numeros</li> -->
-            </ul>
-          </label>
-        </div>
-        <div class="form-control">
           <label for="marca">
             <span>Marca </span>
             <input
@@ -46,10 +31,27 @@
               maxlength="15"
             />
             <ul class="input-requirements">
-              <li>Una marca solo contiene letras</li>
+              <li>Ej: Samsung, sin espacios</li>
             </ul>
           </label>
         </div>
+
+        <div class="form-control">
+          <label for="modelo">
+            <span>Modelo</span>
+            <input
+              type="text"
+              id="modelo"
+              placeholder="Ingrese el modelo del dispositivo"
+              maxlength="15"
+            />
+            <ul class="input-requirements">
+              <li>Ej: g532m, sin espacios</li>
+              <!-- <li>Un dni solo tiene numeros</li> -->
+            </ul>
+          </label>
+        </div>
+
         <div class="form-control">
           <label for="nombre"
             ><span>Nombre</span>
@@ -60,7 +62,7 @@
               maxlength="15"
             />
             <ul class="input-requirements">
-              <li>Un nombre solo contiene letras</li>
+              <li>Ej: j7 2016</li>
             </ul>
           </label>
         </div>

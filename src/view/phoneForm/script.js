@@ -88,13 +88,12 @@ CustomValidation.prototype = {
 const modeloValidityChecks = [
   {
     isInvalid: function (input) {
-      console.log(input.value);
-      const regex = /^[A-z-0-9 ]{2,30}$/;
+      const regex = /^[A-z-0-9]{2,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un modelo solo contiene letras y numeros",
+    invalidityMessage: "Ej: Samsung, sin espacios",
     element: document.querySelector(
       'label[for="modelo"] .input-requirements li:nth-child(1)'
     ),
@@ -104,12 +103,12 @@ const modeloValidityChecks = [
 const marcaValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{2,30}$/;
+      const regex = /^[A-z-0-9]{4,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Una marca solo contiene letras",
+    invalidityMessage: "Ej: g532m, sin espacios",
     element: document.querySelector(
       'label[for="marca"] .input-requirements li:nth-child(1)'
     ),
@@ -124,7 +123,7 @@ const nombreValidityChecks = [
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un nombre solo contiene letras",
+    invalidityMessage: "Ej: j7 2016",
     element: document.querySelector(
       'label[for="nombre"] .input-requirements li:nth-child(1)'
     ),
