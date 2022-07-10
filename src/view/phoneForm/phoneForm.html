@@ -4,49 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+
     <link rel="stylesheet" href="style.css" />
-    <title>Form Validator</title>
+    <title>Ingreso de un dispositivo</title>
   </head>
   <body>
     <div class="container">
-      <nav class="navbar navbar-light bg-light">
-        <div class="container">
-          <a class="navbar-brand" href="../index.html">
-            <img
-              src="../../assets/png/arrow.png"
-              alt=""
-              width="30"
-              height="24"
-            />
-          </a>
+      <a href="../index.html">
+        <div class="container-block">
+          <div class="block1">
+            <i class="fa fa-arrow-left"></i>
+          </div>
         </div>
-      </nav>
+      </a>
 
-      <form id="form" class="form">
-        <h2>Register With Us</h2>
+      <form id="saveClient" class="form">
+        <h2>Registrar Dispositivo</h2>
         <div class="form-control">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Enter username" />
-          <small>Error message</small>
+          <label for="marca">
+            <span>Marca </span>
+            <input
+              type="text"
+              id="marca"
+              placeholder="Ingrese la marca del dispositivo"
+              maxlength="15"
+            />
+            <ul class="input-requirements">
+              <li>Ej: Samsung, sin espacios</li>
+            </ul>
+          </label>
         </div>
+
         <div class="form-control">
-          <label for="email">Email</label>
-          <input type="text" id="email" placeholder="Enter email" />
-          <small>Error message</small>
+          <label for="modelo">
+            <span>Modelo</span>
+            <input
+              type="text"
+              id="modelo"
+              placeholder="Ingrese el modelo del dispositivo"
+              maxlength="15"
+            />
+            <ul class="input-requirements">
+              <li>Ej: g532m, sin espacios</li>
+              <!-- <li>Un dni solo tiene numeros</li> -->
+            </ul>
+          </label>
         </div>
+
         <div class="form-control">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter password" />
-          <small>Error message</small>
-        </div>
-        <div class="form-control">
-          <label for="password2">Confirm Password</label>
-          <input
-            type="password"
-            id="password2"
-            placeholder="Enter password again"
-          />
-          <small>Error message</small>
+          <label for="nombre"
+            ><span>Nombre</span>
+            <input
+              type="text"
+              id="nombre"
+              placeholder="Ingrese el nombre del dispositivo"
+              maxlength="15"
+            />
+            <ul class="input-requirements">
+              <li>Ej: j7 2016</li>
+            </ul>
+          </label>
         </div>
         <button type="submit">Submit</button>
       </form>
