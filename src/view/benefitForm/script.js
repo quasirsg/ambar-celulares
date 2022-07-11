@@ -115,6 +115,20 @@ const clientValidityChecks = [
   },
 ];
 
+const deviceValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="device"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
 /* ----------------------------
 
 	Setup CustomValidation
@@ -124,9 +138,14 @@ const clientValidityChecks = [
 
 ---------------------------- */
 const clientInput = document.getElementById("client");
+const deviceInput = document.getElementById("device");
 
-clientInput.CustomValidation = new CustomValidation(clientInput);
+[clientInput, deviceInput].forEach(
+  (input) => (input.CustomValidation = new CustomValidation(input))
+);
+
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
+deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 
 /* ----------------------------
 
@@ -164,7 +183,8 @@ clientSelect.addEventListener("change", function (e) {
 });
 
 deviceSelect.addEventListener("change", function (e) {
-  console.log(e.target.value);
+  deviceInput.value = e.target.value;
+  deviceInput.CustomValidation.checkInput();
 });
 /* ----------------------------
 
