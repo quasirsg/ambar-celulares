@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
 
     <link rel="stylesheet" href="style.css" />
-    <title>Ingreso de un equipo</title>
+    <link rel="stylesheet" href="../../assets/css/nice-select2.css" />
+    <title>Ingreso de un dispositivo</title>
   </head>
+
   <body>
     <div class="container">
       <a href="../index.html">
@@ -20,129 +22,35 @@
       </a>
 
       <form id="saveClient" class="form">
+        <h2>Registrar Dispositivo</h2>
         <div class="form-control">
-          <label
-            >Elija a partir del dni
-
-            <div class="dropdown">
-              <div class="select">
-                <span>Seleccionar cliente</span>
-                <i class="fa fa-chevron-left"></i>
-              </div>
-              <input type="hidden" id="client" name="client" />
-              <ul class="dropdown-menu">
-                <li id="42523334">42523334</li>
-                <li id="42356511">42356511</li>
-              </ul>
-            </div>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label
-            >Elija el modelo
-
-            <div class="dropdown">
-              <div class="select">
-                <span>Seleccionar modelo</span>
-                <i class="fa fa-chevron-left"></i>
-              </div>
-              <input type="hidden" id="device" name="device" />
-              <ul class="dropdown-menu">
-                <li id="g532m">g532m</li>
-                <li id="j700m">j700m</li>
-              </ul>
-            </div>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label for="imei"
-            ><span>Imei</span>
-            <input
-              type="text"
-              id="imei"
-              placeholder="Ingrese el imei"
-              maxlength="15"
-            />
+          <select id="searchable-select-client" class="wide">
+            <option data-display="Select"></option>
+          </select>
+          <label for="client">
             <ul class="input-requirements">
-              <li>Un imei contiene 15 digitos</li>
+              <li>Campo requerido</li>
             </ul>
+            <input type="hidden" id="client" />
           </label>
         </div>
 
         <div class="form-control">
-          <label for="description"
-            ><span>Describa el problema del telefono</span>
-            <textarea name="description" cols="30" rows="5"></textarea>
-            <input type="hidden" name="description" id="description" />
-          </label>
-        </div>
-
-        <dl class="dropdown-multi">
-          <dt>
-            <a href="#">
-              <span class="hida">Partes a Cambiar</span>
-              <p class="multiSel" id="spanOfMulti"></p>
-            </a>
-          </dt>
-
-          <dd>
-            <div class="mutliSelect">
-              <ul>
-                <li>
-                  <input type="checkbox" class="cheboxes" value="Apple" />Pin de
-                  carga
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    class="cheboxes"
-                    value="Blackberry"
-                  />Modulo
-                </li>
-                <li>
-                  <input type="checkbox" class="cheboxes" value="HTC" />Tactil
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    class="cheboxes"
-                    value="Sony Ericson"
-                  />Display
-                </li>
-                <li>
-                  <input
-                    type="checkbox"
-                    class="cheboxes"
-                    value="Motorola"
-                  />Bateria
-                </li>
-              </ul>
-            </div>
-          </dd>
-        </dl>
-
-        <div class="form-control">
-          <label for="entryDate"
-            ><span>Fecha de entrada</span>
-            <input
-              type="text"
-              id="entryDate"
-              placeholder="Ingrese la fecha de entrada"
-              maxlength="10"
-            />
+          <select id="searchable-select-device" class="wide">
+            <option data-display="Select"></option>
+          </select>
+          <label for="client">
             <ul class="input-requirements">
-              <li>dd/mm/yyyy</li>
+              <li>Campo requerido</li>
             </ul>
+            <input type="hidden" id="client" />
           </label>
         </div>
-
         <button type="submit">Submit</button>
       </form>
     </div>
 
-    <script src="../../assets/js/jquery-2.2.4.min.js"></script>
+    <script src="../../assets/js/nice-select2.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

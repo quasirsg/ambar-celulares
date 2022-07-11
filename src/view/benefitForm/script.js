@@ -1,4 +1,18 @@
 /* ----------------------------
+	Get data of bd
+---------------------------- */
+
+//mocks
+const arrOfClientsMock = [
+  { value: "42523334", text: "42523334" },
+  { value: "42523333", text: "42523333" },
+];
+let arrOfDevicesMock = [
+  { value: "g532m", text: "g532m" },
+  { value: "j700m", text: "j700m" },
+];
+
+/* ----------------------------
 
 	CustomValidation prototype
 
@@ -11,7 +25,6 @@
 function CustomValidation(input) {
   this.invalidities = [];
   this.validityChecks = [];
-
   //add reference to the input node
   this.inputNode = input;
 
@@ -57,9 +70,11 @@ CustomValidation.prototype = {
       this.inputNode.value !== ""
     ) {
       this.inputNode.setCustomValidity("");
+      return true;
     } else {
       var message = this.inputNode.CustomValidation.getInvalidities();
       this.inputNode.setCustomValidity(message);
+      return false;
     }
   },
   registerListener: function () {
@@ -67,7 +82,7 @@ CustomValidation.prototype = {
 
     var CustomValidation = this;
 
-    this.inputNode.addEventListener("keyup", function () {
+    this.inputNode.addEventListener("input", function () {
       CustomValidation.checkInput();
     });
   },
@@ -85,97 +100,20 @@ CustomValidation.prototype = {
 
 ---------------------------- */
 
-const imeiValidityChecks = [
+const clientValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[0-9]{15,15}$/;
+      const regex = /^[A-z-0-9]{2,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un imei contiene 15 digitos",
+    invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="imei"] .input-requirements li:nth-child(1)'
+      'label[for="client"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
-
-const entryDateValidityChecks = [
-  {
-    isInvalid: function (input) {
-      const regex =
-        /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
-      const caracters = input.value;
-      const test = regex.test(caracters);
-      return test ? false : true;
-    },
-    invalidityMessage: "dd/mm/yyyy",
-    element: document.querySelector(
-      'label[for="entryDate"] .input-requirements li:nth-child(1)'
-    ),
-  },
-];
-/* ----------------------------
-
-	Select
-
----------------------------- */
-$(".dropdown").click(function () {
-  $(this).attr("tabindex", 1).focus();
-  $(this).toggleClass("active");
-  $(this).find(".dropdown-menu").slideToggle(300);
-});
-$(".dropdown").focusout(function () {
-  $(this).removeClass("active");
-  $(this).find(".dropdown-menu").slideUp(300);
-});
-$(".dropdown .dropdown-menu li").click(function () {
-  $(this).parents(".dropdown").find("span").text($(this).text());
-  $(this).parents(".dropdown").find("input").attr("value", $(this).attr("id"));
-});
-
-/* ----------------------------
-
-Multi Select
-
----------------------------- */
-$(".dropdown-multi dt a").on("click", function () {
-  $(".dropdown-multi dd ul").slideToggle("fast");
-});
-
-$(".dropdown-multi dd ul li a").on("click", function () {
-  $(".dropdown-multi dd ul").hide();
-});
-
-function getSelectedValue(id) {
-  return $("#" + id)
-    .find("dt a span.value")
-    .html();
-}
-
-$(document).bind("click", function (e) {
-  var $clicked = $(e.target);
-  if (!$clicked.parents().hasClass("dropdown-multi"))
-    $(".dropdown-multi dd ul").hide();
-});
-
-$('.mutliSelect input[type="checkbox"]').on("click", function () {
-  var title = $(this) //step 1
-      .closest(".mutliSelect")
-      .find('input[type="checkbox"]')
-      .val(),
-    title = $(this).val() + ",";
-
-  if ($(this).is(":checked")) {
-    var html = '<span title="' + title + '">' + title + "</span>";
-    $(".multiSel").append(html); // here value (step 2)
-    $(".hida").hide();
-  } else {
-    $('span[title="' + title + '"]').remove();
-    var ret = $(".hida");
-    $(".dropdown-multi dt a").append(ret);
-  }
-});
 
 /* ----------------------------
 
@@ -186,46 +124,72 @@ $('.mutliSelect input[type="checkbox"]').on("click", function () {
 
 ---------------------------- */
 const clientInput = document.getElementById("client");
-const deviceInput = document.getElementById("device");
-const imeiInput = document.getElementById("imei");
-const descriptionInput = document.getElementById("description");
-const entryDateInput = document.getElementById("entryDate");
-const spans = document.getElementById("spanOfMulti");
 
-const checkboxes = Array.from(document.getElementsByClassName("cheboxes"));
-[
-  clientInput,
-  deviceInput,
-  imeiInput,
-  entryDateInput,
-  descriptionInput,
-  entryDateInput,
-].forEach((e) => (e.CustomValidation = new CustomValidation(e)));
+clientInput.CustomValidation = new CustomValidation(clientInput);
+clientInput.CustomValidation.validityChecks = clientValidityChecks;
 
-checkboxes.forEach((e) => (e.CustomValidation = new CustomValidation(e)));
+/* ----------------------------
 
-imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
-entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
+	NiceSelect
+
+  ---------------------------- */
+
+// get element
+
+const clientSelect = document.getElementById("searchable-select-client");
+const deviceSelect = document.getElementById("searchable-select-device");
+
+// Initialize
+NiceSelect.bind(clientSelect, { searchable: true, data: arrOfClientsMock });
+NiceSelect.bind(deviceSelect, { searchable: true, data: arrOfDevicesMock });
+
+// Append options
+arrOfClientsMock.forEach((e) => {
+  let option = document.createElement("option");
+  option.value = e.value;
+  option.text = e.text;
+  clientSelect.append(option);
+});
+arrOfDevicesMock.forEach((e) => {
+  let option = document.createElement("option");
+  option.value = e.value;
+  option.text = e.text;
+  deviceSelect.append(option);
+});
+
+//Event Listener
+clientSelect.addEventListener("change", function (e) {
+  clientInput.value = e.target.value;
+  clientInput.CustomValidation.checkInput();
+});
+
+deviceSelect.addEventListener("change", function (e) {
+  console.log(e.target.value);
+});
 /* ----------------------------
 
 	Event Listeners
 
 ---------------------------- */
 
-var inputs = document.querySelectorAll('input:not([type="submit"])');
-
-var submit = document.querySelector('button[type="submit"');
-var form = document.getElementById("saveClient");
+const inputs = document.querySelectorAll(
+  'input:not([type="submit"],[class="nice-select-search"])'
+);
+const submit = document.querySelector('button[type="submit"');
+const form = document.getElementById("saveClient");
+let checks = [];
 
 function validate() {
-  for (var i = 0; i < inputs.length; i++) {
-    inputs[i].CustomValidation.checkInput();
-  }
+  inputs.forEach((input) => {
+    checks.push(input.CustomValidation.checkInput());
+  });
+
+  return checks.every((e) => e === true);
 }
 
-submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  validate();
-  console.log(spans);
+  if (validate()) console.log("ok");
+
+  checks = [];
 });
