@@ -25,6 +25,6 @@ node ^v12
 
 ## Descripción
 
-CRUD de clientes. el propósito de la aplicación es gestionar el ingreso de dispositivos asociados a un cliente solucionando la problemática de que el cliente olvide la boleta donde se especifica el modelo, falla técnica y monto
+CRUD de clientes. El propósito de la aplicación es gestionar el ingreso de dispositivos asociados a un cliente solucionando la problemática de que el cliente olvide la boleta donde se especifica el modelo, falla técnica y monto
 
 ## Final
