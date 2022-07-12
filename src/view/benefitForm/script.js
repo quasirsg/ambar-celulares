@@ -152,6 +152,21 @@ const imeiValidityChecks = [
     ),
   },
 ];
+const descriptionValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="description"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
 /* ----------------------------
 
 	Setup CustomValidation
@@ -163,15 +178,16 @@ const imeiValidityChecks = [
 const clientInput = document.getElementById("client");
 const deviceInput = document.getElementById("device");
 const imeiInput = document.getElementById("imei");
+const descriptionInput = document.getElementById("description");
 
-[clientInput, deviceInput, imeiInput].forEach(
+[clientInput, deviceInput, imeiInput, descriptionInput].forEach(
   (input) => (input.CustomValidation = new CustomValidation(input))
 );
 
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
 deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
-
+descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
 /* ----------------------------
 
 	NiceSelect
@@ -199,6 +215,17 @@ clientSelect.addEventListener("change", function (e) {
   clientInput.CustomValidation.checkInput();
 });
 
+/* ----------------------------
+
+	General
+
+---------------------------- */
+const textAreaDescription = document.getElementById("text-area-description");
+
+textAreaDescription.addEventListener("keyup", function (e) {
+  descriptionInput.value = e.target.value;
+  descriptionInput.CustomValidation.checkInput();
+});
 /* ----------------------------
 
 	Event Listeners
