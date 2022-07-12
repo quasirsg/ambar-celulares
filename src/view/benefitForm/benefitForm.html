@@ -36,16 +36,36 @@
         </div>
 
         <div class="form-control">
-          <select id="searchable-select-device" class="wide">
-            <option data-display="Select"></option>
-          </select>
           <label for="device">
+            <span>Dispositivo</span>
+            <input
+              type="text"
+              id="device"
+              placeholder="Ingrese un dispositivo"
+              maxlength="30"
+            />
             <ul class="input-requirements">
-              <li>Campo requerido</li>
+              <li>Ej: g532m</li>
             </ul>
-            <input type="hidden" id="device" />
           </label>
         </div>
+
+        <div class="form-control">
+          <label for="imei">
+            <span>Imei</span>
+            <input
+              type="text"
+              id="imei"
+              placeholder="Ingrese un dispositivo"
+              maxlength="15"
+            />
+            <ul class="input-requirements">
+              <li>un Imei esta conformado por numeros</li>
+              <li>un Imei esta conformado por 15 digitos</li>
+            </ul>
+          </label>
+        </div>
+
         <button type="submit">Submit</button>
       </form>
     </div>

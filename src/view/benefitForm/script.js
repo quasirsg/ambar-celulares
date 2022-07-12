@@ -7,10 +7,6 @@ const arrOfClientsMock = [
   { value: "42523334", text: "42523334" },
   { value: "42523333", text: "42523333" },
 ];
-let arrOfDevicesMock = [
-  { value: "g532m", text: "g532m" },
-  { value: "j700m", text: "j700m" },
-];
 
 /* ----------------------------
 
@@ -129,6 +125,33 @@ const deviceValidityChecks = [
     ),
   },
 ];
+
+const imeiValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[0-9]{0,15}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="imei"] .input-requirements li:nth-child(1) '
+    ),
+  },
+  {
+    isInvalid: function (input) {
+      const regex = /^[0-9]{15,15}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="imei"] .input-requirements li:nth-child(2) '
+    ),
+  },
+];
 /* ----------------------------
 
 	Setup CustomValidation
@@ -139,13 +162,15 @@ const deviceValidityChecks = [
 ---------------------------- */
 const clientInput = document.getElementById("client");
 const deviceInput = document.getElementById("device");
+const imeiInput = document.getElementById("imei");
 
-[clientInput, deviceInput].forEach(
+[clientInput, deviceInput, imeiInput].forEach(
   (input) => (input.CustomValidation = new CustomValidation(input))
 );
 
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
 deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
+imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
 
 /* ----------------------------
 
@@ -156,11 +181,9 @@ deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 // get element
 
 const clientSelect = document.getElementById("searchable-select-client");
-const deviceSelect = document.getElementById("searchable-select-device");
 
 // Initialize
 NiceSelect.bind(clientSelect, { searchable: true, data: arrOfClientsMock });
-NiceSelect.bind(deviceSelect, { searchable: true, data: arrOfDevicesMock });
 
 // Append options
 arrOfClientsMock.forEach((e) => {
@@ -169,12 +192,6 @@ arrOfClientsMock.forEach((e) => {
   option.text = e.text;
   clientSelect.append(option);
 });
-arrOfDevicesMock.forEach((e) => {
-  let option = document.createElement("option");
-  option.value = e.value;
-  option.text = e.text;
-  deviceSelect.append(option);
-});
 
 //Event Listener
 clientSelect.addEventListener("change", function (e) {
@@ -182,10 +199,6 @@ clientSelect.addEventListener("change", function (e) {
   clientInput.CustomValidation.checkInput();
 });
 
-deviceSelect.addEventListener("change", function (e) {
-  deviceInput.value = e.target.value;
-  deviceInput.CustomValidation.checkInput();
-});
 /* ----------------------------
 
 	Event Listeners
