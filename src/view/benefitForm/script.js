@@ -220,6 +220,21 @@ const entryDateValidityChecks = [
     ),
   },
 ];
+
+const mountValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[0-9]{0,15}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Solo numeros",
+    element: document.querySelector(
+      'label[for="mount"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
 /* ----------------------------
 
 	Setup CustomValidation
@@ -234,6 +249,8 @@ const imeiInput = document.getElementById("imei");
 const descriptionInput = document.getElementById("description");
 const replacementInput = document.getElementById("replacement");
 const entryDateInput = document.getElementById("entryDate");
+const mountInput = document.getElementById("mount");
+
 [
   clientInput,
   deviceInput,
@@ -241,6 +258,7 @@ const entryDateInput = document.getElementById("entryDate");
   descriptionInput,
   replacementInput,
   entryDateInput,
+  mountInput,
 ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
@@ -249,7 +267,7 @@ imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
 descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
 replacementInput.CustomValidation.validityChecks = replacementValidityChecks;
 entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
-
+mountInput.CustomValidation.validityChecks = mountValidityChecks;
 /* ----------------------------
 
 	NiceSelect
