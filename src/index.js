@@ -2,9 +2,12 @@ require("electron-reload")(__dirname);
 
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
+const os = require("os");
 
-function createWindow() {
-  const win = new BrowserWindow({
+(async function main() {
+  await app.whenReady();
+
+  const browserWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -12,23 +15,18 @@ function createWindow() {
     },
   });
 
-  win.loadFile("src/view/index.html");
-}
+  browserWindow.loadFile("src/view/index.html");
 
-app.allowRendererProcessReuse = true;
-
-app.whenReady().then(() => {
-  createWindow();
-
+  app.allowRendererProcessReuse = true;
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
-});
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
+})();
