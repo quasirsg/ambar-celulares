@@ -8,6 +8,28 @@ const arrOfClientsMock = [
   { value: "42523333", text: "42523333" },
 ];
 
+const arrOfMultiSelectMock = [
+  {
+    label: "Pin de carga",
+    value: "pnc",
+  },
+  {
+    label: "Bateria",
+    value: "ba",
+  },
+  {
+    label: "Modulo",
+    value: "pa",
+  },
+  {
+    label: "Tactil",
+    value: "touch",
+  },
+  {
+    label: "Display",
+    value: "display",
+  },
+];
 /* ----------------------------
 
 	CustomValidation prototype
@@ -167,6 +189,21 @@ const descriptionValidityChecks = [
   },
 ];
 
+const replacementValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="replacement"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
 /* ----------------------------
 
 	Setup CustomValidation
@@ -179,15 +216,22 @@ const clientInput = document.getElementById("client");
 const deviceInput = document.getElementById("device");
 const imeiInput = document.getElementById("imei");
 const descriptionInput = document.getElementById("description");
+const replacementInput = document.getElementById("replacement");
 
-[clientInput, deviceInput, imeiInput, descriptionInput].forEach(
-  (input) => (input.CustomValidation = new CustomValidation(input))
-);
+[
+  clientInput,
+  deviceInput,
+  imeiInput,
+  descriptionInput,
+  replacementInput,
+].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
 deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
 descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
+replacementInput.CustomValidation.validityChecks = replacementValidityChecks;
+
 /* ----------------------------
 
 	NiceSelect
@@ -214,7 +258,34 @@ clientSelect.addEventListener("change", function (e) {
   clientInput.value = e.target.value;
   clientInput.CustomValidation.checkInput();
 });
+/* ----------------------------
 
+	MultiSelect
+
+  ---------------------------- */
+var instance = new SelectPure(".replacement", {
+  options: arrOfMultiSelectMock,
+  multiple: true, // default: false
+  onChange: (value) => {
+    replacementInput.value = value[0];
+    console.log(value[0]);
+    replacementInput.CustomValidation.checkInput();
+  },
+  classNames: {
+    select: "select-pure__select",
+    dropdownShown: "select-pure__select--opened",
+    multiselect: "select-pure__select--multiple",
+    label: "select-pure__label",
+    placeholder: "select-pure__placeholder",
+    dropdown: "select-pure__options",
+    option: "select-pure__option",
+    autocompleteInput: "select-pure__autocomplete",
+    selectedLabel: "select-pure__selected-label",
+    selectedOption: "select-pure__option--selected",
+    placeholderHidden: "select-pure__placeholder--hidden",
+    optionHidden: "select-pure__option--hidden",
+  },
+});
 /* ----------------------------
 
 	General
