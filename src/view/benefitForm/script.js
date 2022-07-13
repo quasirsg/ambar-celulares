@@ -204,6 +204,22 @@ const replacementValidityChecks = [
   },
 ];
 
+const entryDateValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex =
+        /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      console.log(test);
+      return test ? false : true;
+    },
+    invalidityMessage: "dd/mm/yyyy",
+    element: document.querySelector(
+      'label[for="entryDate"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
 /* ----------------------------
 
 	Setup CustomValidation
@@ -217,13 +233,14 @@ const deviceInput = document.getElementById("device");
 const imeiInput = document.getElementById("imei");
 const descriptionInput = document.getElementById("description");
 const replacementInput = document.getElementById("replacement");
-
+const entryDateInput = document.getElementById("entryDate");
 [
   clientInput,
   deviceInput,
   imeiInput,
   descriptionInput,
   replacementInput,
+  entryDateInput,
 ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
 clientInput.CustomValidation.validityChecks = clientValidityChecks;
@@ -231,6 +248,7 @@ deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
 descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
 replacementInput.CustomValidation.validityChecks = replacementValidityChecks;
+entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
 
 /* ----------------------------
 
