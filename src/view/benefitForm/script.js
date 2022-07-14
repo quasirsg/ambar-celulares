@@ -1,4 +1,36 @@
 /* ----------------------------
+	Get data of bd
+---------------------------- */
+
+//mocks
+const arrOfClientsMock = [
+  { value: "42523334", text: "42523334" },
+  { value: "42523333", text: "42523333" },
+];
+
+const arrOfMultiSelectMock = [
+  {
+    label: "Pin de carga",
+    value: "pnc",
+  },
+  {
+    label: "Bateria",
+    value: "ba",
+  },
+  {
+    label: "Modulo",
+    value: "pa",
+  },
+  {
+    label: "Tactil",
+    value: "touch",
+  },
+  {
+    label: "Display",
+    value: "display",
+  },
+];
+/* ----------------------------
 
 	CustomValidation prototype
 
@@ -11,7 +43,6 @@
 function CustomValidation(input) {
   this.invalidities = [];
   this.validityChecks = [];
-
   //add reference to the input node
   this.inputNode = input;
 
@@ -57,9 +88,11 @@ CustomValidation.prototype = {
       this.inputNode.value !== ""
     ) {
       this.inputNode.setCustomValidity("");
+      return true;
     } else {
       var message = this.inputNode.CustomValidation.getInvalidities();
       this.inputNode.setCustomValidity(message);
+      return false;
     }
   },
   registerListener: function () {
@@ -67,7 +100,7 @@ CustomValidation.prototype = {
 
     var CustomValidation = this;
 
-    this.inputNode.addEventListener("keyup", function () {
+    this.inputNode.addEventListener("input", function () {
       CustomValidation.checkInput();
     });
   },
@@ -85,7 +118,49 @@ CustomValidation.prototype = {
 
 ---------------------------- */
 
+const clientValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="client"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
+const deviceValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="device"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
 const imeiValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[0-9]{0,15}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="imei"] .input-requirements li:nth-child(1) '
+    ),
+  },
   {
     isInvalid: function (input) {
       const regex = /^[0-9]{15,15}$/;
@@ -93,9 +168,38 @@ const imeiValidityChecks = [
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Un imei contiene 15 digitos",
+    invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="imei"] .input-requirements li:nth-child(1)'
+      'label[for="imei"] .input-requirements li:nth-child(2) '
+    ),
+  },
+];
+const descriptionValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="description"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
+const replacementValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-z-0-9]{2,30}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Campo requerido",
+    element: document.querySelector(
+      'label[for="replacement"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -107,6 +211,7 @@ const entryDateValidityChecks = [
         /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
       const caracters = input.value;
       const test = regex.test(caracters);
+      console.log(test);
       return test ? false : true;
     },
     invalidityMessage: "dd/mm/yyyy",
@@ -115,68 +220,21 @@ const entryDateValidityChecks = [
     ),
   },
 ];
-/* ----------------------------
 
-	Select
-
----------------------------- */
-$(".dropdown").click(function () {
-  $(this).attr("tabindex", 1).focus();
-  $(this).toggleClass("active");
-  $(this).find(".dropdown-menu").slideToggle(300);
-});
-$(".dropdown").focusout(function () {
-  $(this).removeClass("active");
-  $(this).find(".dropdown-menu").slideUp(300);
-});
-$(".dropdown .dropdown-menu li").click(function () {
-  $(this).parents(".dropdown").find("span").text($(this).text());
-  $(this).parents(".dropdown").find("input").attr("value", $(this).attr("id"));
-});
-
-/* ----------------------------
-
-Multi Select
-
----------------------------- */
-$(".dropdown-multi dt a").on("click", function () {
-  $(".dropdown-multi dd ul").slideToggle("fast");
-});
-
-$(".dropdown-multi dd ul li a").on("click", function () {
-  $(".dropdown-multi dd ul").hide();
-});
-
-function getSelectedValue(id) {
-  return $("#" + id)
-    .find("dt a span.value")
-    .html();
-}
-
-$(document).bind("click", function (e) {
-  var $clicked = $(e.target);
-  if (!$clicked.parents().hasClass("dropdown-multi"))
-    $(".dropdown-multi dd ul").hide();
-});
-
-$('.mutliSelect input[type="checkbox"]').on("click", function () {
-  var title = $(this) //step 1
-      .closest(".mutliSelect")
-      .find('input[type="checkbox"]')
-      .val(),
-    title = $(this).val() + ",";
-
-  if ($(this).is(":checked")) {
-    var html = '<span title="' + title + '">' + title + "</span>";
-    $(".multiSel").append(html); // here value (step 2)
-    $(".hida").hide();
-  } else {
-    $('span[title="' + title + '"]').remove();
-    var ret = $(".hida");
-    $(".dropdown-multi dt a").append(ret);
-  }
-});
-
+const mountValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[0-9]{0,15}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Solo numeros",
+    element: document.querySelector(
+      'label[for="mount"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
 /* ----------------------------
 
 	Setup CustomValidation
@@ -189,43 +247,116 @@ const clientInput = document.getElementById("client");
 const deviceInput = document.getElementById("device");
 const imeiInput = document.getElementById("imei");
 const descriptionInput = document.getElementById("description");
+const replacementInput = document.getElementById("replacement");
 const entryDateInput = document.getElementById("entryDate");
-const spans = document.getElementById("spanOfMulti");
+const mountInput = document.getElementById("mount");
 
-const checkboxes = Array.from(document.getElementsByClassName("cheboxes"));
 [
   clientInput,
   deviceInput,
   imeiInput,
-  entryDateInput,
   descriptionInput,
+  replacementInput,
   entryDateInput,
-].forEach((e) => (e.CustomValidation = new CustomValidation(e)));
+  mountInput,
+].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
-checkboxes.forEach((e) => (e.CustomValidation = new CustomValidation(e)));
-
+clientInput.CustomValidation.validityChecks = clientValidityChecks;
+deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
 imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
+descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
+replacementInput.CustomValidation.validityChecks = replacementValidityChecks;
 entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
+mountInput.CustomValidation.validityChecks = mountValidityChecks;
+/* ----------------------------
+
+	NiceSelect
+
+  ---------------------------- */
+
+// get element
+
+const clientSelect = document.getElementById("searchable-select-client");
+
+// Initialize
+NiceSelect.bind(clientSelect, { searchable: true, data: arrOfClientsMock });
+
+// Append options
+arrOfClientsMock.forEach((e) => {
+  let option = document.createElement("option");
+  option.value = e.value;
+  option.text = e.text;
+  clientSelect.append(option);
+});
+
+//Event Listener
+clientSelect.addEventListener("change", function (e) {
+  clientInput.value = e.target.value;
+  clientInput.CustomValidation.checkInput();
+});
+/* ----------------------------
+
+	MultiSelect
+
+  ---------------------------- */
+var instance = new SelectPure(".replacement", {
+  options: arrOfMultiSelectMock,
+  multiple: true, // default: false
+  onChange: (value) => {
+    replacementInput.value = value[0];
+    console.log(value[0]);
+    replacementInput.CustomValidation.checkInput();
+  },
+  classNames: {
+    select: "select-pure__select",
+    dropdownShown: "select-pure__select--opened",
+    multiselect: "select-pure__select--multiple",
+    label: "select-pure__label",
+    placeholder: "select-pure__placeholder",
+    dropdown: "select-pure__options",
+    option: "select-pure__option",
+    autocompleteInput: "select-pure__autocomplete",
+    selectedLabel: "select-pure__selected-label",
+    selectedOption: "select-pure__option--selected",
+    placeholderHidden: "select-pure__placeholder--hidden",
+    optionHidden: "select-pure__option--hidden",
+  },
+});
+/* ----------------------------
+
+	General
+
+---------------------------- */
+const textAreaDescription = document.getElementById("text-area-description");
+
+textAreaDescription.addEventListener("keyup", function (e) {
+  descriptionInput.value = e.target.value;
+  descriptionInput.CustomValidation.checkInput();
+});
 /* ----------------------------
 
 	Event Listeners
 
 ---------------------------- */
 
-var inputs = document.querySelectorAll('input:not([type="submit"])');
-
-var submit = document.querySelector('button[type="submit"');
-var form = document.getElementById("saveClient");
+const inputs = document.querySelectorAll(
+  'input:not([type="submit"],[class="nice-select-search"])'
+);
+const submit = document.querySelector('button[type="submit"');
+const form = document.getElementById("saveClient");
+let checks = [];
 
 function validate() {
-  for (var i = 0; i < inputs.length; i++) {
-    inputs[i].CustomValidation.checkInput();
-  }
+  inputs.forEach((input) => {
+    checks.push(input.CustomValidation.checkInput());
+  });
+
+  return checks.every((e) => e === true);
 }
 
-submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  validate();
-  console.log(spans);
+  if (validate()) console.log("ok");
+
+  checks = [];
 });
