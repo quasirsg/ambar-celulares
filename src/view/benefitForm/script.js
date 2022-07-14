@@ -135,7 +135,6 @@ const entryDateValidityChecks = [
         /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
       const caracters = input.value;
       const test = regex.test(caracters);
-      console.log(test);
       return test ? false : true;
     },
     invalidityMessage: "dd/mm/yyyy",
@@ -159,6 +158,24 @@ const mountValidityChecks = [
     ),
   },
 ];
+
+const invalidToaster = function () {
+  var alerta = document.getElementById("alert")
+  alerta.style.cssText = "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML = "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo."
+  setTimeout(function() {
+    alerta.style.display = "none";
+},1500);
+}
+
+const validToaster = function () {
+  var alerta = document.getElementById("alert")
+    alerta.style.cssText = "display: block; background-color: #dff0d8; color: #3c763d;";
+    alerta.innerHTML = "<strong>¡Bien hecho!</strong> Guardaste el dispositivo con exito."
+    setTimeout(function() {
+      alerta.style.display = "none";
+  },2000);
+}
 /* ----------------------------
 
 	Setup CustomValidation
@@ -273,14 +290,19 @@ let checks = [];
 function validate() {
   inputs.forEach((input) => {
     checks.push(input.CustomValidation.checkInput());
+    console.log(checks);
+    if (checks[input] !== true) {
+      invalidToaster()
+    }
   });
 
   return checks.every((e) => e === true);
 }
 
+submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  if (validate()) console.log("ok");
+  if (validate()) validToaster(), console.log("ok");
 
   checks = [];
 });
