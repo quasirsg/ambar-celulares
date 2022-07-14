@@ -10,12 +10,40 @@
       type="text/css"
       href="../../assets/css/bootstrap.min.css"
     />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../assets/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container">
+      <div class="row text-left">
+        <a href="../index.html">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-home"></i>
+            </div>
+          </div>
+        </a>
+      </div>
       <div class="row text-center">
-        <h2>Hi</h2>
+        <form class="search-bar" id="search-form">
+          <input
+            type="search"
+            id="search"
+            name="search"
+            pattern=".*\S.*"
+            maxlength="8"
+            required
+          />
+          <button class="search-btn" type="submit"></button>
+        </form>
+
+        <table id="example" class="display" style="width: 100%"></table>
       </div>
     </div>
+    <script src="../../assets/js/jquery-3.5.1.js"></script>
+    <script src="../../assets/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/inputsCustomValidation.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
