@@ -153,6 +153,14 @@ const phoneNumberValidtyChecks = [
     ),
   },
 ];
+
+const cambioBoton = function (sub) {
+  var alerta = document.getElementById("alert")
+    alerta.style.display = "block";
+    setTimeout(function() {
+      alerta.style.display = "none";
+  },2000);
+}
 /* ----------------------------
 
 	Setup CustomValidation
@@ -166,6 +174,9 @@ const dniInput = document.getElementById("dni");
 const nameInput = document.getElementById("name");
 const surnameInput = document.getElementById("surname");
 const phoneNumberInput = document.getElementById("phoneNumber");
+const submitForm = document.getElementById("submitForm");
+
+submitForm.addEventListener("click", cambioBoton)
 
 dniInput.CustomValidation = new CustomValidation(dniInput);
 dniInput.CustomValidation.validityChecks = dniValidityChecks;
