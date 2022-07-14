@@ -165,15 +165,8 @@ h2 {
 .alert {
   width: 400px;
   min-height: 70px;
-  background-color: #dff0d8;
-  color: #3c763d;
   border-radius: 50px;
   position: absolute;
   padding: 20px;
-  margin-top: 10px;
+  margin-top: 7px;
  }
- 
-/* .alert.visible {
-  display: block;
-}
- */

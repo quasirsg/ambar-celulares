@@ -154,9 +154,19 @@ const phoneNumberValidtyChecks = [
   },
 ];
 
-const cambioBoton = function (sub) {
+const invalidToaster = function () {
   var alerta = document.getElementById("alert")
-    alerta.style.display = "block";
+  alerta.style.cssText = "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML = "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo."
+  setTimeout(function() {
+    alerta.style.display = "none";
+},1500);
+}
+
+const validToaster = function () {
+  var alerta = document.getElementById("alert")
+    alerta.style.cssText = "display: block; background-color: #dff0d8; color: #3c763d;";
+    alerta.innerHTML = "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito."
     setTimeout(function() {
       alerta.style.display = "none";
   },2000);
@@ -174,20 +184,16 @@ const dniInput = document.getElementById("dni");
 const nameInput = document.getElementById("name");
 const surnameInput = document.getElementById("surname");
 const phoneNumberInput = document.getElementById("phoneNumber");
-const submitForm = document.getElementById("submitForm");
 
-submitForm.addEventListener("click", cambioBoton)
+[dniInput,
+  nameInput,
+  surnameInput,
+  phoneNumberInput,
+].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
-dniInput.CustomValidation = new CustomValidation(dniInput);
 dniInput.CustomValidation.validityChecks = dniValidityChecks;
-
-nameInput.CustomValidation = new CustomValidation(nameInput);
 nameInput.CustomValidation.validityChecks = nameValidityChecks;
-
-surnameInput.CustomValidation = new CustomValidation(surnameInput);
 surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
-
-phoneNumberInput.CustomValidation = new CustomValidation(phoneNumberInput);
 phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
 
 /* ----------------------------
@@ -204,11 +210,15 @@ var form = document.getElementById("saveClient");
 function validate() {
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].CustomValidation.checkInput();
+    if (inputs[i].CustomValidation.invalidities.length !== 0) {
+      invalidToaster()
+    }
   }
 }
 
 submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+  validToaster()
   validate();
 });
