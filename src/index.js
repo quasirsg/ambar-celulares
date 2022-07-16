@@ -8,8 +8,9 @@ const os = require("os");
   await app.whenReady();
 
   const browserWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1360,
+    height: 760,
+    resizable: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },

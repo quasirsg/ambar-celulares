@@ -88,11 +88,12 @@ CustomValidation.prototype = {
 const dniValidityChecks = [
   {
     isInvalid: function (input) {
+      console.log("a");
       return input.value.length > 8;
     },
     invalidityMessage: "Un dni debe ser menor a los 9 digitos",
     element: document.querySelector(
-      'label[for="dni"] .input-requirements li:nth-child(1)'
+      'div[id="div-dni"] .input-requirements li:nth-child(1)'
     ),
   },
   {
@@ -104,7 +105,7 @@ const dniValidityChecks = [
     },
     invalidityMessage: "Un dni solo tiene numeros",
     element: document.querySelector(
-      'label[for="dni"] .input-requirements li:nth-child(2)'
+      'div[id="div-dni"] .input-requirements li:nth-child(2)'
     ),
   },
 ];
@@ -119,7 +120,7 @@ const nameValidityChecks = [
     },
     invalidityMessage: "Un nombre solo contiene letras",
     element: document.querySelector(
-      'label[for="name"] .input-requirements li:nth-child(1)'
+      'div[id="div-name"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -134,7 +135,7 @@ const surnameValidityChecks = [
     },
     invalidityMessage: "Un apellido solo contiene letras",
     element: document.querySelector(
-      'label[for="surname"] .input-requirements li:nth-child(1)'
+      'div[id="div-surname"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -149,28 +150,32 @@ const phoneNumberValidtyChecks = [
     },
     invalidityMessage: "Un numero de telefono solo contiene numeros",
     element: document.querySelector(
-      'label[for="phoneNumber"] .input-requirements li:nth-child(1)'
+      'div[id="div-phoneNumber"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
 
 const invalidToaster = function () {
-  var alerta = document.getElementById("alert")
-  alerta.style.cssText = "display: block; background-color: #f2dede; color: #a94442;";
-  alerta.innerHTML = "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo."
-  setTimeout(function() {
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML =
+    "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo.";
+  setTimeout(function () {
     alerta.style.display = "none";
-},1500);
-}
+  }, 1500);
+};
 
 const validToaster = function () {
-  var alerta = document.getElementById("alert")
-    alerta.style.cssText = "display: block; background-color: #dff0d8; color: #3c763d;";
-    alerta.innerHTML = "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito."
-    setTimeout(function() {
-      alerta.style.display = "none";
-  },2000);
-}
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #dff0d8; color: #3c763d;";
+  alerta.innerHTML =
+    "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito.";
+  setTimeout(function () {
+    alerta.style.display = "none";
+  }, 2000);
+};
 /* ----------------------------
 
 	Setup CustomValidation
@@ -185,17 +190,14 @@ const nameInput = document.getElementById("name");
 const surnameInput = document.getElementById("surname");
 const phoneNumberInput = document.getElementById("phoneNumber");
 
-[dniInput,
-  nameInput,
-  surnameInput,
-  phoneNumberInput,
-].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
+[dniInput, nameInput, surnameInput, phoneNumberInput].forEach(
+  (input) => (input.CustomValidation = new CustomValidation(input))
+);
 
 dniInput.CustomValidation.validityChecks = dniValidityChecks;
 nameInput.CustomValidation.validityChecks = nameValidityChecks;
 surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
 phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
-
 /* ----------------------------
 
 	Event Listeners
@@ -211,7 +213,7 @@ function validate() {
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].CustomValidation.checkInput();
     if (inputs[i].CustomValidation.invalidities.length !== 0) {
-      invalidToaster()
+      invalidToaster();
     }
   }
 }
@@ -219,6 +221,6 @@ function validate() {
 submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  validToaster()
+  validToaster();
   validate();
 });

@@ -298,13 +298,14 @@ let checks = [];
 function validate() {
   inputs.forEach((input) => {
     checks.push(input.CustomValidation.checkInput());
-    console.log(checks);
-    if (checks[input] !== true) {
-      invalidToaster();
-    }
   });
 
-  return checks.every((e) => e === true);
+  checks.every((e) => {
+    if (e === false) {
+      invalidToaster();
+    }
+    return e;
+  });
 }
 
 submit.addEventListener("click", validate);

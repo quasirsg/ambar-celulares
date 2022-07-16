@@ -5,83 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
     <title>Ingreso de un cliente</title>
   </head>
   <body>
-    <div class="container">
-      <div class="alert" role="alert" id="alert" style="display: none"></div>
-      <a href="../index.html">
-        <div class="container-block">
-          <div class="block1">
-            <i class="fa fa-arrow-left"></i>
+    <div class="container-fluid">
+      <div class="row text-left">
+        <a href="../index.html">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-home"></i>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
+      <div class="alert" role="alert" id="alert" style="display: none"></div>
 
       <form id="saveClient" class="form">
         <h2>Registrar Cliente</h2>
-        <div class="form-control">
-          <label for="dni">
-            <span>DNI</span>
-            <input
-              type="text"
-              id="dni"
-              placeholder="Ingrese un DNI"
-              maxlength="8"
-            />
-            <ul class="input-requirements">
-              <li>Un dni debe ser menor a los 9 digitos</li>
-              <li>Un dni solo tiene numeros</li>
-            </ul>
-          </label>
+        <div class="form-group" id="div-dni">
+          <span>DNI</span>
+          <input
+            class="form-control"
+            type="text"
+            id="dni"
+            name="dni"
+            placeholder="Ingrese un DNI"
+            maxlength="8"
+          />
+          <ul class="input-requirements">
+            <li>Un dni debe ser menor a los 9 digitos</li>
+            <li>Un dni solo tiene numeros</li>
+          </ul>
         </div>
-        <div class="form-control">
-          <label for="name">
-            <span>Nombre </span>
-            <input
-              type="text"
-              id="name"
-              placeholder="Ingrese un nombre"
-              maxlength="30"
-            />
-            <ul class="input-requirements">
-              <li>Un nombre solo contiene letras</li>
-            </ul>
-          </label>
+
+        <div class="form-group" id="div-name">
+          <span>Nombre </span>
+          <input
+            class="form-control"
+            type="text"
+            id="name"
+            placeholder="Ingrese un nombre"
+            maxlength="30"
+          />
+          <ul class="input-requirements">
+            <li>Un nombre solo contiene letras</li>
+          </ul>
         </div>
-        <div class="form-control">
-          <label for="surname"
-            ><span>Apellido</span>
-            <input
-              type="text"
-              id="surname"
-              placeholder="Ingrese un apellido"
-              maxlength="30"
-            />
-            <ul class="input-requirements">
-              <li>Un nombre solo contiene letras</li>
-            </ul>
-          </label>
+
+        <div class="form-group" id="div-surname">
+          <label for="surname"></label>
+          <span>Apellido</span>
+          <input
+            class="form-control"
+            type="text"
+            id="surname"
+            placeholder="Ingrese un apellido"
+            maxlength="30"
+          />
+          <ul class="input-requirements">
+            <li>Un nombre solo contiene letras</li>
+          </ul>
         </div>
-        <div class="form-control">
-          <label for="phoneNumber"
-            ><span>Nro.Teléfono</span>
-            <input
-              type="text"
-              id="phoneNumber"
-              placeholder="Ingrese un numero de telefono"
-              maxlength="10"
-            />
-            <ul class="input-requirements">
-              <li>
-                Un numero de telefono solo contiene numeros y tiene 10 digitos
-              </li>
-            </ul>
-          </label>
+
+        <div class="form-group" id="div-phoneNumber">
+          <label for="phoneNumber"></label>
+          <span>Nro.Teléfono</span>
+          <input
+            class="form-control"
+            type="text"
+            id="phoneNumber"
+            placeholder="Ingrese un numero de telefono"
+            maxlength="10"
+          />
+          <ul class="input-requirements">
+            <li>
+              Un numero de telefono solo contiene numeros y tiene 10 digitos
+            </li>
+          </ul>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-primary form-control">
+          Submit
+        </button>
       </form>
     </div>
     <script src="script.js"></script>
