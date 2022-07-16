@@ -161,3 +161,12 @@ h2 {
   max-height: 1000px; /* any large number (bigger then the .input-requirements list) */
   transition: max-height 1s ease-in;
 }
+
+.alert {
+  width: 400px;
+  min-height: 70px;
+  border-radius: 50px;
+  position: absolute;
+  padding: 20px;
+  margin-top: 7px;
+ }

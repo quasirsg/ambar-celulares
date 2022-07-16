@@ -254,3 +254,12 @@ h2 {
   padding: 10px;
   width: 100%;
 }
+
+.alert {
+  width: 400px;
+  min-height: 70px;
+  border-radius: 50px;
+  position: absolute;
+  padding: 20px;
+  margin-top: 7px;
+ }
