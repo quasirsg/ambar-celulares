@@ -60,7 +60,7 @@ const clientValidityChecks = [
 const deviceValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9]{2,30}$/;
+      const regex = /^[A-z-0-9]{2,15}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -116,7 +116,7 @@ const descriptionValidityChecks = [
 const replacementValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9]{2,30}$/;
+      const regex = /^[A-z-0-9,]{0,255}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
