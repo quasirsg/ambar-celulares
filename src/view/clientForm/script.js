@@ -1,3 +1,13 @@
+/*Function to return the client info to method saveClient from DB*/
+function clientInfo(dni, name, surname, phoneNumber) {
+  return {
+    dni,
+    name,
+    surname,
+    phoneNumber,
+  };
+}
+
 /* ----------------------------
 
 	CustomValidation prototype
@@ -88,7 +98,6 @@ CustomValidation.prototype = {
 const dniValidityChecks = [
   {
     isInvalid: function (input) {
-      console.log("a");
       return input.value.length > 8;
     },
     invalidityMessage: "Un dni debe ser menor a los 9 digitos",
@@ -223,4 +232,10 @@ form.addEventListener("submit", function (e) {
   e.preventDefault();
   validToaster();
   validate();
+  const client = clientInfo(
+    dniInput.value,
+    nameInput.value,
+    surnameInput.value,
+    phoneNumberInput.value
+  );
 });

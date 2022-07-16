@@ -6,6 +6,13 @@ const getDnis = async () => {
   return results;
 };
 
+const saveClient = async (client) => {
+  const [dni, name, surname, phoneNumber] = client;
+  try {
+    console.log(dni, name, surname, phoneNumber);
+  } catch (error) {}
+};
+
 module.exports = {
   getDnis,
 };
