@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="../../assets/css/nice-select2.css" />
     <title>Ingreso de un dispositivo</title>
   </head>
 
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <div class="alert" role="alert" id="alert" style="display: none"></div>
       <a href="../index.html">
         <div class="container-block">
@@ -24,106 +24,117 @@
 
       <form id="saveClient" class="form">
         <h2>Registrar Dispositivo</h2>
-        <div class="form-control">
-          <select id="searchable-select-client" class="wide">
-            <option data-display="Select"></option>
-          </select>
-          <label for="client">
-            <ul class="input-requirements">
-              <li>Campo requerido</li>
-            </ul>
-            <input type="hidden" id="client" />
-          </label>
+        <div class="row">
+          <div class="col-sm-12" id="div-client">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Buscar cliente</span>
+              <select id="searchable-select-client" class="wide">
+                <option data-display="Select"></option>
+              </select>
+              <input type="hidden" id="client" />
+              <ul class="input-requirements">
+                <li>Campo requerido</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-6" id="div-device">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Dispositivo</span>
+              <input
+                class="form-control"
+                type="text"
+                id="device"
+                placeholder="Ingrese un dispositivo"
+                maxlength="30"
+              />
+              <ul class="input-requirements">
+                <li>Ej: g532m</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-6" id="div-imei">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Imei</span>
+              <input
+                class="form-control"
+                type="text"
+                id="imei"
+                placeholder="Ingrese un dispositivo"
+                maxlength="15"
+              />
+              <ul class="input-requirements">
+                <li>un Imei esta conformado por numeros</li>
+                <li>un Imei esta conformado por 15 digitos</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-6" id="div-replacement">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Partes a cambiar</span>
+              <span class="replacement"></span>
+              <input type="hidden" name="replacement" id="replacement" />
+              <ul class="input-requirements">
+                <li>Campo requerido</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-6" id="div-entryDate">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Fecha de entrada</span>
+              <input
+                class="form-control"
+                type="text"
+                id="entryDate"
+                placeholder="Ingrese la fecha de entrada"
+                maxlength="10"
+              />
+              <ul class="input-requirements">
+                <li>dd/mm/yyyy</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-6" id="div-mount">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Monto</span>
+              <input
+                class="form-control"
+                type="text"
+                id="mount"
+                placeholder="Ingrese el monto"
+                maxlength="10"
+              />
+              <ul class="input-requirements">
+                <li>Solo numeros</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-sm-12" id="div-description">
+            <div class="form-group" style="margin-bottom: 5px">
+              <span>Describa el problema del telefono</span>
+              <textarea
+                class="form-control"
+                id="text-area-description"
+                name="description"
+                cols="30"
+                rows="5"
+              ></textarea>
+              <input type="hidden" name="description" id="description" />
+              <ul class="input-requirements">
+                <li>Campo requerido</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div class="form-control">
-          <label for="device">
-            <span>Dispositivo</span>
-            <input
-              type="text"
-              id="device"
-              placeholder="Ingrese un dispositivo"
-              maxlength="30"
-            />
-            <ul class="input-requirements">
-              <li>Ej: g532m</li>
-            </ul>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label for="imei">
-            <span>Imei</span>
-            <input
-              type="text"
-              id="imei"
-              placeholder="Ingrese un dispositivo"
-              maxlength="15"
-            />
-            <ul class="input-requirements">
-              <li>un Imei esta conformado por numeros</li>
-              <li>un Imei esta conformado por 15 digitos</li>
-            </ul>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <span>Describa el problema del telefono</span>
-          <textarea
-            id="text-area-description"
-            name="description"
-            cols="30"
-            rows="5"
-          ></textarea>
-          <label for="description">
-            <ul class="input-requirements">
-              <li>Campo requerido</li>
-            </ul>
-            <input type="hidden" name="description" id="description" />
-          </label>
-        </div>
-
-        <div class="form-control">
-          <span class="replacement"></span>
-          <label for="replacement">
-            <ul class="input-requirements">
-              <li>Campo requerido</li>
-            </ul>
-            <input type="hidden" name="replacement" id="replacement" />
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label for="entryDate"
-            ><span>Fecha de entrada</span>
-            <input
-              type="text"
-              id="entryDate"
-              placeholder="Ingrese la fecha de entrada"
-              maxlength="10"
-            />
-            <ul class="input-requirements">
-              <li>dd/mm/yyyy</li>
-            </ul>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label for="mount"
-            ><span>Monto</span>
-            <input
-              type="text"
-              id="mount"
-              placeholder="Ingrese el monto"
-              maxlength="10"
-            />
-            <ul class="input-requirements">
-              <li>Solo numeros</li>
-            </ul>
-          </label>
-        </div>
-
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-primary form-control">
+          Submit
+        </button>
       </form>
     </div>
     <script src="../assets/js/inputsCustomValidation.js"></script>
