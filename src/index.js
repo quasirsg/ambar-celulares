@@ -1,8 +1,8 @@
-require("electron-reload")(__dirname);
-
 const { app, BrowserWindow } = require("electron");
-const path = require("path");
-const os = require("os");
+
+require("./main");
+require("electron-reload")(__dirname);
+require("./database");
 
 (async function main() {
   await app.whenReady();
@@ -12,7 +12,9 @@ const os = require("os");
     height: 760,
     resizable: false,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
