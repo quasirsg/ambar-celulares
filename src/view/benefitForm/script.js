@@ -101,7 +101,7 @@ const imeiValidityChecks = [
 const descriptionValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9]{2,30}$/;
+      const regex = /^[A-z-0-9 ]{2,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -158,24 +158,32 @@ const mountValidityChecks = [
     ),
   },
 ];
+/* ----------------------------
 
+	Tosaster
+
+---------------------------- */
 const invalidToaster = function () {
-  var alerta = document.getElementById("alert")
-  alerta.style.cssText = "display: block; background-color: #f2dede; color: #a94442;";
-  alerta.innerHTML = "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo."
-  setTimeout(function() {
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML =
+    "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo.";
+  setTimeout(function () {
     alerta.style.display = "none";
-},1500);
-}
+  }, 1500);
+};
 
 const validToaster = function () {
-  var alerta = document.getElementById("alert")
-    alerta.style.cssText = "display: block; background-color: #dff0d8; color: #3c763d;";
-    alerta.innerHTML = "<strong>¡Bien hecho!</strong> Guardaste el dispositivo con exito."
-    setTimeout(function() {
-      alerta.style.display = "none";
-  },2000);
-}
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #dff0d8; color: #3c763d;";
+  alerta.innerHTML =
+    "<strong>¡Bien hecho!</strong> Guardaste el dispositivo con exito.";
+  setTimeout(function () {
+    alerta.style.display = "none";
+  }, 2000);
+};
 /* ----------------------------
 
 	Setup CustomValidation
@@ -292,7 +300,7 @@ function validate() {
     checks.push(input.CustomValidation.checkInput());
     console.log(checks);
     if (checks[input] !== true) {
-      invalidToaster()
+      invalidToaster();
     }
   });
 
