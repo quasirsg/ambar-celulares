@@ -52,7 +52,7 @@ const clientValidityChecks = [
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="client"] .input-requirements li:nth-child(1)'
+      'div[id="div-client"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -67,7 +67,7 @@ const deviceValidityChecks = [
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="device"] .input-requirements li:nth-child(1)'
+      'div[id="div-device"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -82,7 +82,7 @@ const imeiValidityChecks = [
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="imei"] .input-requirements li:nth-child(1) '
+      'div[id="div-imei"] .input-requirements li:nth-child(1) '
     ),
   },
   {
@@ -94,21 +94,21 @@ const imeiValidityChecks = [
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="imei"] .input-requirements li:nth-child(2) '
+      'div[id="div-imei"] .input-requirements li:nth-child(2) '
     ),
   },
 ];
 const descriptionValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9 ]{2,30}$/;
+      const regex = /^[A-z-0-9 ]{2,255}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="description"] .input-requirements li:nth-child(1)'
+      'div[id="div-description"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -123,7 +123,7 @@ const replacementValidityChecks = [
     },
     invalidityMessage: "Campo requerido",
     element: document.querySelector(
-      'label[for="replacement"] .input-requirements li:nth-child(1)'
+      'div[id="div-replacement"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -139,7 +139,7 @@ const entryDateValidityChecks = [
     },
     invalidityMessage: "dd/mm/yyyy",
     element: document.querySelector(
-      'label[for="entryDate"] .input-requirements li:nth-child(1)'
+      'div[id="div-entryDate"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -154,7 +154,7 @@ const mountValidityChecks = [
     },
     invalidityMessage: "Solo numeros",
     element: document.querySelector(
-      'label[for="mount"] .input-requirements li:nth-child(1)'
+      'div[id="div-mount"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -253,7 +253,7 @@ var instance = new SelectPure(".replacement", {
   multiple: true, // default: false
   onChange: (value) => {
     replacementInput.value = value[0];
-    console.log(value[0]);
+    console.log(value);
     replacementInput.CustomValidation.checkInput();
   },
   classNames: {
