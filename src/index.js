@@ -2,7 +2,6 @@ const { app, BrowserWindow } = require("electron");
 
 require("./main");
 require("electron-reload")(__dirname);
-require("./database");
 
 (async function main() {
   await app.whenReady();

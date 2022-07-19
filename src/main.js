@@ -7,12 +7,17 @@ const getDnis = async () => {
 };
 
 const saveClient = async (client) => {
-  const [dni, name, surname, phoneNumber] = client;
   try {
-    console.log(dni, name, surname, phoneNumber);
-  } catch (error) {}
+    const conn = await getConnection();
+    await conn.query("INSERT INTO clients SET ?", client);
+    /* new Notification("title", { body: "hola" }); */
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 module.exports = {
   getDnis,
+  saveClient,
 };

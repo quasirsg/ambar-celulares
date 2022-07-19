@@ -1,13 +1,26 @@
+/* Errors */
+const errorsMap = new Map();
+
+errorsMap.set("ER_DUP_ENTRY", "Error el dni ya esta registrado");
+errorsMap.set("dni_incomplete","Porfavor ingrese su dni correctamente para poder avanzar");
+errorsMap.set("name_incomplete","Porfavor ingrese su nombre correctamente para poder avanzar");
+errorsMap.set("surname_incomplete","Porfavor ingrese su apellido correctamente para poder avanzar");
+errorsMap.set("phoneNumber_incomplete","Porfavor ingrese su telefono correctamente para poder avanzar");
+
+
 /*Function to return the client info to method saveClient from DB*/
 function clientInfo(dni, name, surname, phoneNumber) {
   return {
-    dni,
+    dni: Number(dni),
     name,
     surname,
-    phoneNumber,
+    phone_number: phoneNumber,
   };
 }
 
+function resetForm() {
+  form.reset();
+}
 /* ----------------------------
 
 	CustomValidation prototype
@@ -77,6 +90,9 @@ CustomValidation.prototype = {
 
     var CustomValidation = this;
 
+    this.inputNode.addEventListener("mousemove", function () {
+      CustomValidation.checkInput();
+    });
     this.inputNode.addEventListener("keyup", function () {
       CustomValidation.checkInput();
     });
@@ -164,12 +180,12 @@ const phoneNumberValidtyChecks = [
   },
 ];
 
-const invalidToaster = function () {
+const invalidToaster = function (error) {
+  const errorText = errorsMap.get(error.code);
   var alerta = document.getElementById("alert");
   alerta.style.cssText =
     "display: block; background-color: #f2dede; color: #a94442;";
-  alerta.innerHTML =
-    "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo.";
+  alerta.innerHTML = "<strong>¡Oh, chasquido! </strong>" + `${errorText}` + ".";
   setTimeout(function () {
     alerta.style.display = "none";
   }, 1500);
@@ -222,20 +238,29 @@ function validate() {
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].CustomValidation.checkInput();
     if (inputs[i].CustomValidation.invalidities.length !== 0) {
-      invalidToaster();
+      invalidToaster({
+        code: `${inputs[i].id}`+"_incomplete",
+      }); break/*realizar los errores del input y condicional para el toaster invalid*/
     }
   }
 }
 
 submit.addEventListener("click", validate);
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  validToaster();
-  validate();
-  const client = clientInfo(
-    dniInput.value,
-    nameInput.value,
-    surnameInput.value,
-    phoneNumberInput.value
-  );
+form.addEventListener("submit", async function (e) {
+  try {
+    e.preventDefault();
+    validate();
+    const client = clientInfo(
+      dniInput.value,
+      nameInput.value,
+      surnameInput.value,
+      phoneNumberInput.value
+    );
+    resetForm();
+    await saveClient(client);
+    validToaster();
+    new Notification("Registro Exitoso", {body: "Haz ingresado con exito un nuevo cliente"})
+  } catch (error) {
+    invalidToaster(error);
+  }
 });
