@@ -6,7 +6,7 @@ const getDnis = async () => {
     const results = await conn.query("SELECT dni FROM clients");
     return results;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
