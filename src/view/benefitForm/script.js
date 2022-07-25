@@ -253,7 +253,6 @@ var instance = new SelectPure(".replacement", {
   multiple: true, // default: false
   onChange: (value) => {
     replacementInput.value = value[0];
-    console.log(value);
     replacementInput.CustomValidation.checkInput();
   },
   classNames: {
@@ -311,7 +310,7 @@ function validate() {
 submit.addEventListener("click", validate);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  if (validate()) validToaster(), console.log("ok");
+  if (validate()) validToaster();
 
   checks = [];
 });

@@ -1,10 +1,10 @@
 const { remote } = require("electron");
 const main = remote.require("./main");
 
-async function init() {
-  const a = await main.getDnis();
-
-  console.log(a);
+async function getDnis() {
+    return await main.getDnis();
 }
 
-init();
+async function saveClient(client) {
+  await main.saveClient(client);
+}
