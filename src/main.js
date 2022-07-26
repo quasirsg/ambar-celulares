@@ -32,8 +32,20 @@ const getBenefits = async (dni) => {
     throw error;
   }
 };
+
+const updateChecks = async () => {
+  try {
+    const conn = await getConnection();
+    return await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,retired,fixed FROM clients c INNER JOIN benefits b ON 
+    c.dni = b.dni WHERE c.dni = ${dni}`);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 module.exports = {
   getClient,
   saveClient,
   getBenefits,
+  updateChecks,
 };
