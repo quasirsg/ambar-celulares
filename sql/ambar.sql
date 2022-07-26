@@ -34,7 +34,7 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 SELECT dni FROM `ambar`.`clients`;
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`retired`,`fixed`) 
-VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,true,true);
+VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos,todos,todos', 16072022, 3050,false,false);
 
 SELECT imei FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
-c.dni = b.dni;
+c.dni = b.dni WHERE c.dni = 42523334;

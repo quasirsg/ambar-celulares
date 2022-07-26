@@ -19,6 +19,15 @@ const saveClient = async (client) => {
   }
 };
 
+const getBenefits = async (dni) => {
+  try {
+    const conn = await getConnection();
+    await conn.query(`SELECT imei FROM clients c INNER JOIN benefits b ON 
+    c.dni = b.dni WHERE c.dni = ${dni}`);
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   getDnis,
   saveClient,

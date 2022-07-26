@@ -3,6 +3,7 @@
  * Mock Data
  *
  */
+
 const mapOfClients = new Map();
 
 mapOfClients.set("42523334", [[1], [2], [3]]);
@@ -77,10 +78,12 @@ function validate() {
   return checks.every((e) => e === true);
 }
 
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   validate();
+  const benefits = await getBenefits(dni);
+  console.log(benefits);
   if (clientExist(dni)) {
     $("#example").dataTable().fnClearTable();
     $("#example").dataTable().fnAddData(getClient(dni));
@@ -92,7 +95,6 @@ form.addEventListener("submit", function (e) {
  * DataTables
  *
  */
-
 $(document).ready(function () {
   $("#example").DataTable({
     data: client,
