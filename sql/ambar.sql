@@ -38,3 +38,8 @@ VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Se queda sin carga, mojad
 
 SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
 c.dni = b.dni WHERE c.dni = 42523334;
+
+
+UPDATE `ambar`.`benefits` b
+SET b.retired = , column2 = value2...., columnN = valueN
+WHERE [condition];
