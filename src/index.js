@@ -14,6 +14,7 @@ require("electron-reload")(__dirname);
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
+      allowRendererProcessReuse: true,
     },
   });
 

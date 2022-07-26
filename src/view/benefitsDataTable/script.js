@@ -1,21 +1,22 @@
-/*
- *
- * Mock Data
- *
- */
+// General
+async function clientExist(dni) {
+  let exists = await getClient(dni);
 
-const mapOfClients = new Map();
-
-mapOfClients.set("42523334", [[1], [2], [3]]);
-mapOfClients.set("42523335", [2]);
-mapOfClients.set("42523336", [3]);
-
-function clientExist(dni) {
-  return mapOfClients.has(dni);
+  return exists.length !== 0;
 }
 
-function getClient(dni) {
-  return mapOfClients.get(dni);
+async function getBenefitArr() {
+  const benefits = await getBenefits(dni);
+  const benefitsArr = benefits.map((value) => Object.values(value));
+  return benefitsArr;
+}
+
+async function reloadData() {
+  if (await clientExist(dni)) {
+    const benefitsArr = await getBenefitArr();
+    $("#example").dataTable().fnClearTable();
+    $("#example").dataTable().fnAddData(benefitsArr);
+  }
 }
 
 /* ----------------------------
@@ -64,9 +65,7 @@ searchInput.addEventListener("change", function (e) {
 /*
  * On submit
  */
-const inputs = document.querySelectorAll(
-  'input:not([type="submit"],[class="nice-select-search"])'
-);
+const inputs = document.querySelectorAll('input:not([type="submit"])');
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
@@ -82,12 +81,16 @@ form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   validate();
-  const benefits = await getBenefits(dni);
-  console.log(benefits);
-  if (clientExist(dni)) {
-    $("#example").dataTable().fnClearTable();
-    $("#example").dataTable().fnAddData(getClient(dni));
-  }
+  await reloadData();
+  const checks = document.getElementsByClassName("_check");
+  Array.from(checks).forEach((e) => {
+    if (e.value == true) e.checked = true;
+    if (e.checked == true) e.disabled = "disabled";
+
+    e.addEventListener("click", (event) => {
+      e.disabled = "disabled";
+    });
+  });
 });
 
 /**
@@ -98,6 +101,46 @@ form.addEventListener("submit", async function (e) {
 $(document).ready(function () {
   $("#example").DataTable({
     data: client,
-    columns: [{ title: "Example" }, { title: "Chavelon" }],
+    columns: [
+      { title: "Imei" },
+      { title: "Contacto" },
+      { title: "Dispositivo" },
+      { title: "Descripcion" },
+      { title: "Cambios" },
+      { title: "Entrada" },
+      { title: "Monto" },
+      {
+        title: "Retirado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="_check" name="check" value="' +
+            data[7] +
+            '">'
+          );
+        },
+        width: "5%",
+      },
+      {
+        title: "Retirado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="_check" name="check" value="' +
+            data[8] +
+            '">'
+          );
+        },
+        width: "5%",
+      },
+    ],
   });
 });
