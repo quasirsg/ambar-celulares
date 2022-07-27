@@ -1,10 +1,18 @@
 const { remote } = require("electron");
 const main = remote.require("./main");
 
-async function getDnis() {
-    return await main.getDnis();
+async function getClient(dni) {
+  return await main.getClient(dni);
 }
 
 async function saveClient(client) {
   await main.saveClient(client);
+}
+
+async function getBenefits(dni) {
+  return await main.getBenefits(dni);
+}
+
+async function updateChecks(id, columnName) {
+  return await main.updateChecks(id, columnName);
 }

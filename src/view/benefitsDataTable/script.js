@@ -1,22 +1,40 @@
-/*
- *
- * Mock Data
- *
- */
-const mapOfClients = new Map();
+// General
+async function clientExist(dni) {
+  let exists = await getClient(dni);
 
-mapOfClients.set("42523334", [[1], [2], [3]]);
-mapOfClients.set("42523335", [2]);
-mapOfClients.set("42523336", [3]);
-
-function clientExist(dni) {
-  return mapOfClients.has(dni);
+  return exists.length !== 0;
 }
 
-function getClient(dni) {
-  return mapOfClients.get(dni);
+async function getBenefitArr() {
+  const benefits = await getBenefits(dni);
+  const benefitsArr = benefits.map((value) => Object.values(value));
+  return benefitsArr;
 }
 
+async function reloadData() {
+  if (await clientExist(dni)) {
+    const benefitsArr = await getBenefitArr();
+    $("#example").dataTable().fnClearTable();
+    $("#example").dataTable().fnAddData(benefitsArr);
+  }
+}
+
+function validateIfChecksComeTrue(checks, position, action, columnName) {
+  Array.from(checks).forEach((e) => {
+    let valuesArr = e.value.split(",");
+    let length = valuesArr.length;
+    if (valuesArr[position] == true) e.checked = true;
+    if (e.checked == true) e.disabled = "disabled";
+    action(e, valuesArr, length, columnName);
+  });
+}
+
+function addUpdateStateToEventClick(e, valuesArr, length, columnName) {
+  e.addEventListener("click", async () => {
+    e.disabled = "disabled";
+    await updateChecks(valuesArr[length - 1], columnName);
+  });
+}
 /* ----------------------------
 
 	Validity Checks
@@ -47,12 +65,10 @@ const searchValidityChecks = [
  */
 
 const searchInput = document.getElementById("search");
+let dni;
 
 searchInput.CustomValidation = new CustomValidation(searchInput);
 searchInput.CustomValidation.validityChecks = searchValidityChecks;
-
-//
-let dni;
 
 searchInput.addEventListener("change", function (e) {
   if (searchInput.CustomValidation.checkInput()) {
@@ -63,12 +79,11 @@ searchInput.addEventListener("change", function (e) {
 /*
  * On submit
  */
-const inputs = document.querySelectorAll(
-  'input:not([type="submit"],[class="nice-select-search"])'
-);
+const inputs = document.querySelectorAll('input:not([type="submit"])');
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
+
 function validate() {
   inputs.forEach((input) => {
     checks.push(input.CustomValidation.checkInput());
@@ -77,14 +92,32 @@ function validate() {
   return checks.every((e) => e === true);
 }
 
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   validate();
-  if (clientExist(dni)) {
-    $("#example").dataTable().fnClearTable();
-    $("#example").dataTable().fnAddData(getClient(dni));
-  }
+  await reloadData();
+  const checksOfRetired = document.getElementsByClassName("checks_of_retired");
+  const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
+  const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
+  validateIfChecksComeTrue(
+    checksOfRetired,
+    7,
+    addUpdateStateToEventClick,
+    "fixed"
+  );
+  validateIfChecksComeTrue(
+    checksOfPaidOut,
+    8,
+    addUpdateStateToEventClick,
+    "paid_out"
+  );
+  validateIfChecksComeTrue(
+    checksOfFixed,
+    9,
+    addUpdateStateToEventClick,
+    "retired"
+  );
 });
 
 /**
@@ -92,10 +125,65 @@ form.addEventListener("submit", function (e) {
  * DataTables
  *
  */
-
 $(document).ready(function () {
   $("#example").DataTable({
     data: client,
-    columns: [{ title: "Example" }, { title: "Chavelon" }],
+    columns: [
+      { title: "Imei" },
+      { title: "Contacto" },
+      { title: "Dispositivo" },
+      { title: "Descripcion" },
+      { title: "Cambios" },
+      { title: "Entrada" },
+      { title: "Monto" },
+      {
+        title: "Arreglado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_retired" name="check" value="' +
+            data +
+            '">'
+          );
+        },
+        width: "1%",
+      },
+      {
+        title: "Pagado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_paid_out" name="check" value="' +
+            data +
+            '">'
+          );
+        },
+        width: "1%",
+      },
+      {
+        title: "Retirado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
+            data +
+            '">'
+          );
+        },
+        width: "1%",
+      },
+    ],
   });
 });

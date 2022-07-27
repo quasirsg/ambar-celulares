@@ -34,8 +34,16 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 
 SELECT dni FROM `ambar`.`clients`;
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`retired`,`fixed`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`fixed`,`paid_out`,`retired`) 
 VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,false,false,false);
 
-SELECT imei FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
-c.dni = b.dni;
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`fixed`,`paid_out`,`retired`) 
+VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,false,false,false);
+
+
+SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
+c.dni = b.dni WHERE c.dni = 42523334;
+
+UPDATE `ambar`.`benefits` b
+SET b.retired = false
+WHERE b.idbenefits = 1;
