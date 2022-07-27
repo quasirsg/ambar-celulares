@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `replacements` VARCHAR(255) NULL,
   `entry_date` INT NOT NULL,
   `mount` INT NULL,
-  `retired` BOOLEAN,
   `fixed` BOOLEAN,
+  `paid_out` BOOLEAN,
+  `retired` BOOLEAN,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC) VISIBLE,
   CONSTRAINT `fk_client_benefits`
@@ -34,7 +35,7 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 SELECT dni FROM `ambar`.`clients`;
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`retired`,`fixed`) 
-VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Se queda sin carga. Mojado y no funciona el pin de carga', 'todos-todos-todos', 16072022, 3050,false,false);
+VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,false,false,false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`retired`,`fixed`) 
 VALUES (DEFAULT, 42523334, 'j700m', '111111111111112','Cambio de modulo y pin de carga', 'modulo-pin_carga', 27072022, 3050,false,false);
