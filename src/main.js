@@ -25,7 +25,7 @@ const saveClient = async (client) => {
 const getBenefits = async (dni) => {
   try {
     const conn = await getConnection();
-    return await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,retired,fixed FROM clients c INNER JOIN benefits b ON 
+    return await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,retired,fixed,idbenefits FROM clients c INNER JOIN benefits b ON 
     c.dni = b.dni WHERE c.dni = ${dni}`);
   } catch (error) {
     console.log(error);
@@ -33,11 +33,12 @@ const getBenefits = async (dni) => {
   }
 };
 
-const updateChecks = async () => {
+const updateChecks = async (id, fixedOrRetired) => {
   try {
     const conn = await getConnection();
-    return await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,retired,fixed FROM clients c INNER JOIN benefits b ON 
-    c.dni = b.dni WHERE c.dni = ${dni}`);
+    return await conn.query(`UPDATE benefits b
+    SET b.${fixedOrRetired} = true
+    WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
     throw error;

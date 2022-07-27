@@ -19,6 +19,22 @@ async function reloadData() {
   }
 }
 
+function validateIfChecksComeTrue(checks, position, action, fixedOrRetired) {
+  Array.from(checks).forEach((e) => {
+    let valuesArr = e.value.split(",");
+    let length = valuesArr.length;
+    if (valuesArr[position] == true) e.checked = true;
+    if (e.checked == true) e.disabled = "disabled";
+    action(e, valuesArr, length, fixedOrRetired);
+  });
+}
+
+function addUpdateStateToEventClick(e, valuesArr, length, fixedOrRetired) {
+  e.addEventListener("click", async () => {
+    e.disabled = "disabled";
+    await updateChecks(valuesArr[length - 1], fixedOrRetired);
+  });
+}
 /* ----------------------------
 
 	Validity Checks
@@ -49,12 +65,10 @@ const searchValidityChecks = [
  */
 
 const searchInput = document.getElementById("search");
+let dni;
 
 searchInput.CustomValidation = new CustomValidation(searchInput);
 searchInput.CustomValidation.validityChecks = searchValidityChecks;
-
-//
-let dni;
 
 searchInput.addEventListener("change", function (e) {
   if (searchInput.CustomValidation.checkInput()) {
@@ -69,6 +83,7 @@ const inputs = document.querySelectorAll('input:not([type="submit"])');
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
+
 function validate() {
   inputs.forEach((input) => {
     checks.push(input.CustomValidation.checkInput());
@@ -82,15 +97,20 @@ form.addEventListener("submit", async function (e) {
 
   validate();
   await reloadData();
-  const checks = document.getElementsByClassName("_check");
-  Array.from(checks).forEach((e) => {
-    if (e.value == true) e.checked = true;
-    if (e.checked == true) e.disabled = "disabled";
-
-    e.addEventListener("click", (event) => {
-      e.disabled = "disabled";
-    });
-  });
+  const checksOfRetired = document.getElementsByClassName("checks_of_retired");
+  const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
+  validateIfChecksComeTrue(
+    checksOfRetired,
+    8,
+    addUpdateStateToEventClick,
+    "fixed"
+  );
+  validateIfChecksComeTrue(
+    checksOfFixed,
+    7,
+    addUpdateStateToEventClick,
+    "retired"
+  );
 });
 
 /**
@@ -110,7 +130,7 @@ $(document).ready(function () {
       { title: "Entrada" },
       { title: "Monto" },
       {
-        title: "Retirado",
+        title: "Arreglado",
         targets: 7,
         data: null,
         className: "text-center",
@@ -118,12 +138,12 @@ $(document).ready(function () {
         orderable: false,
         render: function (data, type, full, meta) {
           return (
-            '<input type="checkbox" class="_check" name="check" value="' +
-            data[7] +
+            '<input type="checkbox" class="checks_of_retired" name="check" value="' +
+            data +
             '">'
           );
         },
-        width: "5%",
+        width: "3%",
       },
       {
         title: "Retirado",
@@ -134,12 +154,12 @@ $(document).ready(function () {
         orderable: false,
         render: function (data, type, full, meta) {
           return (
-            '<input type="checkbox" class="_check" name="check" value="' +
-            data[8] +
+            '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
+            data +
             '">'
           );
         },
-        width: "5%",
+        width: "3%",
       },
     ],
   });

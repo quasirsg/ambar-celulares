@@ -12,3 +12,7 @@ async function saveClient(client) {
 async function getBenefits(dni) {
   return await main.getBenefits(dni);
 }
+
+async function updateChecks(id, fixedOrRetired) {
+  return await main.updateChecks(id, fixedOrRetired);
+}
