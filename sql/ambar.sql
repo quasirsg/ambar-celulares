@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `imei` VARCHAR(15) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
   `replacements` VARCHAR(255) NULL,
-  `entry_date` INT NOT NULL,
+  `entry_date` VARCHAR(30) NOT NULL,
   `mount` INT NULL,
   `fixed` BOOLEAN,
   `paid_out` BOOLEAN,
@@ -35,10 +35,10 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 SELECT dni FROM `ambar`.`clients`;
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`fixed`,`paid_out`,`retired`) 
-VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,false,false,false);
+VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', 'todos', '27/07/2022', 3050,false,false,false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`,`replacements`, `entry_date`, `mount`,`fixed`,`paid_out`,`retired`) 
-VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', 'todos', 16072022, 3050,false,false,false);
+VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', 'todos', '27/06/2022', 3050,false,false,false);
 
 
 SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
