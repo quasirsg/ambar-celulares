@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `replacements` VARCHAR(255) NULL,
   `entry_date` INT NOT NULL,
   `mount` INT NULL,
-  `retired` BOOLEAN,
   `fixed` BOOLEAN,
+  `paid_out` BOOLEAN,
+  `retired` BOOLEAN,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC) VISIBLE,
   CONSTRAINT `fk_client_benefits`
