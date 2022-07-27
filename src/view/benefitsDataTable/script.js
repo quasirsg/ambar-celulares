@@ -19,20 +19,20 @@ async function reloadData() {
   }
 }
 
-function validateIfChecksComeTrue(checks, position, action, fixedOrRetired) {
+function validateIfChecksComeTrue(checks, position, action, columnName) {
   Array.from(checks).forEach((e) => {
     let valuesArr = e.value.split(",");
     let length = valuesArr.length;
     if (valuesArr[position] == true) e.checked = true;
     if (e.checked == true) e.disabled = "disabled";
-    action(e, valuesArr, length, fixedOrRetired);
+    action(e, valuesArr, length, columnName);
   });
 }
 
-function addUpdateStateToEventClick(e, valuesArr, length, fixedOrRetired) {
+function addUpdateStateToEventClick(e, valuesArr, length, columnName) {
   e.addEventListener("click", async () => {
     e.disabled = "disabled";
-    await updateChecks(valuesArr[length - 1], fixedOrRetired);
+    await updateChecks(valuesArr[length - 1], columnName);
   });
 }
 /* ----------------------------
@@ -98,16 +98,23 @@ form.addEventListener("submit", async function (e) {
   validate();
   await reloadData();
   const checksOfRetired = document.getElementsByClassName("checks_of_retired");
+  const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
   const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
   validateIfChecksComeTrue(
     checksOfRetired,
-    8,
+    7,
     addUpdateStateToEventClick,
     "fixed"
   );
   validateIfChecksComeTrue(
+    checksOfPaidOut,
+    8,
+    addUpdateStateToEventClick,
+    "paid_out"
+  );
+  validateIfChecksComeTrue(
     checksOfFixed,
-    7,
+    9,
     addUpdateStateToEventClick,
     "retired"
   );
@@ -143,7 +150,23 @@ $(document).ready(function () {
             '">'
           );
         },
-        width: "3%",
+        width: "1%",
+      },
+      {
+        title: "Pagado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_paid_out" name="check" value="' +
+            data +
+            '">'
+          );
+        },
+        width: "1%",
       },
       {
         title: "Retirado",
@@ -159,7 +182,7 @@ $(document).ready(function () {
             '">'
           );
         },
-        width: "3%",
+        width: "1%",
       },
     ],
   });
