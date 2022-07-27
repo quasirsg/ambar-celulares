@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `replacements` VARCHAR(255) NULL,
   `entry_date` INT NOT NULL,
   `mount` INT NULL,
-  `retired` BOOLEAN,
-  `fixed` BOOLEAN,
+  `retired` false,
+  `fixed` false,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC) VISIBLE,
   CONSTRAINT `fk_client_benefits`
@@ -38,3 +38,5 @@ VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería',
 
 SELECT imei FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
 c.dni = b.dni;
+
+SELECT replacements from `ambar`.`benefits`

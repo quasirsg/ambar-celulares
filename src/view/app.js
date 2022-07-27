@@ -8,3 +8,7 @@ async function getDnis() {
 async function saveClient(client) {
   await main.saveClient(client);
 }
+
+async function saveBenefit(benefit) {
+  await main.saveBenefit(benefit)
+}
