@@ -111,8 +111,6 @@ form.addEventListener("submit", async function (e) {
   validate();
   await reloadData();
   toggleModals();
-  const chave = await getChaves();
-  console.log(chave);
   const checksOfRetired = document.getElementsByClassName("checks_of_retired");
   const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
   const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
