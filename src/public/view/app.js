@@ -16,3 +16,6 @@ async function getBenefits(dni) {
 async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
+async function getChaves() {
+  return await main.getChaves();
+}
