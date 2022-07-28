@@ -1,3 +1,4 @@
+const { generateUrl } = require("./backend/qr");
 const { getConnection } = require("./database");
 const axios = require("axios").default;
 
@@ -59,10 +60,23 @@ const getChaves = async () => {
     throw error;
   }
 };
+
+const generateQr = async () => {
+  try {
+    const secret = await axios.post("http://localhost:3000/api/register");
+    const url = await generateUrl(secret.data.secret);
+    return url;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   getClient,
   saveClient,
   getBenefits,
   updateChecks,
   getChaves,
+  generateQr,
 };
