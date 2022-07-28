@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 
+require("./server");
 require("./main");
 require("electron-reload")(__dirname);
 
@@ -14,12 +15,15 @@ require("electron-reload")(__dirname);
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
+      allowRendererProcessReuse: true,
     },
   });
 
-  browserWindow.loadFile("src/view/index.html");
+  browserWindow.loadFile("src/public/view/index.html");
+  browserWindow.webContents.openDevTools();
 
   app.allowRendererProcessReuse = true;
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
