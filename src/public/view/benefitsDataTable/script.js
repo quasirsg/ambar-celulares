@@ -35,6 +35,17 @@ function addUpdateStateToEventClick(e, valuesArr, length, columnName) {
     await updateChecks(valuesArr[length - 1], columnName);
   });
 }
+
+function toggleModals() {
+  const modalAForm = document.getElementById("modal-a-form");
+
+  modalAForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    $("#myModalNorm").modal("hide");
+    $("#myModalb").modal("show");
+  });
+}
+
 /* ----------------------------
 
 	Validity Checks
@@ -79,7 +90,9 @@ searchInput.addEventListener("change", function (e) {
 /*
  * On submit
  */
-const inputs = document.querySelectorAll('input:not([type="submit"])');
+const inputs = document.querySelectorAll(
+  'input:not([type="submit"]) input:not([id="code"])'
+);
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
@@ -97,6 +110,7 @@ form.addEventListener("submit", async function (e) {
 
   validate();
   await reloadData();
+  toggleModals();
   const chave = await getChaves();
   console.log(chave);
   const checksOfRetired = document.getElementsByClassName("checks_of_retired");
@@ -137,7 +151,109 @@ $(document).ready(function () {
       { title: "Descripcion" },
       { title: "Cambios" },
       { title: "Entrada" },
-      { title: "Monto" },
+      {
+        title: "Monto",
+        data: null,
+        className: "text-center",
+        render: function (data, type, full, meta) {
+          return `
+          <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalNorm">
+              ${data[6]}
+          </button>
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="myModalNorm"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+      
+                <!-- Modal Body -->
+                <div class="modal-body">
+                  <form role="form" id="modal-a-form">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Code</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="code"
+                        placeholder="Enter 2fa code"
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+      
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Modal 2-->
+          <div
+            class="modal fade"
+            id="myModalb"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">Modal b</h4>
+                </div>
+      
+                <!-- Modal Body -->
+                <div class="modal-body">
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Code</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="code"
+                        placeholder="Enter 2fa code"
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+      
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          `;
+        },
+      },
       {
         title: "Arreglado",
         targets: 7,

@@ -26,8 +26,11 @@ const saveClient = async (client) => {
 const getBenefits = async (dni) => {
   try {
     const conn = await getConnection();
-    return await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,fixed,paid_out,retired,idbenefits FROM clients c INNER JOIN benefits b ON 
+    const benefits =
+      await conn.query(`SELECT imei,phone_number,device,description,replacements,entry_date,mount,fixed,paid_out,retired,idbenefits FROM clients c INNER JOIN benefits b ON 
     c.dni = b.dni WHERE c.dni = ${dni}`);
+    benefits.forEach((benefit) => (benefit.mount = `$${benefit.mount}`));
+    return benefits;
   } catch (error) {
     console.log(error);
     throw error;

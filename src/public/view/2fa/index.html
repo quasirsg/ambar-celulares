@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2FA</title>
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row text-left" id="item">
+        <div class="alert" role="alert" id="alert" style="display: none"></div>
+        <a href="../index.html">
+          <div class="container-block">
+            <div class="block1">
+              <i class="fa fa-home"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="row text-center">
+        <img
+          src="data:image/png;base64,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"
+          alt=""
+        />
+      </div>
+
+      <form id="saveClient" class="form">
+        <h2>Verifique el código de doble factor</h2>
+        <div class="form-group" id="div-codes">
+          <input
+            class="form-control"
+            type="text"
+            id="codes"
+            name="codes"
+            placeholder="Ingrese el codigo"
+            maxlength="8"
+          />
+          <ul class="input-requirements">
+            <li>Requerido</li>
+          </ul>
+        </div>
+        <button type="submit" class="btn btn-primary form-control">
+          Submit
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
