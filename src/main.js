@@ -1,4 +1,5 @@
 const { getConnection } = require("./database");
+const axios = require("axios").default;
 
 const getClient = async (dni) => {
   try {
@@ -44,9 +45,21 @@ const updateChecks = async (id, columnName) => {
     throw error;
   }
 };
+
+const getChaves = async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/chave");
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 module.exports = {
   getClient,
   saveClient,
   getBenefits,
   updateChecks,
+  getChaves,
 };
