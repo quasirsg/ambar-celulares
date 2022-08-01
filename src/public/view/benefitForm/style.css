@@ -176,12 +176,13 @@ h2 {
 }
 
 .alert {
-  width: 400px;
+  width: 600px;
   min-height: 70px;
   border-radius: 50px;
   position: absolute;
   padding: 20px;
   margin-top: 7px;
+  margin-left: 180px;
 }
 
 .container-fluid {
