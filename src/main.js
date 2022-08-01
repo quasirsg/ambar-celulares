@@ -26,11 +26,11 @@ const saveClient = async (client) => {
 const saveBenefit = async (benefit) => {
   try {
     const conn = await getConnection();
-    await conn.query("INSERT INTO benefits SET ?", benefit)
+    await conn.query("INSERT INTO benefits SET ?", benefit);
   } catch (error) {
     throw error;
   }
-}
+};
 
 const getBenefits = async (dni) => {
   try {
