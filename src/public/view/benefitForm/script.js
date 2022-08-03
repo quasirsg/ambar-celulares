@@ -11,25 +11,43 @@ const arrOfClientsMock = [
 const arrOfMultiSelectMock = [
   {
     label: "Pin de carga",
-    value: "pnc",
+    value: "Pin de carga",
   },
   {
     label: "Bateria",
-    value: "ba",
+    value: "Bateria",
   },
   {
     label: "Modulo",
-    value: "pa",
+    value: "Modulo",
   },
   {
     label: "Tactil",
-    value: "touch",
+    value: "Tactil",
   },
   {
     label: "Display",
-    value: "display",
+    value: "Display",
   },
 ];
+
+/* ----------------------------
+	BD
+---------------------------- */
+
+// Method to create a benefit plain object
+function benefitInfo(dni, device, imei, description, replacements, entry_date, mount,) {
+  return {
+    dni: Number(dni),
+    device,
+    imei,
+    description,
+    replacements,
+    entry_date: entry_date.replace(/[/]/gi,""),
+    mount: Number(mount),
+  };
+}
+
 /* ----------------------------
 
 	Validity Checks
@@ -166,7 +184,7 @@ const mountValidityChecks = [
 const invalidToaster = function () {
   var alerta = document.getElementById("alert");
   alerta.style.cssText =
-    "display: block; background-color: #f2dede; color: #a94442;";
+    "display: flex; justify-content: center; align-content: auto; background-color: #f2dede; color: #a94442;";
   alerta.innerHTML =
     "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo.";
   setTimeout(function () {
@@ -251,8 +269,9 @@ clientSelect.addEventListener("change", function (e) {
 var instance = new SelectPure(".replacement", {
   options: arrOfMultiSelectMock,
   multiple: true, // default: false
+  icon: "fa fa-times",
   onChange: (value) => {
-    replacementInput.value = value[0];
+    replacementInput.value = value;
     replacementInput.CustomValidation.checkInput();
   },
   classNames: {
@@ -287,18 +306,18 @@ textAreaDescription.addEventListener("keyup", function (e) {
 
 ---------------------------- */
 
-const inputs = document.querySelectorAll(
-  'input:not([type="submit"],[class="nice-select-search"])'
+var inputs = document.querySelectorAll(
+  /* 'input:not([type="submit"])', */
+  'input:not([class="nice-select-search"])'
 );
-const submit = document.querySelector('button[type="submit"');
-const form = document.getElementById("saveClient");
+var submit = document.querySelector('button[type="submit"');
+var form = document.getElementById("saveClient");
 let checks = [];
 
 function validate() {
   inputs.forEach((input) => {
     checks.push(input.CustomValidation.checkInput());
   });
-
   checks.every((e) => {
     if (e === false) {
       invalidToaster();
@@ -308,9 +327,27 @@ function validate() {
 }
 
 submit.addEventListener("click", validate);
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  if (validate()) validToaster();
-
-  checks = [];
+form.addEventListener("submit", async function (e) {
+  try {
+    e.preventDefault();
+    validate()
+    const benefit = benefitInfo(
+      clientInput.value,
+      deviceInput.value,
+      imeiInput.value,
+      descriptionInput.value,
+      replacementInput.value,
+      entryDateInput.value,
+      mountInput.value,
+      )
+      resetForm();
+      await saveBenefit(benefit)
+    validToaster()
+    new Notification("Registro Exitoso", {
+      body: "Haz ingresado con exito un nuevo cliente",
+    });
+  } catch (error) {
+    invalidToaster()
+    console.log(error);
+  }
 });

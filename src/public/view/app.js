@@ -9,16 +9,16 @@ async function saveClient(client) {
   await main.saveClient(client);
 }
 
+async function saveBenefit(benefit) {
+  await main.saveBenefit(benefit);
+}
+
 async function getBenefits(dni) {
   return await main.getBenefits(dni);
 }
 
 async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
-}
-
-async function getChaves() {
-  return await main.getChaves();
 }
 
 async function verifyUser(userId, token) {
@@ -39,4 +39,8 @@ function save2faUserInLocalStorage(userId) {
 
 function get2faUserInLocalStorage() {
   return main.get2faUserInLocalStorage();
+}
+
+async function saveBenefit(benefit) {
+  await main.saveBenefit(benefit);
 }
