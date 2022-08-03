@@ -22,9 +22,9 @@ function registerUser2fa(req, res) {
     // Create user in the database
     db.push(path, { id, temp_secret });
     // Send user id and base32 key to user
-    res.json({ id, secret: temp_secret.otpauth_url });
-  } catch (e) {
-    console.log(e);
+    res.json({ id, secret: temp_secret });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error generating secret key" });
   }
 }
