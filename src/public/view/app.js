@@ -9,6 +9,10 @@ async function saveClient(client) {
   await main.saveClient(client);
 }
 
+async function saveBenefit(benefit) {
+  await main.saveBenefit(benefit);
+}
+
 async function getBenefits(dni) {
   return await main.getBenefits(dni);
 }
@@ -23,4 +27,8 @@ async function getChaves() {
 
 async function generateQr() {
   return await main.generateQr();
+}
+
+async function saveBenefit(benefit) {
+  await main.saveBenefit(benefit);
 }
