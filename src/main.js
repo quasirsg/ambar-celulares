@@ -1,5 +1,7 @@
 const { generateUrl } = require("./backend/qr");
 const { getConnection } = require("./database");
+const { LocalStorage } = require("node-localstorage");
+const localStorage = new LocalStorage("./scratch");
 const axios = require("axios").default;
 
 const getClient = async (dni) => {
@@ -59,26 +61,45 @@ const updateChecks = async (id, columnName) => {
   }
 };
 
-const getChaves = async () => {
+const get2faUser = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/chave");
-
-    return response;
+    const user2fa = await axios.post("http://localhost:3000/api/register");
+    return user2fa;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-const generateQr = async () => {
+const verifyUser = async (userId, token) => {
   try {
-    const secret = await axios.post("http://localhost:3000/api/register");
-    const url = await generateUrl(secret.data.secret);
+    const verified = await axios.post("http://localhost:3000/api/verify", {
+      userId,
+      token,
+    });
+    return verified.data.verified;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const generateQr = async (otpauth_url) => {
+  try {
+    const url = await generateUrl(otpauth_url);
     return url;
   } catch (error) {
     console.log(error);
     throw error;
   }
+};
+
+const save2faUserInLocalStorage = (userId) => {
+  localStorage.setItem("2fauser", userId);
+};
+
+const get2faUserInLocalStorage = () => {
+  return localStorage.getItem("2fauser");
 };
 
 module.exports = {
@@ -87,6 +108,9 @@ module.exports = {
   saveBenefit,
   getBenefits,
   updateChecks,
-  getChaves,
+  verifyUser,
+  get2faUser,
   generateQr,
+  save2faUserInLocalStorage,
+  get2faUserInLocalStorage,
 };
