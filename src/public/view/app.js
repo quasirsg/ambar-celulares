@@ -40,7 +40,6 @@ function save2faUserInLocalStorage(userId) {
 function get2faUserInLocalStorage() {
   return main.get2faUserInLocalStorage();
 }
-
 async function saveBenefit(benefit) {
   await main.saveBenefit(benefit);
 }
