@@ -10,7 +10,7 @@ async function saveClient(client) {
 }
 
 async function saveBenefit(benefit) {
-  await main.saveBenefit(benefit)
+  await main.saveBenefit(benefit);
 }
 
 async function getBenefits(dni) {
@@ -23,6 +23,10 @@ async function updateChecks(id, columnName) {
 
 async function getChaves() {
   return await main.getChaves();
+}
+
+async function generateQr() {
+  return await main.generateQr();
 }
 
 async function saveBenefit(benefit) {
