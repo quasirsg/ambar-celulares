@@ -5,9 +5,10 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
+      content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"
     />
     <!-- Bootstrap CSS -->
+
     <link
       rel="stylesheet"
       type="text/css"
@@ -27,24 +28,22 @@
         <h2>Menu</h2>
         <div id="menu-box">
           <a href="clientForm/clientForm.html">
-            <div id="item" class="col-sm-6 col-md-6">
+            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
               <div class="container-block">
                 <div class="block1">
                   <i class="fa fa-address-card-o"></i>
                 </div>
                 <div class="block2">
                   <span>Regsitrar cliente</span>
-                  <p>
-                    Guardar información de un cliente que viene por primera vez
-                  </p>
+                  <p>Guardar información de un cliente</p>
                 </div>
               </div>
             </div>
           </a>
 
           <a href="benefitForm/benefitForm.html">
-            <div id="item" class="col-sm-6 col-md-4">
-              <di class="container-block">
+            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+              <div class="container-block">
                 <div class="block1">
                   <i class="fa fa-keyboard-o"></i>
                 </div>
@@ -52,27 +51,12 @@
                   <span>Nueva prestación</span>
                   <p>Asigna un equipo a un cliente para arreglo</p>
                 </div>
-              </di
-              v>
-            </div>
-          </a>
-
-          <a href="benefitsDataTable/index.html">
-            <div id="item" class="col-sm-6 col-md-4">
-              <div class="container-block">
-                <div class="block1">
-                  <i class="fa fa-search"></i>
-                </div>
-                <div class="block2">
-                  <span>Buscar cliente</span>
-                  <p>ver los equipos que dejo el cliente para arreglo</p>
-                </div>
               </div>
             </div>
           </a>
 
-          <a href="2fa/index.html">
-            <div id="item" class="col-sm-6 col-md-4">
+          <a href="2fa/index.html" id="2fa">
+            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
               <div class="container-block">
                 <div class="block1">
                   <i class="fa fa-qrcode"></i>
@@ -84,9 +68,36 @@
               </div>
             </div>
           </a>
+
+          <a href="benefitsDataTable/index.html">
+            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+              <div class="container-block">
+                <div class="block1">
+                  <i class="fa fa-search"></i>
+                </div>
+                <div class="block2">
+                  <span>Buscar cliente</span>
+                  <p>ver los equipos que dejo el cliente para arreglo</p>
+                </div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
+    <!-- Insert this line above script imports  -->
+    <script>
+      if (typeof module === "object") {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
     <script src="app.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script src="script.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>
+      if (window.module) module = window.module;
+    </script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 const { remote } = require("electron");
 const main = remote.require("./main");
 
+//client
 async function getClient(dni) {
   return await main.getClient(dni);
 }
@@ -8,6 +9,8 @@ async function getClient(dni) {
 async function saveClient(client) {
   await main.saveClient(client);
 }
+
+// benefit and benefit datatable
 
 async function saveBenefit(benefit) {
   await main.saveBenefit(benefit);
@@ -21,6 +24,7 @@ async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
 
+// 2fa
 async function verifyUser(userId, token) {
   return await main.verifyUser(userId, token);
 }
@@ -39,7 +43,4 @@ function save2faUserInLocalStorage(userId) {
 
 function get2faUserInLocalStorage() {
   return main.get2faUserInLocalStorage();
-}
-async function saveBenefit(benefit) {
-  await main.saveBenefit(benefit);
 }
