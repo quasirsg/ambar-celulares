@@ -97,7 +97,7 @@ h2 {
 .form input:not([type="submit"]):hover + .input-requirements,
 .form input:not([type="submit"]):active + .input-requirements {
   max-height: 1000px; /* any large number (bigger then the .input-requirements list) */
-  transition: max-height 1s ease-in;
+  transition: max-height 3s ease-in;
 }
 
 .alert {

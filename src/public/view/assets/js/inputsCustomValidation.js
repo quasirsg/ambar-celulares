@@ -56,11 +56,11 @@ CustomValidation.prototype = {
       this.inputNode.value !== ""
     ) {
       this.inputNode.setCustomValidity("");
-      return true;
+      
     } else {
       var message = this.inputNode.CustomValidation.getInvalidities();
       this.inputNode.setCustomValidity(message);
-      return false;
+      
     }
   },
   registerListener: function () {
@@ -68,7 +68,10 @@ CustomValidation.prototype = {
 
     var CustomValidation = this;
 
-    this.inputNode.addEventListener("input", function () {
+    this.inputNode.addEventListener("mousemove", function () {
+      CustomValidation.checkInput();
+    });
+    this.inputNode.addEventListener("keyup", function () {
       CustomValidation.checkInput();
     });
   },
