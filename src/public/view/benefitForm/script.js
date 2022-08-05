@@ -37,15 +37,26 @@ const arrOfMultiSelectMock = [
 
 // Method to create a benefit plain object
 function benefitInfo(dni, device, imei, description, replacements, entry_date, mount,) {
-  return {
-    dni: Number(dni),
-    device,
-    imei,
-    description,
-    replacements,
-    entry_date: String(entry_date),
-    mount: Number(mount),
-  };
+  controlInputs(dni, description);
+    return {
+      dni: Number(dni),
+      device,
+      imei,
+      description,
+      replacements: replacements.replace(/[,]/gi, "-"),
+      entry_date: String(entry_date),
+      mount: Number(mount),
+      fixed: false,
+      paid_out: false,
+      retired: false,
+    };
+}
+
+function controlInputs(dni, description) {
+  if (dni === 'null')
+    throw new Error(invalidToaster({ code: "client_incomplete" }));
+  if (description === '')
+    throw new Error(invalidToaster({ code: "description_incomplete" }));
 }
 
 // Error Control and Validate
@@ -59,18 +70,15 @@ function validate() {
     }
   });
 
-  if (check.length === 6) {
-    console.log(check);
+  if (check.length === 5) {
     var allCamps = "All"
     invalidToaster({
         code: `${allCamps}` + "_incomplete",
       });
   }else{
-    console.log(check);
-    for (var i = 0; i < inputs.length; i++) {
+    for (var i = 1; i < inputs.length; i++) {
       inputs[i].CustomValidation.checkInput();
-      if (inputs[i].CustomValidation.invalidities.length === 1) {
-        console.log(inputs[i]);
+      if (inputs[i].CustomValidation.invalidities.length !== 0) {
         return invalidToaster({
           code: `${inputs[i].id}` + "_incomplete",
         });
@@ -130,7 +138,7 @@ errorsMap.set(
 const clientValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9]{2,30}$/;
+      const regex = /^[A-z-0-9]{5,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -186,7 +194,7 @@ const imeiValidityChecks = [
 const descriptionValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9 ]{2,255}$/;
+      const regex = /^[A-z-0-9]{2,255}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -203,7 +211,6 @@ const replacementValidityChecks = [
     isInvalid: function (input) {
       const regex = /^[A-z-0-9,]{0,255}$/;
       var caracters = input.value;
-      caracters = caracters.replace(/[,]/gi, "-")
       const test = regex.test(caracters);
       return test ? false : true;
     },
@@ -250,6 +257,7 @@ const mountValidityChecks = [
 
 ---------------------------- */
 const invalidToaster = function (error) {
+  console.log(error);
   const errorText = errorsMap.get(error.code);
   var alerta = document.getElementById("alert");
   alerta.style.cssText =
@@ -396,15 +404,13 @@ form.addEventListener("submit", async function (e) {
       entryDateInput.value,
       mountInput.value,
       )
+      validToaster()
+      new Notification("Registro Exitoso", {
+        body: "Haz ingresado con exito un nuevo cliente",
+      }); 
       form.reset();
-      console.log(benefit);
-      /* await saveBenefit(benefit) */
-    validToaster()
-    new Notification("Registro Exitoso", {
-      body: "Haz ingresado con exito un nuevo cliente",
-    });
+      await saveBenefit(benefit)
   } catch (error) {
-    invalidToaster()
     console.log(error);
   }
 });

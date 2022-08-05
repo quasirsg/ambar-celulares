@@ -74,5 +74,8 @@ CustomValidation.prototype = {
     this.inputNode.addEventListener("keyup", function () {
       CustomValidation.checkInput();
     });
+    this.inputNode.addEventListener("reset", function () {
+      CustomValidation.checkInput();
+    });
   },
 };

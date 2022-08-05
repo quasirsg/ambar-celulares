@@ -47,3 +47,5 @@ c.dni = b.dni WHERE c.dni = 42523334;
 UPDATE `ambar`.`benefits` b
 SET b.retired = false
 WHERE b.idbenefits = 1;
+
+SELECT * FROM `ambar`.`benefits`

@@ -28,10 +28,10 @@
           <div class="col-sm-12" id="div-client">
             <div class="form-group" style="margin-bottom: 10px">
               <span>Buscar cliente</span>
-              <select id="searchable-select-client" class="wide">
+              <select id="searchable-select-client" class="wide" >
                 <option data-display="Select"></option>
               </select>
-              <input type="hidden" id="client" class="form-control"/>
+              <input type="hidden" id="client" class="form-control" value="null"/>
               <ul class="input-requirements">
                 <li>Campo requerido</li>
               </ul>
@@ -104,6 +104,7 @@
                 id="mount"
                 placeholder="Ingrese el monto"
                 maxlength="10"
+                value="0"
               />
               <ul class="input-requirements">
                 <li>Solo numeros</li>
@@ -115,8 +116,8 @@
             <div class="form-group" style="margin-bottom: 5px">
               <span>Describa el problema del telefono</span>
               <textarea
-                class="form-control"
                 id="text-area-description"
+                class="form-control"
                 name="description"
                 cols="30"
                 rows="5"
