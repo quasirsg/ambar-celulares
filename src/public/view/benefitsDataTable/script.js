@@ -62,9 +62,6 @@ searchInput.addEventListener("change", function (e) {
 /*
  * On submit
  */
-const inputs = document.querySelectorAll(
-  'input:not([type="submit"]) input:not([id="code"])'
-);
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
@@ -77,18 +74,9 @@ function verifyIsValidDni(e) {
   );
 }
 
-function validate() {
-  inputs.forEach((input) => {
-    checks.push(input.CustomValidation.checkInput());
-  });
-
-  return checks.every((e) => e === true);
-}
-
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  validate();
   await reloadData(dni);
   toggleModals();
   const checksOfRetired = document.getElementsByClassName("checks_of_retired");
