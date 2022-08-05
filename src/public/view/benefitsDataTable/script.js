@@ -5,15 +5,15 @@ async function clientExist(dni) {
   return exists.length !== 0;
 }
 
-async function getBenefitArr() {
+async function getBenefitArr(dni) {
   const benefits = await getBenefits(dni);
   const benefitsArr = benefits.map((value) => Object.values(value));
   return benefitsArr;
 }
 
-async function reloadData() {
+async function reloadData(dni) {
   if (await clientExist(dni)) {
-    const benefitsArr = await getBenefitArr();
+    const benefitsArr = await getBenefitArr(dni);
     $("#example").dataTable().fnClearTable();
     $("#example").dataTable().fnAddData(benefitsArr);
   }
@@ -46,31 +46,6 @@ function toggleModals() {
   });
 }
 
-/* ----------------------------
-
-	Validity Checks
-
-	The arrays of validity checks for each input
-	Comprised of three things
-		1. isInvalid() - the function to determine if the input fulfills a particular requirement
-		2. invalidityMessage - the error message to display if the field is invalid
-		3. element - The element that states the requirement
-
----------------------------- */
-const searchValidityChecks = [
-  {
-    isInvalid: function (input) {
-      const regex = /^[0-9]{7,8}$/;
-      const caracters = input.value;
-      const test = regex.test(caracters);
-      return test ? false : true;
-    },
-    invalidityMessage: "Ingrese un dni valido",
-    element: document.querySelector(
-      'label[for="client"] .input-requirements li:nth-child(1)'
-    ),
-  },
-];
 /*
  * Search
  */
@@ -78,38 +53,31 @@ const searchValidityChecks = [
 const searchInput = document.getElementById("search");
 let dni;
 
-searchInput.CustomValidation = new CustomValidation(searchInput);
-searchInput.CustomValidation.validityChecks = searchValidityChecks;
-
 searchInput.addEventListener("change", function (e) {
-  if (searchInput.CustomValidation.checkInput()) {
-    dni = e.target.value;
+  if (verifyIsValidDni(e)) {
+    dni = e.target.value; 
   }
 });
 
 /*
  * On submit
  */
-const inputs = document.querySelectorAll(
-  'input:not([type="submit"]) input:not([id="code"])'
-);
 const form = document.getElementById("search-form");
 let checks = [];
 let client;
 
-function validate() {
-  inputs.forEach((input) => {
-    checks.push(input.CustomValidation.checkInput());
-  });
-
-  return checks.every((e) => e === true);
+function verifyIsValidDni(e) {
+  return (
+    e.target.value.length >= 7 &&
+    e.target.value.length <= 9 &&
+    !isNaN(e.target.value)
+  );
 }
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  validate();
-  await reloadData();
+  await reloadData(dni);
   toggleModals();
   const checksOfRetired = document.getElementsByClassName("checks_of_retired");
   const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");

@@ -37,16 +37,91 @@ const arrOfMultiSelectMock = [
 
 // Method to create a benefit plain object
 function benefitInfo(dni, device, imei, description, replacements, entry_date, mount,) {
-  return {
-    dni: Number(dni),
-    device,
-    imei,
-    description,
-    replacements,
-    entry_date: entry_date.replace(/[/]/gi,""),
-    mount: Number(mount),
-  };
+  controlInputs(dni, description);
+    return {
+      dni: Number(dni),
+      device,
+      imei,
+      description,
+      replacements: replacements.replace(/[,]/gi, "-"),
+      entry_date: String(entry_date),
+      mount: Number(mount),
+      fixed: false,
+      paid_out: false,
+      retired: false,
+    };
 }
+
+function controlInputs(dni, description) {
+  if (dni === 'null')
+    throw new Error(invalidToaster({ code: "client_incomplete" }));
+  if (description === '')
+    throw new Error(invalidToaster({ code: "description_incomplete" }));
+}
+
+// Error Control and Validate
+
+function validate() {
+  var check = [];
+    inputs.forEach((input) => {
+    input.CustomValidation.checkInput();
+    if (input.CustomValidation.invalidities.length !== 0) {
+      check.push(input.CustomValidation)
+    }
+  });
+
+  if (check.length === 5) {
+    var allCamps = "All"
+    invalidToaster({
+        code: `${allCamps}` + "_incomplete",
+      });
+  }else{
+    for (var i = 1; i < inputs.length; i++) {
+      inputs[i].CustomValidation.checkInput();
+      if (inputs[i].CustomValidation.invalidities.length !== 0) {
+        return invalidToaster({
+          code: `${inputs[i].id}` + "_incomplete",
+        });
+      }
+    }
+  }
+}
+
+/* Errors */
+const errorsMap = new Map();
+
+errorsMap.set("ER_DUP_ENTRY", "Error el dni ya esta registrado");
+errorsMap.set(
+  "client_incomplete",
+  "Porfavor ingrese el dni correctamente para poder avanzar"
+);
+errorsMap.set(
+  "device_incomplete",
+  "Porfavor ingrese el nombre del dispositivio correctamente para poder avanzar"
+);
+errorsMap.set(
+  "imei_incomplete",
+  "Porfavor ingrese el imei correctamente para poder avanzar"
+);
+errorsMap.set(
+  "replacement_incomplete",
+  "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
+);errorsMap.set(
+  "entryDate_incomplete",
+  "Porfavor ingrese una fecha correctamente para poder avanzar"
+);
+errorsMap.set(
+  "mount_incomplete",
+  "Porfavor ingrese el monto correctamente para poder avanzar"
+);
+errorsMap.set(
+  "description_incomplete",
+  "Porfavor ingrese una descripcion correctamente para poder avanzar"
+);
+errorsMap.set(
+  "All_incomplete",
+  "Porfavor complete todos los campos correctamente para poder avanzar"
+);
 
 /* ----------------------------
 
@@ -63,7 +138,7 @@ function benefitInfo(dni, device, imei, description, replacements, entry_date, m
 const clientValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9]{2,30}$/;
+      const regex = /^[A-z-0-9]{5,30}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -93,7 +168,7 @@ const deviceValidityChecks = [
 const imeiValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[0-9]{0,15}$/;
+      const regex = /^[0-9]{2,15}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -110,7 +185,7 @@ const imeiValidityChecks = [
       const test = regex.test(caracters);
       return test ? false : true;
     },
-    invalidityMessage: "Campo requerido",
+    invalidityMessage: "",
     element: document.querySelector(
       'div[id="div-imei"] .input-requirements li:nth-child(2) '
     ),
@@ -119,7 +194,7 @@ const imeiValidityChecks = [
 const descriptionValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z-0-9 ]{2,255}$/;
+      const regex = /^[A-z-0-9]{2,255}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -135,7 +210,7 @@ const replacementValidityChecks = [
   {
     isInvalid: function (input) {
       const regex = /^[A-z-0-9,]{0,255}$/;
-      const caracters = input.value;
+      var caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
     },
@@ -165,7 +240,7 @@ const entryDateValidityChecks = [
 const mountValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[0-9]{0,15}$/;
+      const regex = /^[0-9]{1,15}$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -181,12 +256,14 @@ const mountValidityChecks = [
 	Tosaster
 
 ---------------------------- */
-const invalidToaster = function () {
+const invalidToaster = function (error) {
+  console.log(error);
+  const errorText = errorsMap.get(error.code);
   var alerta = document.getElementById("alert");
   alerta.style.cssText =
-    "display: flex; justify-content: center; align-content: auto; background-color: #f2dede; color: #a94442;";
+    "display: block; background-color: #f2dede; color: #a94442;";
   alerta.innerHTML =
-    "<strong>¡Oh, chasquido!</strong> Cambia algunas cosas e intenta enviarlo de nuevo.";
+    "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
   setTimeout(function () {
     alerta.style.display = "none";
   }, 1500);
@@ -312,19 +389,6 @@ var inputs = document.querySelectorAll(
 );
 var submit = document.querySelector('button[type="submit"');
 var form = document.getElementById("saveClient");
-let checks = [];
-
-function validate() {
-  inputs.forEach((input) => {
-    checks.push(input.CustomValidation.checkInput());
-  });
-  checks.every((e) => {
-    if (e === false) {
-      invalidToaster();
-    }
-    return e;
-  });
-}
 
 submit.addEventListener("click", validate);
 form.addEventListener("submit", async function (e) {
@@ -340,14 +404,13 @@ form.addEventListener("submit", async function (e) {
       entryDateInput.value,
       mountInput.value,
       )
-      resetForm();
+      validToaster()
+      new Notification("Registro Exitoso", {
+        body: "Haz ingresado con exito un nuevo cliente",
+      }); 
+      form.reset();
       await saveBenefit(benefit)
-    validToaster()
-    new Notification("Registro Exitoso", {
-      body: "Haz ingresado con exito un nuevo cliente",
-    });
   } catch (error) {
-    invalidToaster()
     console.log(error);
   }
 });

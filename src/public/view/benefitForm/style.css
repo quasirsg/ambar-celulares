@@ -85,6 +85,7 @@ h2 {
 /*Multi Select*/
 
 .select-wrapper {
+  position: absolute;
   margin: auto;
   max-width: 600px;
   width: calc(100% - 40px);
@@ -99,7 +100,7 @@ h2 {
   color: #363b3e;
   cursor: pointer;
   display: flex;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 500;
   justify-content: left;
   min-height: 34px;
@@ -119,7 +120,7 @@ h2 {
   max-height: 221px;
   overflow-y: scroll;
   position: absolute;
-  top: 50px;
+  top: 33px;
   width: 100%;
   z-index: 5;
 }

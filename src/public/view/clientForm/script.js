@@ -13,15 +13,38 @@ function resetForm() {
   form.reset();
 }
 function validate() {
-  inputs.forEach((input) => {
+  var check = [];
+    inputs.forEach((input) => {
     input.CustomValidation.checkInput();
-
     if (input.CustomValidation.invalidities.length !== 0) {
-      invalidToaster({
-        code: `${input.id}` + "_incomplete",
-      });
+      check.push(input.CustomValidation)
+      /*if (check.length > 3) {
+        var allCamps = "All"
+      return invalidToaster({
+          code: `${allCamps}` + "_incomplete",
+        });
+      }else{
+        return invalidToaster({
+          code: `${input.id}` + "_incomplete",
+        });} */
     }
   });
+
+  if (check.length > 3) {
+    var allCamps = "All"
+    invalidToaster({
+        code: `${allCamps}` + "_incomplete",
+      });
+  }else{
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].CustomValidation.checkInput();
+      if (inputs[i].CustomValidation.invalidities.length === 1) {
+        return invalidToaster({
+          code: `${inputs[i].id}` + "_incomplete",
+        });
+      }
+    }
+  }
 }
 
 /* Errors */
@@ -43,6 +66,10 @@ errorsMap.set(
 errorsMap.set(
   "phoneNumber_incomplete",
   "Porfavor ingrese su telefono correctamente para poder avanzar"
+);
+errorsMap.set(
+  "All_incomplete",
+  "Porfavor complete todos los campos correctamente para poder avanzar"
 );
 
 /* ----------------------------
