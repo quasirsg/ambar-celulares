@@ -88,3 +88,6 @@ h2 {
   font-size: 12px;
   color: #757575;
 }
+.display-none {
+  display: none;
+}
