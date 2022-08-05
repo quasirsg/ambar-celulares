@@ -64,6 +64,7 @@ const updateChecks = async (id, columnName) => {
 const get2faUser = async () => {
   try {
     const user2fa = await axios.post("http://localhost:3000/api/register");
+    console.log(user2fa);
     return user2fa;
   } catch (error) {
     console.log(error);
