@@ -4,23 +4,44 @@ const main = remote.require("./main");
 //client
 /**
  * este metodo devuelve un cliente de la base de datos a partir de un dni
- * @param {String} dni  
+ * @param {String} dni
  * @return {ClientObject}
  */
 async function getClient(dni) {
   return await main.getClient(dni);
 }
 
+/**
+ * este metodo guarda la informacion de un nuevo cliente en la db
+ * @param {Object} client
+ */
 async function saveClient(client) {
   await main.saveClient(client);
 }
 
+/**
+ * este metodo devuelve todos los dni registrados en la db
+ * @returns {DniObject}
+ */
+async function getDni() {
+  return await main.getDni();
+}
+
 // benefit and benefit datatable
 
+/**
+ * este metodo guarda la informacion de una nueva benefit en la db
+ * @param {Object} benefit 
+ */
 async function saveBenefit(benefit) {
   await main.saveBenefit(benefit);
 }
 
+/**
+ * este metodo devuelve todos los benefit de un cliente a partir de su dni
+ * @param {String} dni 
+ * @returns {BenefitObject}
+ */
 async function getBenefits(dni) {
   return await main.getBenefits(dni);
 }

@@ -28,10 +28,19 @@
           <div class="col-sm-12" id="div-client">
             <div class="form-group" style="margin-bottom: 10px">
               <span>Buscar cliente</span>
-              <select id="searchable-select-client" class="wide" >
+              <select id="searchable-select-client" class="wide">
                 <option data-display="Select"></option>
+                <div>
+                  <button>a</button>
+                  <button>b</button>
+                </div>
               </select>
-              <input type="hidden" id="client" class="form-control" value="null"/>
+              <input
+                type="hidden"
+                id="client"
+                class="form-control"
+                value="null"
+              />
               <ul class="input-requirements">
                 <li>Campo requerido</li>
               </ul>
@@ -39,7 +48,7 @@
           </div>
 
           <div class="col-sm-6" id="div-device">
-            <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 10px">
               <span>Dispositivo</span>
               <input
                 class="form-control"
@@ -55,7 +64,7 @@
           </div>
 
           <div class="col-sm-6" id="div-imei">
-            <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 10px">
               <span>Imei</span>
               <input
                 class="form-control"
@@ -72,10 +81,15 @@
           </div>
 
           <div class="col-sm-6" id="div-replacement">
-            <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-group" style="margin-bottom: 10px">
               <span>Partes a cambiar</span>
               <span class="replacement"></span>
-              <input class="form-control" type="hidden" name="replacement" id="replacement"/>
+              <input
+                class="form-control"
+                type="hidden"
+                name="replacement"
+                id="replacement"
+              />
             </div>
           </div>
 
@@ -135,10 +149,22 @@
         </button>
       </form>
     </div>
+    <!-- Insert this line above script imports  -->
+    <script>
+      if (typeof module === "object") {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+    <script src="../app.js"></script>
+    <script src="../../assets/js/jquery.js"></script>
     <script src="../assets/js/inputsCustomValidation.js"></script>
     <script src="../../assets/js/bundle-multi-select.min.js"></script>
     <script src="../../assets/js/nice-select2.js"></script>
     <script src="script.js"></script>
-    <script src="../app.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>
+      if (window.module) module = window.module;
+    </script>
   </body>
 </html>
