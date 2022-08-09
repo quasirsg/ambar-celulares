@@ -74,6 +74,7 @@ function verifyIsValidDni(e) {
     e.target.value.length <= 9 &&
     !isNaN(e.target.value)
   );
+  // TODO: tirar un toast de error si el dni no es valido
 }
 
 function isValidTokenAnd2faUser(token, get2faUser) {
@@ -91,11 +92,9 @@ function getId() {
     });
   });
 }
-
 /* ----------------------------
-	Básic Validations
+Add events to fields of dataTables
 ---------------------------- */
-
 function validateIfChecksComeTrue(checks, position, action, columnName) {
   Array.from(checks).forEach((check) => {
     let valuesArr = check.value.split(",");
@@ -113,9 +112,6 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
   });
 }
 
-/* ----------------------------
-	Add events to fields of dataTables
----------------------------- */
 function toggleModals() {
   const verifyCodesModal = document.getElementById(
     "verify-code-for-edit-mount-form"
@@ -152,7 +148,7 @@ searchInput.addEventListener("change", function (e) {
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  await reloadData(dni);
+  if (verifyIsValidDni(dni)) await reloadData(dni);
   getId();
   toggleModals();
   validateIfChecksComeTrue(
