@@ -85,6 +85,19 @@ const verifyUser = async (userId, token) => {
   }
 };
 
+const validateToken = async (userId, token) => {
+  try {
+    const verified = await axios.post("http://localhost:3000/api/validate", {
+      userId,
+      token,
+    });
+    return verified.data.validated;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const generateQr = async (otpauth_url) => {
   try {
     const url = await generateUrl(otpauth_url);
@@ -110,6 +123,7 @@ module.exports = {
   getBenefits,
   updateChecks,
   verifyUser,
+  validateToken,
   get2faUser,
   generateQr,
   save2faUserInLocalStorage,
