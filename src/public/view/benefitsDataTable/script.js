@@ -1,4 +1,20 @@
-// General
+/* ----------------------------
+  
+---------------------------- */
+const form = document.getElementById("search-form");
+const searchInput = document.getElementById("search");
+const checksOfRetired = document.getElementsByClassName("checks_of_retired");
+const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
+const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
+let dni;
+let idOfBenefit;
+let checks = [];
+let client;
+
+/* ----------------------------
+	Async Functions
+---------------------------- */
+
 async function clientExist(dni) {
   let exists = await getClient(dni);
 
@@ -19,59 +35,38 @@ async function reloadData(dni) {
   }
 }
 
-function validateIfChecksComeTrue(checks, position, action, columnName) {
-  Array.from(checks).forEach((e) => {
-    let valuesArr = e.value.split(",");
-    let length = valuesArr.length;
-    if (valuesArr[position] == true) e.checked = true;
-    if (e.checked == true) e.disabled = "disabled";
-    action(e, valuesArr, length, columnName);
-  });
-}
-
-function addUpdateStateToEventClick(e, valuesArr, length, columnName) {
-  e.addEventListener("click", async () => {
-    e.disabled = "disabled";
-    await updateChecks(valuesArr[length - 1], columnName);
-  });
-}
-
-function toggleModals() {
-  const modalAForm = document.getElementById("modal-a-form");
-  const codeInput = document.getElementById("code");
-  modalAForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const get2faUser = get2faUserInLocalStorage();
-    const token = parseInt(codeInput.value);
-    if (typeof token === "number" && get2faUser) {
-      const isUser = await validateToken(get2faUser, token);
-      if (isUser === true) {
-        $("#myModalNorm").modal("hide");
-        $("#myModalb").modal("show");
-      }
+async function validateTokenAndToggleEditMountModal(codeInput) {
+  const get2faUser = get2faUserInLocalStorage();
+  const token = parseInt(codeInput.value);
+  try {
+    if (!isValidTokenAnd2faUser(token, get2faUser)) throw new Error("Error"); // TODO: Tirar un toast de error
+    const isUser = await validateToken(get2faUser, token);
+    if (isUser === true) {
+      $("#myModalNorm").modal("hide");
+      $("#myModalb").modal("show");
     }
-  });
+  } catch (error) {
+    console.log(error); // TODO: Tirar un toast de error
+  }
 }
 
-/*
- * Search
- */
-
-const searchInput = document.getElementById("search");
-let dni;
-
-searchInput.addEventListener("change", function (e) {
-  if (verifyIsValidDni(e)) {
-    dni = e.target.value;
+async function editMount(mountInput) {
+  const mount = parseInt(mountInput.value);
+  if (!isNumber(mount)) throw new Error("Error"); // TODO: Tirar un toast de error
+  try {
+    await updateMount(idOfBenefit, mount);
+    console.log("updated"); //TODO: Tirar un toast
+  } catch (error) {
+    console.log(error); // TODO: Tirar un toast de error
   }
-});
+}
 
-/*
- * On submit
- */
-const form = document.getElementById("search-form");
-let checks = [];
-let client;
+/* ----------------------------
+	Básic Validations
+---------------------------- */
+function isNumber(toValidate) {
+  return typeof toValidate === "number";
+}
 
 function verifyIsValidDni(e) {
   return (
@@ -81,14 +76,85 @@ function verifyIsValidDni(e) {
   );
 }
 
+function isValidTokenAnd2faUser(token, get2faUser) {
+  return typeof isNumber(token) && get2faUser;
+}
+
+function getId() {
+  const buttonsOfMount = document.getElementsByClassName("button-of-mount");
+  Array.from(buttonsOfMount).forEach((buttonOfMount) => {
+    buttonOfMount.addEventListener("click", async function (buttonOfMount) {
+      buttonOfMount.preventDefault();
+      let valuesArr = buttonOfMount.target.value.split(",");
+
+      idOfBenefit = valuesArr[valuesArr.length - 1];
+    });
+  });
+}
+
+/* ----------------------------
+	Básic Validations
+---------------------------- */
+
+function validateIfChecksComeTrue(checks, position, action, columnName) {
+  Array.from(checks).forEach((check) => {
+    let valuesArr = check.value.split(",");
+    let length = valuesArr.length;
+    if (valuesArr[position] == true) check.checked = true;
+    if (check.checked == true) check.disabled = "disabled";
+    action(check, valuesArr, length, columnName);
+  });
+}
+
+function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
+  check.addEventListener("click", async () => {
+    check.disabled = "disabled";
+    await updateChecks(valuesArr[length - 1], columnName);
+  });
+}
+
+/* ----------------------------
+	Add events to fields of dataTables
+---------------------------- */
+function toggleModals() {
+  const verifyCodesModal = document.getElementById(
+    "verify-code-for-edit-mount-form"
+  );
+  const editMountModal = document.getElementById("edit-mount-form");
+  const codeInput = document.getElementById("code");
+  const mountInput = document.getElementById("mount-of-modal");
+
+  verifyCodesModal.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    await validateTokenAndToggleEditMountModal(codeInput);
+  });
+
+  editMountModal.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    await editMount(mountInput);
+  });
+}
+
+/* ----------------------------
+	Search Benefits by DNI
+---------------------------- */
+
+searchInput.addEventListener("change", function (e) {
+  if (verifyIsValidDni(e)) {
+    dni = e.target.value;
+  }
+});
+
+/* ----------------------------
+	Add submit logic to dataTable fields
+---------------------------- */
+
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   await reloadData(dni);
+  getId();
   toggleModals();
-  const checksOfRetired = document.getElementsByClassName("checks_of_retired");
-  const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
-  const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
   validateIfChecksComeTrue(
     checksOfRetired,
     7,

@@ -49,6 +49,18 @@ const getBenefits = async (dni) => {
   }
 };
 
+const updateMount = async (id, mount) => {
+  try {
+    const conn = await getConnection();
+    return await conn.query(`UPDATE benefits b
+    SET b.mount = ${mount}
+    WHERE b.idbenefits = ${id}`);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const updateChecks = async (id, columnName) => {
   try {
     const conn = await getConnection();
@@ -121,6 +133,7 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
+  updateMount,
   updateChecks,
   verifyUser,
   validateToken,
