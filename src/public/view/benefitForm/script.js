@@ -34,6 +34,13 @@ const arrOfMultiSelectMock = [
 /* ----------------------------
 	BD
 ---------------------------- */
+//Function to reset form
+
+function resetForm() {
+  form.reset();
+  instance.reset();
+  niceSelectInstance.clear()
+}
 
 // Method to create a benefit plain object
 function benefitInfo(dni, device, imei, description, replacements, entry_date, mount,) {
@@ -44,7 +51,7 @@ function benefitInfo(dni, device, imei, description, replacements, entry_date, m
       imei,
       description,
       replacements: replacements.replace(/[,]/gi, "-"),
-      entry_date: String(entry_date),
+      entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
       mount: Number(mount),
       fixed: false,
       paid_out: false,
@@ -323,7 +330,7 @@ mountInput.CustomValidation.validityChecks = mountValidityChecks;
 const clientSelect = document.getElementById("searchable-select-client");
 
 // Initialize
-NiceSelect.bind(clientSelect, { searchable: true, data: arrOfClientsMock });
+const niceSelectInstance = NiceSelect.bind(clientSelect, { searchable: true, data: arrOfClientsMock });
 
 // Append options
 arrOfClientsMock.forEach((e) => {
@@ -408,8 +415,9 @@ form.addEventListener("submit", async function (e) {
       new Notification("Registro Exitoso", {
         body: "Haz ingresado con exito un nuevo cliente",
       }); 
-      form.reset();
-      await saveBenefit(benefit)
+      console.log(benefit);
+      resetForm()
+      /* await saveBenefit(benefit) */
   } catch (error) {
     console.log(error);
   }

@@ -2,6 +2,11 @@ const { remote } = require("electron");
 const main = remote.require("./main");
 
 //client
+/**
+ * este metodo devuelve un cliente de la base de datos a partir de un dni
+ * @param {String} dni  
+ * @return {ClientObject}
+ */
 async function getClient(dni) {
   return await main.getClient(dni);
 }
