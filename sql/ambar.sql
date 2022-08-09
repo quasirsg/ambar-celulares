@@ -48,4 +48,6 @@ UPDATE `ambar`.`benefits` b
 SET b.retired = false
 WHERE b.idbenefits = 1;
 
-SELECT * FROM `ambar`.`benefits`
+SELECT * FROM `ambar`.`benefits`;
+
+SELECT dni FROM `ambar`.`clients`
