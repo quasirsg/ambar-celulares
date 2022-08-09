@@ -1,7 +1,9 @@
 const { remote } = require("electron");
 const main = remote.require("./main");
 
-//client
+/* ----------------------------
+	Client
+---------------------------- */
 /**
  * este metodo devuelve un cliente de la base de datos a partir de un dni
  * @param {String} dni
@@ -27,11 +29,12 @@ async function getDni() {
   return await main.getDni();
 }
 
-// benefit and benefit datatable
-
+/* ----------------------------
+	Benefit and BenefitDataTable
+---------------------------- */
 /**
  * este metodo guarda la informacion de una nueva benefit en la db
- * @param {Object} benefit 
+ * @param {Object} benefit
  */
 async function saveBenefit(benefit) {
   await main.saveBenefit(benefit);
@@ -39,7 +42,7 @@ async function saveBenefit(benefit) {
 
 /**
  * este metodo devuelve todos los benefit de un cliente a partir de su dni
- * @param {String} dni 
+ * @param {String} dni
  * @returns {BenefitObject}
  */
 async function getBenefits(dni) {
@@ -50,7 +53,9 @@ async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
 
-// 2fa
+/* ----------------------------
+	2fa
+---------------------------- */
 async function verifyUser(userId, token) {
   return await main.verifyUser(userId, token);
 }
