@@ -31,8 +31,8 @@ async function reloadData(dni) {
   if (await clientExist(dni)) {
     const benefitsArr = await getBenefitArr(dni);
     $("#example").dataTable().fnClearTable();
-    $("#example").dataTable().fnAddData(benefitsArr);
-  }
+    $("#example").dataTable().fnAddData(benefitsArr); // TODO: no actualizar la tabla si no hay benefits
+  } //TODO: tirar un toast de alerta si el cliente no existe
 }
 
 async function validateTokenAndToggleEditMountModal(codeInput) {
