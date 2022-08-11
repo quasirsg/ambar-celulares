@@ -17,6 +17,17 @@ const getClient = async (dni) => {
   }
 };
 
+const getDni = async () => {
+  try {
+    const conn = await getConnection();
+    const resultsDni = await conn.query("SELECT dni FROM clients");
+    /* console.log(resultsDni); */
+    return resultsDni;
+  } catch (error) {
+    throw error
+  }
+}
+
 const saveClient = async (client) => {
   try {
     const conn = await getConnection();
@@ -130,6 +141,7 @@ const get2faUserInLocalStorage = () => {
 
 module.exports = {
   getClient,
+  getDni,
   saveClient,
   saveBenefit,
   getBenefits,
