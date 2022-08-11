@@ -64,6 +64,9 @@ async function get2faUser() {
   return await main.get2faUser();
 }
 
+async function validateToken(userId, token) {
+  return await main.validateToken(userId, token);
+}
 async function generateQr(url) {
   return await main.generateQr(url);
 }
