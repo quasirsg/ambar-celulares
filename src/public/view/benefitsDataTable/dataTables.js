@@ -1,26 +1,25 @@
-
 /**
  *
  * DataTables
  *
  */
- $(document).ready(function () {
-    $("#example").DataTable({
-      data: client,
-      columns: [
-        { title: "Imei" },
-        { title: "Contacto" },
-        { title: "Dispositivo" },
-        { title: "Descripcion" },
-        { title: "Cambios" },
-        { title: "Entrada" },
-        {
-          title: "Monto",
-          data: null,
-          className: "text-center",
-          render: function (data, type, full, meta) {
-            return `
-            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalNorm">
+$(document).ready(function () {
+  $("#example").DataTable({
+    data: client,
+    columns: [
+      { title: "Imei" },
+      { title: "Contacto" },
+      { title: "Dispositivo" },
+      { title: "Descripcion" },
+      { title: "Cambios" },
+      { title: "Entrada" },
+      {
+        title: "Monto",
+        data: null,
+        className: "text-center",
+        render: function (data, type, full, meta) {
+          return `
+            <button class="btn btn-primary btn-lg button-of-mount" data-toggle="modal" data-target="#myModalNorm" value="${data}">
                 ${data[6]}
             </button>
             <!-- Modal -->
@@ -40,14 +39,14 @@
                       <span aria-hidden="true">&times;</span>
                       <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    <h4 class="modal-title" id="myModalLabel">Verificar token</h4>
                   </div>
         
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form role="form" id="modal-a-form">
+                    <form role="form" id="verify-code-for-edit-mount-form">
                       <div class="form-group">
-                        <label for="">Code</label>
+                        <label for="">Verificar Token</label>
                         <input
                           type="text"
                           class="form-control"
@@ -86,19 +85,19 @@
                       <span aria-hidden="true">&times;</span>
                       <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Modal b</h4>
+                    <h4 class="modal-title" id="myModalLabel">Editar monto</h4>
                   </div>
         
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form role="form">
+                    <form role="form" id="edit-mount-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Code</label>
+                        <label for="exampleInputEmail1">Monto</label>
                         <input
-                          type="email"
+                          type="text"
                           class="form-control"
-                          id="code"
-                          placeholder="Enter 2fa code"
+                          id="mount-of-modal"
+                          placeholder="Replace mount"
                         />
                       </div>
                       <button type="submit" class="btn btn-primary">Submit</button>
@@ -115,57 +114,56 @@
               </div>
             </div>
             `;
-          },
         },
-        {
-          title: "Arreglado",
-          targets: 7,
-          data: null,
-          className: "text-center",
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<input type="checkbox" class="checks_of_retired" name="check" value="' +
-              data +
-              '">'
-            );
-          },
-          width: "1%",
+      },
+      {
+        title: "Arreglado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_retired" name="check" value="' +
+            data +
+            '">'
+          );
         },
-        {
-          title: "Pagado",
-          targets: 7,
-          data: null,
-          className: "text-center",
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<input type="checkbox" class="checks_of_paid_out" name="check" value="' +
-              data +
-              '">'
-            );
-          },
-          width: "1%",
+        width: "1%",
+      },
+      {
+        title: "Pagado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_paid_out" name="check" value="' +
+            data +
+            '">'
+          );
         },
-        {
-          title: "Retirado",
-          targets: 7,
-          data: null,
-          className: "text-center",
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
-              data +
-              '">'
-            );
-          },
-          width: "1%",
+        width: "1%",
+      },
+      {
+        title: "Retirado",
+        targets: 7,
+        data: null,
+        className: "text-center",
+        searchable: false,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          return (
+            '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
+            data +
+            '">'
+          );
         },
-      ],
-    });
+        width: "1%",
+      },
+    ],
   });
-  
+});

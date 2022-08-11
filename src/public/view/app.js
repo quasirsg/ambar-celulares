@@ -53,6 +53,10 @@ async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
 
+async function updateMount(id, mount) {
+  return await main.updateMount(id, mount);
+}
+
 /* ----------------------------
 	2fa
 ---------------------------- */
