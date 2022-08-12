@@ -33,7 +33,6 @@ body {
   border-radius: 5px;
   padding: 12px 8px;
   text-align: left;
-  cursor: pointer;
 }
 .block1 {
   display: inline-block;
@@ -49,9 +48,9 @@ body {
   font-size: 31px;
   color: #616161;
 }
-#item:focus .block1 i,
-#item:active .block1 i,
-#item:hover .block1 i {
+#icon:focus,
+#icon:active,
+#icon:hover {
   -webkit-transition: all 0.4s ease-in;
   -moz-transition: all 0.4s ease-in;
   -ms-transition: all 0.4s ease-in;
@@ -111,4 +110,14 @@ h2 {
 
 .btn-primary {
   margin-bottom: 15px;
+}
+
+.alert {
+  width: 430px;
+  min-height: 70px;
+  border-radius: 50px;
+  position: absolute;
+  padding: 20px;
+  margin-top: 7px;
+  margin-left: 40px;
 }

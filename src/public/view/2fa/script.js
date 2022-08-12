@@ -9,6 +9,18 @@ let secret;
   const url = await generateQr(secret.otpauth_url);
   $("#qr-img").attr("src", url);
 })();
+/* Control Errors*/
+
+const errorsMap = new Map();
+
+errorsMap.set(
+  "codes_incomplete",
+  "Porfavor ingrese su codigo correctamente para poder avanzar"
+);
+errorsMap.set(
+  "code_incorrect",
+  "El codigo que ingreso es incorrecto. Porfavor ingrese su codigo nuevamente para poder avanzar"
+);
 
 /* ----------------------------
 
@@ -34,6 +46,41 @@ const codesValidityChecks = [
   },
 ];
 
+/* Toaster */
+
+const invalidToaster = function (error) {
+  console.log(error);
+  const errorText = errorsMap.get(error.code);
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML =
+    "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
+  setTimeout(function () {
+    alerta.style.display = "none";
+  }, 4500);
+};
+
+const validToaster = function () {
+  var alerta = document.getElementById("alert");
+  alerta.style.cssText =
+    "display: block; background-color: #dff0d8; color: #3c763d;";
+  alerta.innerHTML =
+  "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito.";
+};
+
+// Funcion que reinicia el formulario y desactiva el boton de submit y el input
+
+function activateButton() {
+  form.reset();
+  inputs[0].disabled="disabled";
+  formButton.disabled="disabled";
+  imageIcon.style.cssText="display: none";
+  setTimeout(function () {
+    location.href = "../index.html"
+  }, 4500);
+}
+
 /* ----------------------------
 	Setup CustomValidation
 
@@ -46,10 +93,15 @@ const codesInput = document.getElementById("codes");
 codesInput.CustomValidation = new CustomValidation(codesInput);
 codesInput.CustomValidation.validityChecks = codesValidityChecks;
 
+
 /* ----------------------------
 	Final
 ---------------------------- */
-const form = document.getElementById("verify-code");
+var form = document.getElementById("verify-code");
+var inputs = document.querySelectorAll('input:not([type="submit"])');
+var formButton = document.getElementById("form__button");
+var submit = document.querySelector('button[type="submit"');
+var imageIcon = document.getElementById("icon")
 
 function validate() {
   inputs.forEach((input) => {
@@ -63,18 +115,23 @@ function validate() {
   });
 }
 
+submit.addEventListener("click", validate);
 form.addEventListener("submit", async function (e) {
   try {
     e.preventDefault();
-
     const token = codesInput.value;
     const verified = await verifyUser(data.id, token);
-
+    console.log(verified);
+    validate()
     if (verified) {
+      validToaster()
+      activateButton();
       save2faUserInLocalStorage(data.id);
+    }else{
+      invalidToaster({code: "code_incorrect"})
     }
   } catch (error) {
-    console.log(error);
+    invalidToaster(error)
   }
 });
 
