@@ -13,15 +13,15 @@
     <div class="container-fluid">
       <div class="row text-left" id="item">
         <div class="alert" role="alert" id="alert" style="display: none"></div>
-        <a href="../index.html">
-          <div class="container-block">
-            <div class="block1">
-              <i class="fa fa-home"></i>
-            </div>
+        <div class="container-block">
+          <div class="block1">
+            <a href="../index.html">
+              <i class="fa fa-home" id="icon"></i>
+            </a>
           </div>
-        </a>
+        </div>
       </div>
-
+      <div class="alert" role="alert" id="alert" style="display: none"></div>
       <div class="row text-center">
         <img src="" alt="" id="qr-img" />
       </div>
@@ -41,7 +41,11 @@
             <li>Requerido</li>
           </ul>
         </div>
-        <button type="submit" class="btn btn-primary form-control">
+        <button
+          type="submit"
+          class="btn btn-primary form-control"
+          id="form__button"
+        >
           Submit
         </button>
       </form>
