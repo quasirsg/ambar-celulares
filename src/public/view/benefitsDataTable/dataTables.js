@@ -31,6 +31,8 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            <div class="alert" role="alert" id="alert" style="display: none"></div>
+
               <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
@@ -77,7 +79,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog">
+            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
+            
+            <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">

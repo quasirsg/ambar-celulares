@@ -194,3 +194,14 @@ body {
     background: #f1f1f1;
   }
 }
+
+.alert {
+  width: 630px;
+  min-height: 70px;
+  border-radius: 50px;
+  position: absolute;
+  padding: 20px;
+  margin-top: 7px;
+  margin-left: 350px;
+  z-index: 1;
+}
