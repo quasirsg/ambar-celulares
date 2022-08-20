@@ -12,7 +12,30 @@ let checks = [];
 let client;
 
 /* ----------------------------
-	Async Functions
+	Control errors
+---------------------------- */
+
+const errorsMap = new Map();
+
+errorsMap.set(
+  "dni_incomplete",
+  "Porfavor ingrese el dni correctamente para poder avanzar"
+);
+errorsMap.set(
+  "client_inexistent",
+  "El cliente seleccionado no cuenta con beneficios"
+);
+errorsMap.set(
+  "invalide_user",
+  "Los datos proporcionados son incorrectos"
+);
+errorsMap.set(
+  "invalid_number",
+  "Debe ingresar unicamente numeros"
+);
+
+/* ----------------------------
+	Async Functions 
 ---------------------------- */
 
 async function clientExist(dni) {
@@ -30,34 +53,44 @@ async function getBenefitArr(dni) {
 async function reloadData(dni) {
   if (await clientExist(dni)) {
     const benefitsArr = await getBenefitArr(dni);
-    $("#example").dataTable().fnClearTable();
-    $("#example").dataTable().fnAddData(benefitsArr); // TODO: no actualizar la tabla si no hay benefits
-  } //TODO: tirar un toast de alerta si el cliente no existe
+    if (benefitsArr.length) {
+      $("#example").dataTable().fnClearTable();
+      $("#example").dataTable().fnAddData(benefitsArr); 
+    } else {
+      invalidToaster({code: "client_inexistent"})
+    }
+    }
 }
 
 async function validateTokenAndToggleEditMountModal(codeInput) {
   const get2faUser = get2faUserInLocalStorage();
   const token = parseInt(codeInput.value);
   try {
-    if (!isValidTokenAnd2faUser(token, get2faUser)) throw new Error("Error"); // TODO: Tirar un toast de error
     const isUser = await validateToken(get2faUser, token);
     if (isUser === true) {
       $("#myModalNorm").modal("hide");
       $("#myModalb").modal("show");
+      $("#alert").addClass("disable-div");
+    }else{
+      invalidToaster({code: "invalide_user"});
     }
   } catch (error) {
-    console.log(error); // TODO: Tirar un toast de error
+    console.log(error);; // TODO: Tirar un toast de error // pendiente a posibles errores
   }
 }
 
 async function editMount(mountInput) {
   const mount = parseInt(mountInput.value);
-  if (!isNumber(mount)) throw new Error("Error"); // TODO: Tirar un toast de error
   try {
+  if (isNaN(mount)) {
+    console.log("ENTRAMOS");
+    invalidToaster({code: "invalid_number"})
+  } else{
+  
     await updateMount(idOfBenefit, mount);
-    console.log("updated"); //TODO: Tirar un toast
-  } catch (error) {
-    console.log(error); // TODO: Tirar un toast de error
+    validToaster()
+  }} catch (error) {
+    console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
   }
 }
 
@@ -69,12 +102,10 @@ function isNumber(toValidate) {
 }
 
 function verifyIsValidDni(e) {
-  return (
-    e.target.value.length >= 7 &&
-    e.target.value.length <= 9 &&
-    !isNaN(e.target.value)
-  );
-  // TODO: tirar un toast de error si el dni no es valido
+  if(e.length >= 7 &&
+     e.length <= 9 &&
+     !isNaN(e)) return true
+     else{invalidToaster({code: "dni_incomplete"})}
 }
 
 function isValidTokenAnd2faUser(token, get2faUser) {
@@ -136,10 +167,43 @@ function toggleModals() {
 ---------------------------- */
 
 searchInput.addEventListener("change", function (e) {
+  e = e.target.value
   if (verifyIsValidDni(e)) {
-    dni = e.target.value;
+    dni = e;
   }
 });
+
+/* ----------------------------
+	Toasters
+---------------------------- */
+function changeStylesAlert(alerta, errorText) {
+  alerta.style.cssText =
+    "display: block; background-color: #f2dede; color: #a94442;";
+  alerta.innerHTML =
+    "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
+  setTimeout(function () {
+    alerta.style.display = "none";
+  }, 4500);
+}
+
+const invalidToaster = function (error) {
+  const errorText = errorsMap.get(error.code);
+  var alerta = document.getElementById("alert")
+  console.log(alerta);
+  if (alerta.classList.contains("disable-div")) {
+    var alert = document.getElementById("second_alert")
+    changeStylesAlert(alert, errorText);
+  }
+  changeStylesAlert(alerta, errorText);
+};
+
+const validToaster = function () {
+  var alerta = document.getElementById("second_alert");
+  alerta.style.cssText =
+    "display: block; background-color: #dff0d8; color: #3c763d;";
+  alerta.innerHTML =
+  "<strong>¡Bien hecho!</strong> Cambiaste el monto con exito.";
+};
 
 /* ----------------------------
 	Add submit logic to dataTable fields
