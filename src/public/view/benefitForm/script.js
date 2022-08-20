@@ -10,32 +10,6 @@ $(document).ready(async function () {
     };
   });
 
-
-  //mocks
-
-  const arrOfMultiSelectMock = [
-    {
-      label: "Pin de carga",
-      value: "Pin de carga",
-    },
-    {
-      label: "Bateria",
-      value: "Bateria",
-    },
-    {
-      label: "Modulo",
-      value: "Modulo",
-    },
-    {
-      label: "Tactil",
-      value: "Tactil",
-    },
-    {
-      label: "Display",
-      value: "Display",
-    },
-  ];
-
   /* ----------------------------
 	BD
 ---------------------------- */
@@ -43,7 +17,6 @@ $(document).ready(async function () {
 
   function resetForm() {
     form.reset();
-    instance.reset();
     niceSelectInstance.clear();
   }
 
@@ -53,8 +26,8 @@ $(document).ready(async function () {
     device,
     imei,
     description,
-    replacements,
     entry_date,
+    paid,
     mount
   ) {
     controlInputs(dni, description);
@@ -63,11 +36,10 @@ $(document).ready(async function () {
       device,
       imei,
       description,
-      replacements: replacements.replace(/[,]/gi, "-"),
       entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
+      paid,
       mount: Number(mount),
       fixed: false,
-      paid_out: false,
       retired: false,
     };
   }
@@ -124,7 +96,7 @@ $(document).ready(async function () {
     "Porfavor ingrese el imei correctamente para poder avanzar"
   );
   errorsMap.set(
-    "replacement_incomplete",
+    "paid_incomplete",
     "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
   );
   errorsMap.set(
@@ -227,17 +199,17 @@ $(document).ready(async function () {
     },
   ];
 
-  const replacementValidityChecks = [
+  const paidValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9,]{0,255}$/;
-        var caracters = input.value;
+        const regex = /^[0-9]{2,15}$/;
+        const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
       },
-      invalidityMessage: "Campo requerido",
+      invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-replacement"] .input-requirements li:nth-child(1)'
+        'div[id="div-paid"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -311,7 +283,7 @@ $(document).ready(async function () {
   const deviceInput = document.getElementById("device");
   const imeiInput = document.getElementById("imei");
   const descriptionInput = document.getElementById("description");
-  const replacementInput = document.getElementById("replacement");
+  const paidInput = document.getElementById("paid");
   const entryDateInput = document.getElementById("entryDate");
   const mountInput = document.getElementById("mount");
 
@@ -320,7 +292,7 @@ $(document).ready(async function () {
     deviceInput,
     imeiInput,
     descriptionInput,
-    replacementInput,
+    paidInput,
     entryDateInput,
     mountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
@@ -329,7 +301,7 @@ $(document).ready(async function () {
   deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
-  replacementInput.CustomValidation.validityChecks = replacementValidityChecks;
+  paidInput.CustomValidation.validityChecks = paidValidityChecks;
   entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
   mountInput.CustomValidation.validityChecks = mountValidityChecks;
   /* ----------------------------
@@ -362,34 +334,7 @@ $(document).ready(async function () {
     clientInput.value = e.target.value;
     clientInput.CustomValidation.checkInput();
   });
-  /* ----------------------------
 
-	MultiSelect
-
-  ---------------------------- */
-  var instance = new SelectPure(".replacement", {
-    options: arrOfMultiSelectMock,
-    multiple: true, // default: false
-    icon: "fa fa-times",
-    onChange: (value) => {
-      replacementInput.value = value;
-      replacementInput.CustomValidation.checkInput();
-    },
-    classNames: {
-      select: "select-pure__select",
-      dropdownShown: "select-pure__select--opened",
-      multiselect: "select-pure__select--multiple",
-      label: "select-pure__label",
-      placeholder: "select-pure__placeholder",
-      dropdown: "select-pure__options",
-      option: "select-pure__option",
-      autocompleteInput: "select-pure__autocomplete",
-      selectedLabel: "select-pure__selected-label",
-      selectedOption: "select-pure__option--selected",
-      placeholderHidden: "select-pure__placeholder--hidden",
-      optionHidden: "select-pure__option--hidden",
-    },
-  });
   /* ----------------------------
 
 	General
@@ -424,8 +369,8 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         descriptionInput.value,
-        replacementInput.value,
         entryDateInput.value,
+        paidInput.value,
         mountInput.value
       );
       validToaster();
