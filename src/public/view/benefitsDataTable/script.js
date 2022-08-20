@@ -79,14 +79,13 @@ async function validateTokenAndToggleEditMountModal(codeInput) {
   }
 }
 
-async function editMount(mountInput) {
+async function editMount(mountInput, subButton) {
   const mount = parseInt(mountInput.value);
   try {
   if (isNaN(mount)) {
-    console.log("ENTRAMOS");
     invalidToaster({code: "invalid_number"})
   } else{
-  
+    subButton.disabled="disabled";
     await updateMount(idOfBenefit, mount);
     validToaster()
   }} catch (error) {
@@ -150,15 +149,18 @@ function toggleModals() {
   const editMountModal = document.getElementById("edit-mount-form");
   const codeInput = document.getElementById("code");
   const mountInput = document.getElementById("mount-of-modal");
+  const subButton = document.getElementById("submit_button")
 
   verifyCodesModal.addEventListener("submit", async function (e) {
     e.preventDefault();
     await validateTokenAndToggleEditMountModal(codeInput);
+    codeInput.value = "";
   });
 
   editMountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editMount(mountInput);
+    await editMount(mountInput, subButton);
+    mountInput.value = "";
   });
 }
 
