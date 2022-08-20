@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `device` VARCHAR(30) NOT NULL,
   `imei` VARCHAR(15) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
+  `replacements` VARCHAR(255) NULL,
   `entry_date` VARCHAR(30) NOT NULL,
   `paid` INT NULL,
   `mount` INT NULL,

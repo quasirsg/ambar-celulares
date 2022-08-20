@@ -31,6 +31,8 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            <div class="alert" role="alert" id="alert" style="display: none"></div>
+
               <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
@@ -77,7 +79,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-              <div class="modal-dialog">
+            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
+            
+            <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -98,9 +102,10 @@ $(document).ready(function () {
                           class="form-control"
                           id="mount-of-modal"
                           placeholder="Replace mount"
+                          value=${data[6].replace("$", "")}
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
                     </form>
                   </div>
         
