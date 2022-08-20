@@ -202,7 +202,7 @@ $(document).ready(async function () {
   const paidValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[0-9]{2,15}$/;
+        const regex = /^[0-9]{1,15}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
