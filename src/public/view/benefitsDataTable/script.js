@@ -68,9 +68,13 @@ async function validateTokenAndToggleEditMountModal(codeInput) {
   try {
     const isUser = await validateToken(get2faUser, token);
     if (isUser === true) {
-      $("#myModalNorm").modal("hide");
-      $("#myModalb").modal("show");
-      $("#alert").addClass("disable-div");
+      var modal = document.getElementById("myModalNorm");
+      $("#myModalNorm").modal("hide")
+      modal.classList.contains("paid") ?
+	      $("#myModalSd").modal("show")
+      :
+      $("#myModalb").modal("show")
+      $("#alert").addClass("disable-div")
     }else{
       invalidToaster({code: "invalide_user"});
     }
@@ -81,6 +85,7 @@ async function validateTokenAndToggleEditMountModal(codeInput) {
 
 async function editMount(mountInput, subButton) {
   const mount = parseInt(mountInput.value);
+  console.log(mount);
   try {
   if (isNaN(mount)) {
     invalidToaster({code: "invalid_number"})
@@ -149,7 +154,9 @@ function toggleModals() {
   const editMountModal = document.getElementById("edit-mount-form");
   const codeInput = document.getElementById("code");
   const mountInput = document.getElementById("mount-of-modal");
-  const subButton = document.getElementById("submit_button")
+  const subButton = document.getElementById("submit_button");
+  const paidButton = document.getElementById("paid");
+  const mountButton = document.getElementById("mount")
 
   verifyCodesModal.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -162,8 +169,29 @@ function toggleModals() {
     await editMount(mountInput, subButton);
     mountInput.value = "";
   });
+
+  mountButton.addEventListener("click", async function (e) {
+    e.preventDefault()
+    var changeClass = document.getElementById("myModalNorm")
+    changeClass.classList.contains("paid") ? $("#myModalNorm").removeClass("paid") : console.log("todo bien");;
+  })
+
+  paidButton.addEventListener("click", async function (e) {
+    e.preventDefault();
+    $("#myModalNorm").addClass("paid");
+  })
 }
 
+function botonmount(e) {
+  e.preventDefault()
+  var changeClass = document.getElementById("myModalNorm")
+  changeClass.classList.contains("paid") ? $("#myModalNorm").removeClass("paid") : console.log("todo bien");;
+}
+
+function botonpaid(e) {
+  e.preventDefault();
+    $("#myModalNorm").addClass("paid");
+}
 /* ----------------------------
 	Search Benefits by DNI
 ---------------------------- */
@@ -224,14 +252,8 @@ form.addEventListener("submit", async function (e) {
     "fixed"
   );
   validateIfChecksComeTrue(
-    checksOfPaidOut,
-    8,
-    addUpdateStateToEventClick,
-    "paid_out"
-  );
-  validateIfChecksComeTrue(
     checksOfFixed,
-    9,
+    8,
     addUpdateStateToEventClick,
     "retired"
   );
