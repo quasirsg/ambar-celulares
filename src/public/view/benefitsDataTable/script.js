@@ -6,11 +6,13 @@ const searchInput = document.getElementById("search");
 const checksOfRetired = document.getElementsByClassName("checks_of_retired");
 const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
+const paidButtons = document.getElementsByClassName("paid-button");
+const mountButtons = document.getElementsByClassName("mount-button");
+
 let dni;
-let idOfBenefit;
 let checks = [];
 let client;
-
+let modalToShow;
 /* ----------------------------
 	Control errors
 ---------------------------- */
@@ -25,14 +27,8 @@ errorsMap.set(
   "client_inexistent",
   "El cliente seleccionado no cuenta con beneficios"
 );
-errorsMap.set(
-  "invalide_user",
-  "Los datos proporcionados son incorrectos"
-);
-errorsMap.set(
-  "invalid_number",
-  "Debe ingresar unicamente numeros"
-);
+errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
+errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 /* ----------------------------
 	Async Functions 
@@ -55,45 +51,24 @@ async function reloadData(dni) {
     const benefitsArr = await getBenefitArr(dni);
     if (benefitsArr.length) {
       $("#example").dataTable().fnClearTable();
-      $("#example").dataTable().fnAddData(benefitsArr); 
+      $("#example").dataTable().fnAddData(benefitsArr);
     } else {
-      invalidToaster({code: "client_inexistent"})
+      invalidToaster({ code: "client_inexistent" });
     }
-    }
-}
-
-async function validateTokenAndToggleEditMountModal(codeInput) {
-  const get2faUser = get2faUserInLocalStorage();
-  const token = parseInt(codeInput.value);
-  try {
-    const isUser = await validateToken(get2faUser, token);
-    if (isUser === true) {
-      var modal = document.getElementById("myModalNorm");
-      $("#myModalNorm").modal("hide")
-      modal.classList.contains("paid") ?
-	      $("#myModalSd").modal("show")
-      :
-      $("#myModalb").modal("show")
-      $("#alert").addClass("disable-div")
-    }else{
-      invalidToaster({code: "invalide_user"});
-    }
-  } catch (error) {
-    console.log(error);; // TODO: Tirar un toast de error // pendiente a posibles errores
   }
 }
 
-async function editMount(mountInput, subButton) {
+
+async function editMount(id,mountInput) {
   const mount = parseInt(mountInput.value);
-  console.log(mount);
   try {
-  if (isNaN(mount)) {
-    invalidToaster({code: "invalid_number"})
-  } else{
-    subButton.disabled="disabled";
-    await updateMount(idOfBenefit, mount);
-    validToaster()
-  }} catch (error) {
+    if (isNaN(mount)) {
+      invalidToaster({ code: "invalid_number" });
+    } else {
+      await updateMount(id, mount);
+      validToaster();
+    }
+  } catch (error) {
     console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
   }
 }
@@ -106,30 +81,66 @@ function isNumber(toValidate) {
 }
 
 function verifyIsValidDni(e) {
-  if(e.length >= 7 &&
-     e.length <= 9 &&
-     !isNaN(e)) return true
-     else{invalidToaster({code: "dni_incomplete"})}
+  if (e.length >= 7 && e.length <= 9 && !isNaN(e)) return true;
+  else {
+    invalidToaster({ code: "dni_incomplete" });
+  }
 }
 
 function isValidTokenAnd2faUser(token, get2faUser) {
   return typeof isNumber(token) && get2faUser;
 }
 
-function getId() {
-  const buttonsOfMount = document.getElementsByClassName("button-of-mount");
-  Array.from(buttonsOfMount).forEach((buttonOfMount) => {
-    buttonOfMount.addEventListener("click", async function (buttonOfMount) {
-      buttonOfMount.preventDefault();
-      let valuesArr = buttonOfMount.target.value.split(",");
-
-      idOfBenefit = valuesArr[valuesArr.length - 1];
-    });
-  });
-}
 /* ----------------------------
 Add events to fields of dataTables
 ---------------------------- */
+
+async function validateTokenAndToggleEditMountModal(codeInput,modalId,dt) {
+  const get2faUser = get2faUserInLocalStorage();
+  const token = parseInt(codeInput.value);
+  try {
+    const isUser = await validateToken(get2faUser, token);
+    if (isUser === true) {
+      $(`#${dt}`).modal("hide")
+      $(`#${modalId}`).modal("show")
+    } else {
+      invalidToaster({ code: "invalide_user" });
+    }
+  } catch (error) {
+    console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
+  }
+}
+
+function verifyCodesModalAddEventToShowPaidOrMountModal(modalId,dt) {
+  
+  const verifyCodesModal = document.getElementById(
+    `verify-code-for-edit-${modalId}`
+  );
+  const codeInput = document.getElementById(`code-${modalId}`);
+  
+  async function name(e) {
+      e.preventDefault();
+      await validateTokenAndToggleEditMountModal(codeInput, modalId, dt);
+      codeInput.value = "";
+  }
+
+  verifyCodesModal.addEventListener("submit", name);
+}
+
+function toggleModalsOfMountAndPaid(buttons,modalId,dt) {
+  const editMountHidden = document.getElementById("edit-mount-hidden");
+
+  verifyCodesModalAddEventToShowPaidOrMountModal(modalId,dt);
+  Array.from(buttons).forEach((button) => {
+    console.log(button.value);
+    button.addEventListener("click", async function (e) {
+      // e.preventDefault();
+      $(`#${modalId}-input`).val(`${button.value}`);
+    });
+  });
+}
+
+
 function validateIfChecksComeTrue(checks, position, action, columnName) {
   Array.from(checks).forEach((check) => {
     let valuesArr = check.value.split(",");
@@ -148,56 +159,28 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
 }
 
 function toggleModals() {
-  const verifyCodesModal = document.getElementById(
-    "verify-code-for-edit-mount-form"
-  );
-  const editMountModal = document.getElementById("edit-mount-form");
-  const codeInput = document.getElementById("code");
-  const mountInput = document.getElementById("mount-of-modal");
-  const subButton = document.getElementById("submit_button");
-  const paidButton = document.getElementById("paid");
-  const mountButton = document.getElementById("mount")
 
-  verifyCodesModal.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    await validateTokenAndToggleEditMountModal(codeInput);
-    codeInput.value = "";
-  });
+  const editMountModal = document.getElementById("edit-mount-form");
+  const editMountHidden = document.getElementById("edit-mount-hidden");
+  const mountInput = document.getElementById("amountModal-input");
+  
 
   editMountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editMount(mountInput, subButton);
+    // await editMount(editMountModal.value,mountInput);
     mountInput.value = "";
   });
 
-  mountButton.addEventListener("click", async function (e) {
-    e.preventDefault()
-    var changeClass = document.getElementById("myModalNorm")
-    changeClass.classList.contains("paid") ? $("#myModalNorm").removeClass("paid") : console.log("todo bien");;
-  })
+  toggleModalsOfMountAndPaid(mountButtons,'amountModal','tokenModal');
+  toggleModalsOfMountAndPaid(paidButtons,'paidModal','tokenModalForPaid');
 
-  paidButton.addEventListener("click", async function (e) {
-    e.preventDefault();
-    $("#myModalNorm").addClass("paid");
-  })
-}
-
-function botonmount(e) {
-  e.preventDefault()
-  var changeClass = document.getElementById("myModalNorm")
-  changeClass.classList.contains("paid") ? $("#myModalNorm").removeClass("paid") : console.log("todo bien");;
-}
-
-function botonpaid(e) {
-  e.preventDefault();
-    $("#myModalNorm").addClass("paid");
 }
 /* ----------------------------
 	Search Benefits by DNI
 ---------------------------- */
 
 searchInput.addEventListener("change", function (e) {
-  e = e.target.value
+  e = e.target.value;
   if (verifyIsValidDni(e)) {
     dni = e;
   }
@@ -218,10 +201,10 @@ function changeStylesAlert(alerta, errorText) {
 
 const invalidToaster = function (error) {
   const errorText = errorsMap.get(error.code);
-  var alerta = document.getElementById("alert")
+  var alerta = document.getElementById("alert");
   console.log(alerta);
   if (alerta.classList.contains("disable-div")) {
-    var alert = document.getElementById("second_alert")
+    var alert = document.getElementById("second_alert");
     changeStylesAlert(alert, errorText);
   }
   changeStylesAlert(alerta, errorText);
@@ -232,7 +215,7 @@ const validToaster = function () {
   alerta.style.cssText =
     "display: block; background-color: #dff0d8; color: #3c763d;";
   alerta.innerHTML =
-  "<strong>¡Bien hecho!</strong> Cambiaste el monto con exito.";
+    "<strong>¡Bien hecho!</strong> Cambiaste el monto con exito.";
 };
 
 /* ----------------------------
@@ -243,7 +226,6 @@ form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   if (verifyIsValidDni(dni)) await reloadData(dni);
-  getId();
   toggleModals();
   validateIfChecksComeTrue(
     checksOfRetired,
