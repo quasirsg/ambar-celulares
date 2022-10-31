@@ -18,7 +18,7 @@
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg mount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]}">
+            <button class="btn btn-primary btn-lg mount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[9]}">
                 ${data[5]}
             </button>
             <!-- Modal -->
@@ -30,7 +30,7 @@
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="alert" style="display: none"></div>
+            <div class="alert" role="alert" id="first_alert" style="display: none"></div>
 
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -78,7 +78,7 @@
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
+            <div class="alert" role="alert" id="mount_alert" style="display: none"></div>
             
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -97,24 +97,25 @@
                       <div class="form-group">
                         <label for="exampleInputEmail1">Monto</label>
                         <input
-                          type="text"
+                          type="number"
                           class="form-control"
                           id="amountModal-input"
                           placeholder="Replace mount"
                         />
                         <input
+                          class="mountPito"
                           type="hidden"
                           id="edit-mount-hidden"
-                          value="pito"
+                          value=${data[9]}
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="submit_button_mount">Submit</button>
                     </form>
                   </div>
 
                   <!-- Modal Footer -->
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-default close_modal" data-dismiss="modal">
                       Close
                     </button>
                   </div>
@@ -131,7 +132,7 @@
         render: function (data) {
           
           return `
-            <button class="btn btn-primary btn-lg paid-button" data-toggle="modal" data-target="#tokenModalForPaid" value="${data[6]}" >
+            <button class="btn btn-primary btn-lg paid-button" data-toggle="modal" data-target="#tokenModalForPaid" value="${data[6]} ${data[9]}" >
               ${data[6]}
             </button>
             <!-- Modal -->
@@ -143,7 +144,7 @@
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="alert" style="display: none"></div>
+            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
 
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -191,7 +192,7 @@
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
+            <div class="alert" role="alert" id="paid_alert" style="display: none"></div>
             
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -210,19 +211,19 @@
                       <div class="form-group">
                         <label for="exampleInputEmail1">Saldo</label>
                         <input
-                          type="text"
+                          type="number"
                           class="form-control"
                           id="paidModal-input"
                           placeholder="Replace mount"
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="submit_button_paid">Submit</button>
                     </form>
                   </div>
 
                   <!-- Modal Footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">
+              <button type="button" class="btn btn-default close_modal" data-dismiss="modal">
                 Close
               </button>
             </div>

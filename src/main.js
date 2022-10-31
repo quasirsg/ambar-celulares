@@ -72,6 +72,18 @@ const updateMount = async (id, mount) => {
   }
 };
 
+const updatePaid = async (id, paid) => {
+  try {
+    const conn = await getConnection();
+    return await conn.query(`UPDATE benefits b
+    SET b.paid = ${paid}
+    WHERE b.idbenefits = ${id}`);
+  } catch (error) {
+    console.log(error);
+    throw error; 
+  }
+};
+
 const updateChecks = async (id, columnName) => {
   try {
     const conn = await getConnection();
@@ -146,6 +158,7 @@ module.exports = {
   saveBenefit,
   getBenefits,
   updateMount,
+  updatePaid,
   updateChecks,
   verifyUser,
   validateToken,
