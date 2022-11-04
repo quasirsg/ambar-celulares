@@ -21,7 +21,6 @@ const getDni = async () => {
   try {
     const conn = await getConnection();
     const resultsDni = await conn.query("SELECT dni FROM clients");
-    /* console.log(resultsDni); */
     return resultsDni;
   } catch (error) {
     throw error

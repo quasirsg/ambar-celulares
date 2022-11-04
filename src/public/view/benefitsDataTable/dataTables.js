@@ -17,7 +17,6 @@
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
-          console.log(data);
           return `
             <button class="btn btn-primary btn-lg mount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[9]}">
                 ${data[5]}
@@ -104,7 +103,7 @@
                           placeholder="Replace mount"
                         />
                         <input
-                          class="mountPito"
+                          class="mountHide"
                           type="hidden"
                           id="edit-mount-hidden"
                         />
@@ -129,11 +128,11 @@
         title: "Saldo",
         data: null,
         className: "text-center",
-        render: function (data) {
+        render: function (data, type, row, meta) {
           
           return `
             <button class="btn btn-primary btn-lg paid-button" data-toggle="modal" data-target="#tokenModalForPaid" value="${data[6]} ${data[9]}" >
-              ${data[6]}
+             $${data[6]}
             </button>
             <!-- Modal -->
             <div

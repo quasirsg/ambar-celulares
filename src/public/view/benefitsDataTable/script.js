@@ -38,8 +38,8 @@ errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-
-  return exists.length !== 0;
+  
+  return exists.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
 }
 
 async function getBenefitArr(dni) {
@@ -62,7 +62,6 @@ async function reloadData(dni) {
 
 async function editMount(id, mountInput, change, buttonToDisable) {
   try {
-    console.log(mountInput.value);
     buttonToDisable.disabled = "disabled";
     if (change === "change-mount") {
       validToaster("monto");
@@ -109,7 +108,7 @@ async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
     } else if (dt === "tokenModalForPaid") {
       invalidToaster({ code: "invalide_user" }, "second_alert");
     } else {
-      invalidToaster({ code: "invalide_user" });
+      invalidToaster({ code: "invalide_user" }, "first_alert");
     }
   } catch (error) {
     console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
@@ -213,8 +212,10 @@ searchInput.addEventListener("change", function (e) {
 const invalidToaster = function (error, diferent) {
   if (diferent === "second_alert") {
     var alerta = document.getElementById("second_alert");
-  } else {
+  } else if(diferent === "first_alert"){
     var alerta = document.getElementById("first_alert");
+  } else {
+    var alerta = document.getElementById("alert")
   }
   const errorText = errorsMap.get(error.code);
   alerta.style.cssText =
