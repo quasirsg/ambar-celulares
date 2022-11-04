@@ -52,9 +52,13 @@ async function getBenefits(dni) {
 async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
-
+  
 async function updateMount(id, mount) {
   return await main.updateMount(id, mount);
+}
+
+async function updatePaid(id, paid) {
+  return await main.updatePaid(id, paid);
 }
 
 /* ----------------------------
