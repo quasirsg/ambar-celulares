@@ -49,7 +49,6 @@ const codesValidityChecks = [
 /* Toaster */
 
 const invalidToaster = function (error) {
-  console.log(error);
   const errorText = errorsMap.get(error.code);
   var alerta = document.getElementById("alert");
   alerta.style.cssText =
@@ -121,7 +120,6 @@ form.addEventListener("submit", async function (e) {
     e.preventDefault();
     const token = codesInput.value;
     const verified = await verifyUser(data.id, token);
-    console.log(verified);
     validate()
     if (verified) {
       validToaster()

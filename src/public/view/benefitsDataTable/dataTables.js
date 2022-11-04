@@ -17,6 +17,7 @@
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
+          console.log(data);
           return `
             <button class="btn btn-primary btn-lg mount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]}">
                 ${data[5]}
@@ -105,7 +106,6 @@
                         <input
                           type="hidden"
                           id="edit-mount-hidden"
-                          value="pito"
                         />
                       </div>
                       <button type="submit" class="btn btn-primary" id="submit_button">Submit</button>
