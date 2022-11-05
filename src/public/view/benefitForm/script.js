@@ -37,7 +37,7 @@ $(document).ready(async function () {
       imei,
       description,
       entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
-      paid,
+      paid: Number(paid),
       mount: Number(mount),
       fixed: false,
       retired: false,
@@ -146,7 +146,7 @@ $(document).ready(async function () {
   const deviceValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9]{2,15}$/;
+        const regex = /^[A-z-0-9 ]{2,15}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
@@ -187,7 +187,7 @@ $(document).ready(async function () {
   const descriptionValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9]{2,255}$/;
+        const regex = /^[A-z-0-9 ]{2,255}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;

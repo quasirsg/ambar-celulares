@@ -103,10 +103,9 @@
                           placeholder="Replace mount"
                         />
                         <input
-                          class="mountPito"
+                          class="mountHide"
                           type="hidden"
                           id="edit-mount-hidden"
-                          value=${data[9]}
                         />
                       </div>
                       <button type="submit" class="btn btn-primary" id="submit_button_mount">Submit</button>
@@ -129,11 +128,11 @@
         title: "Saldo",
         data: null,
         className: "text-center",
-        render: function (data) {
+        render: function (data, type, row, meta) {
           
           return `
             <button class="btn btn-primary btn-lg paid-button" data-toggle="modal" data-target="#tokenModalForPaid" value="${data[6]} ${data[9]}" >
-              ${data[6]}
+             $${data[6]}
             </button>
             <!-- Modal -->
             <div
