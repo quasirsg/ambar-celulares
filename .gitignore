@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 .env
 2fauser
+2faDataBase.json

@@ -1,173 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="../../assets/css/nice-select2.css" />
-    <title>Ingreso de un dispositivo</title>
-  </head>
 
-  <body>
-    <div class="container-fluid">
-      <div class="alert" role="alert" id="alert" style="display: none"></div>
-      <a href="../index.html">
-        <div class="container-block">
-          <div class="block1">
-            <i class="fa fa-arrow-left"></i>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../../assets/css/nice-select2.css" />
+  <title>Ingreso de un dispositivo</title>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="alert" role="alert" id="alert" style="display: none"></div>
+    <a href="../index.html">
+      <div class="container-block">
+        <div class="block1">
+          <i class="fa fa-arrow-left"></i>
         </div>
-      </a>
+      </div>
+    </a>
 
-      <form id="saveClient" class="form">
-        <h2>Registrar Dispositivo</h2>
-        <div class="row">
-          <div class="col-sm-12" id="div-client">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Buscar cliente</span>
-              <select id="searchable-select-client" class="wide">
-                <option data-display="Select"></option>
-                <div>
-                  <button>a</button>
-                  <button>b</button>
-                </div>
-              </select>
-              <input
-                type="hidden"
-                id="client"
-                class="form-control"
-                value="null"
-              />
-              <ul class="input-requirements">
-                <li>Campo requerido</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-6" id="div-device">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Dispositivo</span>
-              <input
-                class="form-control"
-                type="text"
-                id="device"
-                placeholder="Ingrese un dispositivo"
-                maxlength="15"
-              />
-              <ul class="input-requirements">
-                <li>Ej: g532m</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-6" id="div-imei">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Imei</span>
-              <input
-                class="form-control"
-                type="text"
-                id="imei"
-                placeholder="Ingrese un dispositivo"
-                maxlength="15"
-              />
-              <ul class="input-requirements">
-                <li>un Imei esta conformado por numeros</li>
-                <li>un Imei esta conformado por 15 digitos</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-6" id="div-paid">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Seña pagada</span>
-              <span></span>
-              <input
-                class="form-control"
-                id="paid"
-                type="text"
-                value="0"
-              />
-              <ul class="input-requirements">
-                <li>Solo numeros</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-6" id="div-entryDate">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Fecha de entrada</span>
-              <input
-                class="form-control"
-                type="text"
-                id="entryDate"
-                placeholder="Ingrese la fecha de entrada"
-                maxlength="10"
-              />
-              <ul class="input-requirements">
-                <li>dd/mm/yyyy</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-6" id="div-mount">
-            <div class="form-group" style="margin-bottom: 10px">
-              <span>Monto</span>
-              <input
-                class="form-control"
-                type="text"
-                id="mount"
-                placeholder="Ingrese el monto"
-                maxlength="10"
-                value="0"
-              />
-              <ul class="input-requirements">
-                <li>Solo numeros</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="col-sm-12" id="div-description">
-            <div class="form-group" style="margin-bottom: 5px">
-              <span>Describa el problema del telefono</span>
-              <textarea
-                id="text-area-description"
-                class="form-control"
-                name="description"
-                cols="30"
-                rows="5"
-              ></textarea>
-              <input type="hidden" name="description" id="description" />
-              <ul class="input-requirements">
-                <li>Campo requerido</li>
-              </ul>
-            </div>
+    <form id="saveClient" class="form">
+      <h2>Registrar Dispositivo</h2>
+      <div class="row">
+        <div class="col-sm-12" id="div-client">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Buscar cliente</span>
+            <select id="searchable-select-client" class="wide">
+              <option data-display="Select"></option>
+              <div>
+                <button>a</button>
+                <button>b</button>
+              </div>
+            </select>
+            <input type="hidden" id="client" class="form-control" value="null" />
+            <ul class="input-requirements">
+              <li>Campo requerido</li>
+            </ul>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary form-control">
-          Submit
-        </button>
-      </form>
-    </div>
-    <!-- Insert this line above script imports  -->
-    <script>
-      if (typeof module === "object") {
-        window.module = module;
-        module = undefined;
-      }
-    </script>
-    <script src="../app.js"></script>
-    <script src="../../assets/js/jquery.js"></script>
-    <script src="../assets/js/inputsCustomValidation.js"></script>
-    <script src="../../assets/js/bundle-multi-select.min.js"></script>
-    <script src="../../assets/js/nice-select2.js"></script>
-    <script src="script.js"></script>
-    <!-- Insert this line after script imports -->
-    <script>
-      if (window.module) module = window.module;
-    </script>
-  </body>
+        <div class="col-sm-6" id="div-device">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Dispositivo</span>
+            <input class="form-control" type="text" id="device" placeholder="Ingrese un dispositivo" maxlength="15" />
+            <ul class="input-requirements">
+              <li>Ej: g532m</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-6" id="div-imei">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Imei</span>
+            <input class="form-control" type="text" id="imei" placeholder="Ingrese el imei del dispositivo"
+              maxlength="15" />
+            <ul class="input-requirements">
+              <li>un Imei esta conformado por numeros</li>
+              <li>un Imei esta conformado por 15 digitos</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-6" id="div-deposited">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Deposito</span>
+            <span></span>
+            <input class="form-control" id="deposited" type="text" placeholder="Deposito o adelanto del cliente" />
+            <ul class="input-requirements">
+              <li>Solo numeros</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-6" id="div-dateReceived">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Fecha recibido</span>
+            <input class="form-control" type="text" id="dateReceived"
+              placeholder="Ingrese la fecha de recepcion del dispositivo" maxlength="10" />
+            <ul class="input-requirements">
+              <li>dd/mm/yyyy</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-6" id="div-totalAmount">
+          <div class="form-group" style="margin-bottom: 10px">
+            <span>Importe Total</span>
+            <input class="form-control" type="text" id="totalAmount" placeholder="Ingrese el monto" maxlength="10"
+              value="0" />
+            <ul class="input-requirements">
+              <li>Solo numeros</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-sm-12" id="div-description">
+          <div class="form-group" style="margin-bottom: 5px">
+            <span>Describa el problema del telefono</span>
+            <textarea id="text-area-description" class="form-control" name="description" cols="30" rows="5"></textarea>
+            <input type="hidden" name="description" id="description" />
+            <ul class="input-requirements">
+              <li>Campo requerido</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary form-control">
+        Submit
+      </button>
+    </form>
+  </div>
+  <!-- Insert this line above script imports  -->
+  <script>
+    if (typeof module === "object") {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
+  <script src="../app.js"></script>
+  <script src="../../assets/js/jquery.js"></script>
+  <script src="../assets/js/inputsCustomValidation.js"></script>
+  <script src="../../assets/js/bundle-multi-select.min.js"></script>
+  <script src="../../assets/js/nice-select2.js"></script>
+  <script src="script.js"></script>
+  <!-- Insert this line after script imports -->
+  <script>
+    if (window.module) module = window.module;
+  </script>
+</body>
+
 </html>
