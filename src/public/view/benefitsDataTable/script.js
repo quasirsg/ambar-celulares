@@ -5,10 +5,10 @@
 const form = document.getElementById("search-form");
 const searchInput = document.getElementById("search");
 const checksOfRetired = document.getElementsByClassName("checks_of_retired");
-const checksOfPaidOut = document.getElementsByClassName("checks_of_paid_out");
+const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposited_out");
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
-const paidButtons = document.getElementsByClassName("paid-button");
-const mountButtons = document.getElementsByClassName("mount-button");
+const depositedButtons = document.getElementsByClassName("deposited-button");
+const amountButtons = document.getElementsByClassName("total-amount-button");
 
 let dni;
 let checks = [];
@@ -60,15 +60,15 @@ async function reloadData(dni) {
   }
 }
 
-async function editMount(id, mountInput, change, buttonToDisable) {
+async function editTotalAmount(id, amountInput, change, buttonToDisable) {
   try {
     buttonToDisable.disabled = "disabled";
-    if (change === "change-mount") {
-      validToaster("monto");
-      await updateMount(id, mountInput.value);
+    if (change === "change-amount") {
+      validToaster("Importe Total");
+      await updateTotalAmount(id, amountInput.value);
     } else {
-      validToaster("saldo");
-      await updatePaid(id, mountInput.value);
+      validToaster("Deposito");
+      await updateDeposited(id, amountInput.value);
     }
   } catch (error) {
     console.log(error);
@@ -105,7 +105,7 @@ async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
     if (isUser === true) {
       $(`#${dt}`).modal("hide");
       $(`#${modalId}`).modal("show");
-    } else if (dt === "tokenModalForPaid") {
+    } else if (dt === "tokenModalForDeposited") {
       invalidToaster({ code: "invalide_user" }, "second_alert");
     } else {
       invalidToaster({ code: "invalide_user" }, "first_alert");
@@ -115,7 +115,7 @@ async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
   }
 }
 
-function verifyCodesModalAddEventToShowPaidOrMountModal(modalId, dt) {
+function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
   const verifyCodesModal = document.getElementById(
     `verify-code-for-edit-${modalId}`
   );
@@ -130,10 +130,10 @@ function verifyCodesModalAddEventToShowPaidOrMountModal(modalId, dt) {
   verifyCodesModal.addEventListener("submit", name);
 }
 
-function toggleModalsOfMountAndPaid(buttons, modalId, dt) {
-  const editMountHidden = document.getElementById("edit-mount-hidden");
+function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
+  const editMountHidden = document.getElementById("edit-amount-hidden");
 
-  verifyCodesModalAddEventToShowPaidOrMountModal(modalId, dt);
+  verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt);
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -162,37 +162,37 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
 }
 
 function toggleModals() {
-  const editMountModal = document.getElementById("edit-mount-form");
-  const editPaidModal = document.getElementById("edit-paid-form");
-  const mountInput = document.getElementById("amountModal-input");
-  const paidInput = document.getElementById("paidModal-input");
-  const submitButtonMount = document.getElementById("submit_button_mount");
-  const submitButtonPaid = document.getElementById("submit_button_paid");
+  const editMountModal = document.getElementById("edit-amount-form");
+  const editDepositedModal = document.getElementById("edit-deposited-form");
+  const amountInput = document.getElementById("amountModal-input");
+  const depositedInput = document.getElementById("depositedModal-input");
+  const submitButtonTotalAmount = document.getElementById("submit_button_amount");
+  const submitButtonDeposited = document.getElementById("submit_button_deposited");
   const closeButtons = document.getElementsByClassName("close_modal")
 
   editMountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editMount(idClient, mountInput, "change-mount", submitButtonMount);
-    mountInput.value = "";
+    await editTotalAmount(idClient, amountInput, "change-amount", submitButtonTotalAmount);
+    amountInput.value = "";
   });
-  editPaidModal.addEventListener("submit", async function (e) {
+  editDepositedModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editMount(idClient, paidInput, "change-paid", submitButtonPaid);
-    paidInput.value = "";
+    await editTotalAmount(idClient, depositedInput, "change-deposited", submitButtonDeposited);
+    depositedInput.value = "";
   });
 
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
        e.preventDefault();
-       submitButtonMount.removeAttribute("disabled");
-       submitButtonPaid.removeAttribute("disabled");
+       submitButtonTotalAmount.removeAttribute("disabled");
+       submitButtonDeposited.removeAttribute("disabled");
        await reloadData(dni)
        toggleModals()
       });
   });
 
-  toggleModalsOfMountAndPaid(mountButtons, "amountModal", "tokenModal");
-  toggleModalsOfMountAndPaid(paidButtons, "paidModal", "tokenModalForPaid");
+  toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
+  toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
 }
 /* ----------------------------
 	Search Benefits by DNI
@@ -228,10 +228,10 @@ const invalidToaster = function (error, diferent) {
 };
 
 const validToaster = function (diferent) {
-  if (diferent === "monto") {
-    var alerta = document.getElementById("mount_alert");
+  if (diferent === "Importe Total") {
+    var alerta = document.getElementById("amount_alert");
   } else {
-    var alerta = document.getElementById("paid_alert");
+    var alerta = document.getElementById("deposited_alert");
   }
   alerta.style.cssText =
     "display: block; background-color: #dff0d8; color: #3c763d;";

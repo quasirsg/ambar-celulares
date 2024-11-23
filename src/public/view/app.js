@@ -53,12 +53,12 @@ async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
   
-async function updateMount(id, mount) {
-  return await main.updateMount(id, mount);
+async function updateTotalAmount(id, total_amount) {
+  return await main.updateTotalAmount(id, total_amount);
 }
 
-async function updatePaid(id, paid) {
-  return await main.updatePaid(id, paid);
+async function updateDeposited(id, deposited) {
+  return await main.updateDeposited(id, deposited);
 }
 
 /* ----------------------------

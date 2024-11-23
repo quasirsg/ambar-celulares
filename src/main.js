@@ -49,9 +49,9 @@ const getBenefits = async (dni) => {
   try {
     const conn = await getConnection();
     const benefits =
-      await conn.query(`SELECT imei,phone_number,device,description,entry_date,mount,paid,fixed,retired,idbenefits FROM clients c INNER JOIN benefits b ON 
+      await conn.query(`SELECT imei,phone_number,device,description,date_received,total_amount,deposited,fixed,retired,idbenefits FROM clients c INNER JOIN benefits b ON 
     c.dni = b.dni WHERE c.dni = ${dni}`);
-    benefits.forEach((benefit) => (benefit.mount = `$${benefit.mount}`));
+    benefits.forEach((benefit) => (benefit.total_amount = `$${benefit.total_amount}`));
     return benefits;
   } catch (error) {
     console.log(error);
@@ -59,11 +59,11 @@ const getBenefits = async (dni) => {
   }
 };
 
-const updateMount = async (id, mount) => {
+const updateTotalAmount = async (id, total_amount) => {
   try {
     const conn = await getConnection();
     return await conn.query(`UPDATE benefits b
-    SET b.mount = ${mount}
+    SET b.total_amount = ${total_amount}
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
@@ -71,11 +71,11 @@ const updateMount = async (id, mount) => {
   }
 };
 
-const updatePaid = async (id, paid) => {
+const updateDeposited = async (id, deposited) => {
   try {
     const conn = await getConnection();
     return await conn.query(`UPDATE benefits b
-    SET b.paid = ${paid}
+    SET b.deposited = ${deposited}
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
@@ -156,8 +156,8 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
-  updateMount,
-  updatePaid,
+  updateTotalAmount,
+  updateDeposited,
   updateChecks,
   verifyUser,
   validateToken,

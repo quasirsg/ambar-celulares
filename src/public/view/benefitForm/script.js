@@ -26,9 +26,9 @@ $(document).ready(async function () {
     device,
     imei,
     description,
-    entry_date,
-    paid,
-    mount
+    date_received,
+    deposited,
+    total_amount
   ) {
     controlInputs(dni, description);
     return {
@@ -36,9 +36,9 @@ $(document).ready(async function () {
       device,
       imei,
       description,
-      entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
-      paid: Number(paid),
-      mount: Number(mount),
+      date_received: String(date_received).replace(/[,.-]/gi, "/"),
+      deposited: Number(deposited),
+      total_amount: Number(total_amount),
       fixed: false,
       retired: false,
     };
@@ -96,15 +96,15 @@ $(document).ready(async function () {
     "Porfavor ingrese el imei correctamente para poder avanzar"
   );
   errorsMap.set(
-    "paid_incomplete",
+    "deposited_incomplete",
     "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
   );
   errorsMap.set(
-    "entryDate_incomplete",
+    "dateReceived_incomplete",
     "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
-    "mount_incomplete",
+    "total_amount_incomplete",
     "Porfavor ingrese el monto correctamente para poder avanzar"
   );
   errorsMap.set(
@@ -199,7 +199,7 @@ $(document).ready(async function () {
     },
   ];
 
-  const paidValidityChecks = [
+  const depositedValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[0-9]{1,15}$/;
@@ -209,12 +209,12 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-paid"] .input-requirements li:nth-child(1)'
+        'div[id="div-deposited"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
 
-  const entryDateValidityChecks = [
+  const dateReceivedValidityChecks = [
     {
       isInvalid: function (input) {
         const regex =
@@ -225,12 +225,12 @@ $(document).ready(async function () {
       },
       invalidityMessage: "dd/mm/yyyy",
       element: document.querySelector(
-        'div[id="div-entryDate"] .input-requirements li:nth-child(1)'
+        'div[id="div-dateReceived"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
 
-  const mountValidityChecks = [
+  const totalAmountValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[0-9]{1,15}$/;
@@ -240,7 +240,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-mount"] .input-requirements li:nth-child(1)'
+        'div[id="div-totalAmount"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -283,27 +283,27 @@ $(document).ready(async function () {
   const deviceInput = document.getElementById("device");
   const imeiInput = document.getElementById("imei");
   const descriptionInput = document.getElementById("description");
-  const paidInput = document.getElementById("paid");
-  const entryDateInput = document.getElementById("entryDate");
-  const mountInput = document.getElementById("mount");
+  const depositedInput = document.getElementById("deposited");
+  const dateReceivedInput = document.getElementById("dateReceived");
+  const totalAmountInput = document.getElementById("totalAmount");
 
   [
     clientInput,
     deviceInput,
     imeiInput,
     descriptionInput,
-    paidInput,
-    entryDateInput,
-    mountInput,
+    depositedInput,
+    dateReceivedInput,
+    totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
   clientInput.CustomValidation.validityChecks = clientValidityChecks;
   deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
-  paidInput.CustomValidation.validityChecks = paidValidityChecks;
-  entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
-  mountInput.CustomValidation.validityChecks = mountValidityChecks;
+  depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
+  dateReceivedInput.CustomValidation.validityChecks = dateReceivedValidityChecks;
+  totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
 
 	NiceSelect
@@ -369,10 +369,12 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         descriptionInput.value,
-        entryDateInput.value,
-        paidInput.value,
-        mountInput.value
+        dateReceivedInput.value,
+        depositedInput.value,
+        totalAmountInput.value
       );
+      console.log(benefit);
+      
       validToaster();
       new Notification("Registro Exitoso", {
         body: "Haz ingresado con exito un nuevo cliente",
