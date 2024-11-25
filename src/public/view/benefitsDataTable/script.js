@@ -9,6 +9,7 @@ const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposite
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
 const amountButtons = document.getElementsByClassName("total-amount-button");
+const descriptionButtons = document.getElementsByClassName("description-button")
 
 let dni;
 let checks = [];
@@ -45,6 +46,8 @@ async function clientExist(dni) {
 async function getBenefitArr(dni) {
   const benefits = await getBenefits(dni);
   const benefitsArr = benefits.map((value) => Object.values(value));
+  console.log(benefitsArr);
+  
   return benefitsArr;
 }
 
@@ -161,6 +164,15 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
   });
 }
 
+ function toggleModalOfDescription(buttons) { 
+   Array.from(buttons).forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      $(`#description-input`).text(`${button.value}`);
+    });
+  });
+}
+
 function toggleModals() {
   const editMountModal = document.getElementById("edit-amount-form");
   const editDepositedModal = document.getElementById("edit-deposited-form");
@@ -193,6 +205,7 @@ function toggleModals() {
 
   toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
+  toggleModalOfDescription(descriptionButtons)
 }
 /* ----------------------------
 	Search Benefits by DNI
@@ -250,7 +263,7 @@ const validToaster = function (diferent) {
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-
+  
   if (verifyIsValidDni(dni)) await reloadData(dni);
   toggleModals();
   validateIfChecksComeTrue(
