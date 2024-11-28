@@ -34,10 +34,10 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 SELECT dni FROM `ambar`.`clients`;
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42523334, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 3050, 6000,false,false,false);
+VALUES (DEFAULT, 99999999, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 3050, 6000,false,false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 3050, 6000,false,false,false);
+VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 3050, 6000,false,false);
 
 
 SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
