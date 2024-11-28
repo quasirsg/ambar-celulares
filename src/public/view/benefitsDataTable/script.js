@@ -9,7 +9,7 @@ const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposite
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
 const amountButtons = document.getElementsByClassName("total-amount-button");
-const descriptionButtons = document.getElementsByClassName("description-button")
+const problemButtons = document.getElementsByClassName("problem-button")
 
 let dni;
 let checks = [];
@@ -166,11 +166,11 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
   });
 }
 
-function toggleModalOfDescription(buttons) {
+function toggleModalOfProblem(buttons) {
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
-      $(`#description-input`).text(`${button.value}`);
+      $(`#problem-input`).text(`${button.value}`);
     });
   });
 }
@@ -259,7 +259,7 @@ function toggleModals() {
 
   toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
-  toggleModalOfDescription(descriptionButtons)
+  toggleModalOfProblem(problemButtons)
   paginationButtonsEvents(dni, paginationState)
 }
 /* ----------------------------

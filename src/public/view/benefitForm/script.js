@@ -1,5 +1,5 @@
 /* ----------------------------
-	Get data of bd
+  Get data of bd
 ---------------------------- */
 $(document).ready(async function () {
   const dnis = await getDni();
@@ -11,7 +11,7 @@ $(document).ready(async function () {
   });
 
   /* ----------------------------
-	BD
+  BD
 ---------------------------- */
   //Function to reset form
 
@@ -25,17 +25,17 @@ $(document).ready(async function () {
     dni,
     device,
     imei,
-    description,
+    problem,
     date_received,
     deposited,
     total_amount
   ) {
-    controlInputs(dni, description);
+    controlInputs(dni, problem);
     return {
       dni: Number(dni),
       device,
       imei,
-      description,
+      problem,
       date_received: String(date_received).replace(/[,.-]/gi, "/"),
       deposited: Number(deposited),
       total_amount: Number(total_amount),
@@ -44,11 +44,11 @@ $(document).ready(async function () {
     };
   }
 
-  function controlInputs(dni, description) {
+  function controlInputs(dni, problem) {
     if (dni === "null")
       throw new Error(invalidToaster({ code: "client_incomplete" }));
-    if (description === "")
-      throw new Error(invalidToaster({ code: "description_incomplete" }));
+    if (problem === "")
+      throw new Error(invalidToaster({ code: "problem_incomplete" }));
   }
 
   // Error Control and Validate
@@ -108,8 +108,8 @@ $(document).ready(async function () {
     "Porfavor ingrese el monto correctamente para poder avanzar"
   );
   errorsMap.set(
-    "description_incomplete",
-    "Porfavor ingrese una descripcion correctamente para poder avanzar"
+    "problem_incomplete",
+    "Porfavor ingrese un problema correctamente para poder avanzar"
   );
   errorsMap.set(
     "All_incomplete",
@@ -118,13 +118,13 @@ $(document).ready(async function () {
 
   /* ----------------------------
 
-	Validity Checks
+  Validity Checks
 
-	The arrays of validity checks for each input
-	Comprised of three things
-		1. isInvalid() - the function to determine if the input fulfills a particular requirement
-		2. invalidityMessage - the error message to display if the field is invalid
-		3. element - The element that states the requirement
+  The arrays of validity checks for each input
+  Comprised of three things
+    1. isInvalid() - the function to determine if the input fulfills a particular requirement
+    2. invalidityMessage - the error message to display if the field is invalid
+    3. element - The element that states the requirement
 
 ---------------------------- */
 
@@ -184,7 +184,7 @@ $(document).ready(async function () {
       ),
     },
   ];
-  const descriptionValidityChecks = [
+  const problemValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[A-z-0-9 ]{2,255}$/;
@@ -194,7 +194,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Campo requerido",
       element: document.querySelector(
-        'div[id="div-description"] .input-requirements li:nth-child(1)'
+        'div[id="div-problem"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -246,7 +246,7 @@ $(document).ready(async function () {
   ];
   /* ----------------------------
 
-	Tosaster
+  Tosaster
 
 ---------------------------- */
   const invalidToaster = async function (error) {
@@ -273,16 +273,16 @@ $(document).ready(async function () {
   };
   /* ----------------------------
 
-	Setup CustomValidation
+  Setup CustomValidation
 
-	Setup the CustomValidation prototype for each input
-	Also sets which array of validity checks to use for that input
+  Setup the CustomValidation prototype for each input
+  Also sets which array of validity checks to use for that input
 
 ---------------------------- */
   const clientInput = document.getElementById("client");
   const deviceInput = document.getElementById("device");
   const imeiInput = document.getElementById("imei");
-  const descriptionInput = document.getElementById("description");
+  const problemInput = document.getElementById("problem");
   const depositedInput = document.getElementById("deposited");
   const dateReceivedInput = document.getElementById("dateReceived");
   const totalAmountInput = document.getElementById("totalAmount");
@@ -291,7 +291,7 @@ $(document).ready(async function () {
     clientInput,
     deviceInput,
     imeiInput,
-    descriptionInput,
+    problemInput,
     depositedInput,
     dateReceivedInput,
     totalAmountInput,
@@ -300,13 +300,13 @@ $(document).ready(async function () {
   clientInput.CustomValidation.validityChecks = clientValidityChecks;
   deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
-  descriptionInput.CustomValidation.validityChecks = descriptionValidityChecks;
+  problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
   dateReceivedInput.CustomValidation.validityChecks = dateReceivedValidityChecks;
   totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
 
-	NiceSelect
+  NiceSelect
 
   ---------------------------- */
 
@@ -337,18 +337,18 @@ $(document).ready(async function () {
 
   /* ----------------------------
 
-	General
+  General
 
 ---------------------------- */
-  const textAreaDescription = document.getElementById("text-area-description");
+  const textAreaProblem = document.getElementById("text-area-problem");
 
-  textAreaDescription.addEventListener("keyup", function (e) {
-    descriptionInput.value = e.target.value;
-    descriptionInput.CustomValidation.checkInput();
+  textAreaProblem.addEventListener("keyup", function (e) {
+    problemInput.value = e.target.value;
+    problemInput.CustomValidation.checkInput();
   });
   /* ----------------------------
 
-	Event Listeners
+  Event Listeners
 
 ---------------------------- */
 
@@ -368,13 +368,13 @@ $(document).ready(async function () {
         clientInput.value,
         deviceInput.value,
         imeiInput.value,
-        descriptionInput.value,
+        problemInput.value,
         dateReceivedInput.value,
         depositedInput.value,
         totalAmountInput.value
       );
       console.log(benefit);
-      
+
       validToaster();
       new Notification("Registro Exitoso", {
         body: "Haz ingresado con exito un nuevo cliente",

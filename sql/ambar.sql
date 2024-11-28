@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `dni` INT UNSIGNED NOT NULL,
   `device` VARCHAR(30) NOT NULL,
   `imei` VARCHAR(15) NOT NULL,
-  `description` VARCHAR(255) NOT NULL,
+  `problem` VARCHAR(255) NOT NULL,
   `date_received` VARCHAR(30) NOT NULL,
   `deposited` INT NULL,
   `total_amount` INT NULL,
@@ -33,10 +33,10 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 
 SELECT dni FROM `ambar`.`clients`;
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
 VALUES (DEFAULT, 99999999, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 3050, 6000,false,false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received`, `deposited`, `total_amount`,`fixed`,`retired`) 
 VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 3050, 6000,false,false);
 
 
