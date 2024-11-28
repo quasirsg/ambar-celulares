@@ -319,7 +319,7 @@ const validToaster = function (diferent) {
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  if (verifyIsValidDni(dni)) await reloadData(dni);
+  if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
   toggleModals();
   validateIfChecksComeTrue(
     checksOfRetired,
