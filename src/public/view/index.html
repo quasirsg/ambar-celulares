@@ -1,103 +1,99 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"
-    />
-    <!-- Bootstrap CSS -->
 
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../assets/css/bootstrap.min.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;" />
+  <!-- Bootstrap CSS -->
 
-    <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css" />
 
-    <!-- Foontawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css" />
-    <title>Hello World!</title>
-  </head>
+  <link rel="stylesheet" href="style.css" />
 
-  <body>
-    <div class="container">
-      <div class="row text-center">
-        <h2>Menu</h2>
-        <div id="menu-box">
-          <a href="clientForm/clientForm.html">
-            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
-              <div class="container-block">
-                <div class="block1">
-                  <i class="fa fa-address-card-o"></i>
-                </div>
-                <div class="block2">
-                  <span>Regsitrar cliente</span>
-                  <p>Guardar información de un cliente</p>
-                </div>
+  <!-- Foontawesome CSS -->
+  <link rel="stylesheet" href="../assets/css/font-awesome.min.css" />
+  <title>Hello World!</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row text-center">
+      <h2>Menu</h2>
+      <div id="menu-box">
+        <a href="clientForm/clientForm.html">
+          <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-address-card-o"></i>
+              </div>
+              <div class="block2">
+                <span>Registrar Cliente</span>
+                <p>Guardar información de contacto del cliente</p>
               </div>
             </div>
-          </a>
+          </div>
+        </a>
 
-          <a href="benefitForm/benefitForm.html">
-            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
-              <div class="container-block">
-                <div class="block1">
-                  <i class="fa fa-keyboard-o"></i>
-                </div>
-                <div class="block2">
-                  <span>Nueva prestación</span>
-                  <p>Asigna un equipo a un cliente para arreglo</p>
-                </div>
+        <a href="benefitForm/benefitForm.html">
+          <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-keyboard-o"></i>
+              </div>
+              <div class="block2">
+                <span>Registrar Equipo</span>
+                <p>Generar un nuevo registro de equipo para servicio técnico</p>
               </div>
             </div>
-          </a>
+          </div>
+        </a>
 
-          <a href="2fa/index.html" id="2fa">
-            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
-              <div class="container-block">
-                <div class="block1">
-                  <i class="fa fa-qrcode"></i>
-                </div>
-                <div class="block2">
-                  <span>2FA</span>
-                  <p>Registrar doble autenticación</p>
-                </div>
+        <a href="2fa/index.html" id="2fa">
+          <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-qrcode"></i>
+              </div>
+              <div class="block2">
+                <span>Activar Seguridad (2FA)</span>
+                <p>Activar medidas avanzadas de seguridad del sistema</p>
               </div>
             </div>
-          </a>
+          </div>
+        </a>
 
-          <a href="benefitsDataTable/index.html">
-            <div id="item" class="col-sm-6 col-md-6 col-lg-6">
-              <div class="container-block">
-                <div class="block1">
-                  <i class="fa fa-search"></i>
-                </div>
-                <div class="block2">
-                  <span>Buscar cliente</span>
-                  <p>ver los equipos que dejo el cliente para arreglo</p>
-                </div>
+        <a href="benefitsDataTable/index.html">
+          <div id="item" class="col-sm-6 col-md-6 col-lg-6">
+            <div class="container-block">
+              <div class="block1">
+                <i class="fa fa-search"></i>
+              </div>
+              <div class="block2">
+                <span>Buscar Registro de Cliente</span>
+                <p>Acceder a la información de contacto y servicios registrados</p>
               </div>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
       </div>
     </div>
-    <!-- Insert this line above script imports  -->
-    <script>
-      if (typeof module === "object") {
-        window.module = module;
-        module = undefined;
-      }
-    </script>
-    <script src="app.js"></script>
-    <script src="../assets/js/jquery.js"></script>
-    <script src="script.js"></script>
-    <!-- Insert this line after script imports -->
-    <script>
-      if (window.module) module = window.module;
-    </script>
-  </body>
+  </div>
+  <!-- Insert this line above script imports  -->
+  <script>
+    if (typeof module === "object") {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
+  <script src="app.js"></script>
+  <script src="../assets/js/jquery.js"></script>
+  <script src="script.js"></script>
+  <!-- Insert this line after script imports -->
+  <script>
+    if (window.module) module = window.module;
+  </script>
+</body>
+
 </html>
