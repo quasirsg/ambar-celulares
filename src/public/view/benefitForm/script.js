@@ -26,7 +26,7 @@ $(document).ready(async function () {
     device,
     imei,
     problem,
-    date_received,
+    entry_date,
     deposited,
     total_amount
   ) {
@@ -36,7 +36,7 @@ $(document).ready(async function () {
       device,
       imei,
       problem,
-      date_received: String(date_received).replace(/[,.-]/gi, "/"),
+      entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
       deposited: Number(deposited),
       total_amount: Number(total_amount),
       fixed: false,
@@ -100,7 +100,7 @@ $(document).ready(async function () {
     "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
   );
   errorsMap.set(
-    "dateReceived_incomplete",
+    "entryDate_incomplete",
     "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
@@ -214,7 +214,7 @@ $(document).ready(async function () {
     },
   ];
 
-  const dateReceivedValidityChecks = [
+  const entryDateValidityChecks = [
     {
       isInvalid: function (input) {
         const regex =
@@ -225,7 +225,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "dd/mm/yyyy",
       element: document.querySelector(
-        'div[id="div-dateReceived"] .input-requirements li:nth-child(1)'
+        'div[id="div-entryDate"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -284,7 +284,7 @@ $(document).ready(async function () {
   const imeiInput = document.getElementById("imei");
   const problemInput = document.getElementById("problem");
   const depositedInput = document.getElementById("deposited");
-  const dateReceivedInput = document.getElementById("dateReceived");
+  const entryDateInput = document.getElementById("entryDate");
   const totalAmountInput = document.getElementById("totalAmount");
 
   [
@@ -293,7 +293,7 @@ $(document).ready(async function () {
     imeiInput,
     problemInput,
     depositedInput,
-    dateReceivedInput,
+    entryDateInput,
     totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
@@ -302,7 +302,7 @@ $(document).ready(async function () {
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
-  dateReceivedInput.CustomValidation.validityChecks = dateReceivedValidityChecks;
+  entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
   totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
 
@@ -369,7 +369,7 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         problemInput.value,
-        dateReceivedInput.value,
+        entryDateInput.value,
         depositedInput.value,
         totalAmountInput.value
       );

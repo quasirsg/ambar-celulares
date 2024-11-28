@@ -50,7 +50,7 @@ const getBenefits = async (dni, page, limit) => {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
     const benefits = await conn.query(`
-        SELECT imei, device, problem, date_received, total_amount, deposited, fixed, retired, idbenefits
+        SELECT imei, device, problem, entry_date, total_amount, deposited, fixed, retired, idbenefits
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?

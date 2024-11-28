@@ -56,7 +56,7 @@ $(document).ready(function () {
           `;
         },
       },
-      { title: "Entrada" },
+      { title: "F. Ingreso" },
       {
         title: "Deposito",
         data: null,
