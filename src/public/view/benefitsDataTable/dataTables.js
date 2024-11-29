@@ -58,7 +58,7 @@ $(document).ready(function () {
       },
       { title: "F. Ingreso" },
       {
-        title: "Deposito",
+        title: "Seña",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
@@ -141,7 +141,7 @@ $(document).ready(function () {
                   <div class="modal-body">
                     <form role="form" id="edit-deposited-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Deposito</label>
+                        <label for="exampleInputEmail1">Seña Depositada</label>
                         <input
                           type="number"
                           class="form-control"
