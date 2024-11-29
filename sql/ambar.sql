@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `imei` VARCHAR(15) NOT NULL,
   `problem` VARCHAR(255) NOT NULL,
   `entry_date` VARCHAR(30) NOT NULL,
+  `brand` VARCHAR(30) NOT NULL,
   `deposited` INT NULL,
   `amount` INT NULL,
   `fixed` BOOLEAN,
@@ -28,16 +29,40 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `ambar`.`brands` (
+  `idbrand` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`idbrand`)
+) ENGINE = InnoDB;
+
+
 
 INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES (42523334, 'Alexis', 'Romano', '3813302319');
 
 SELECT dni FROM `ambar`.`clients`;
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42525591, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 3050, 6000,false,false);
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`) 
+VALUES (DEFAULT, 42525591, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 'Motorola', 3050, 6000,false,false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 3050, 6000,false,false);
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`) 
+VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 'Samsung', 3050, 6000,false,false);
+
+INSERT INTO `ambar`.`brands` (`name`) VALUES
+('Samsung'),
+('Motorola'),
+('Apple'),
+('Xiaomi'),
+('Huawei'),
+('LG'),
+('Alcatel'),
+('Nokia'),
+('ZTE'),
+('Sony'),
+('TCL'),
+('Oppo'),
+('Realme'),
+('Vivo'),
+('Honor');
 
 
 SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 

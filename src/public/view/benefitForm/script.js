@@ -9,6 +9,13 @@ $(document).ready(async function () {
       text: e.dni.toString(),
     };
   });
+  const brands = await getPhoneBrands();
+  const brandsFor = brands.map((e) => {
+    return {
+      value: e.name,
+      text: e.name,
+    }
+  });
 
   /* ----------------------------
   BD
@@ -18,6 +25,7 @@ $(document).ready(async function () {
   function resetForm() {
     form.reset();
     niceSelectInstance.clear();
+    niceSelectInstanceBrand.clear();
   }
 
   // Method to create a benefit plain object
@@ -27,6 +35,7 @@ $(document).ready(async function () {
     imei,
     problem,
     entry_date,
+    brand,
     deposited,
     amount
   ) {
@@ -37,6 +46,7 @@ $(document).ready(async function () {
       imei,
       problem,
       entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
+      brand,
       deposited: Number(deposited),
       amount: Number(amount),
       fixed: false,
@@ -230,6 +240,21 @@ $(document).ready(async function () {
     },
   ];
 
+  const brandValidityChecks = [
+    {
+      isInvalid: function (input) {
+        const regex = /^[A-z-0-9]{5,30}$/;
+        const caracters = input.value;
+        const test = regex.test(caracters);
+        return test ? false : true;
+      },
+      invalidityMessage: "Campo requerido",
+      element: document.querySelector(
+        'div[id="div-brand"] .input-requirements li:nth-child(1)'
+      ),
+    },
+  ];
+
   const amountValidityChecks = [
     {
       isInvalid: function (input) {
@@ -285,6 +310,7 @@ $(document).ready(async function () {
   const problemInput = document.getElementById("problem");
   const depositedInput = document.getElementById("deposited");
   const entryDateInput = document.getElementById("entryDate");
+  const brandInput = document.getElementById("brand");
   const amountInput = document.getElementById("amount");
 
   [
@@ -294,6 +320,7 @@ $(document).ready(async function () {
     problemInput,
     depositedInput,
     entryDateInput,
+    brandInput,
     amountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
@@ -303,6 +330,7 @@ $(document).ready(async function () {
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
   entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
+  brandInput.CustomValidation.validityChecks = brandValidityChecks;
   amountInput.CustomValidation.validityChecks = amountValidityChecks;
   /* ----------------------------
 
@@ -313,12 +341,19 @@ $(document).ready(async function () {
   // get element
 
   const clientSelect = document.getElementById("searchable-select-client");
+  const brandSelect = document.getElementById("searchable-select-brand")
 
   // Initialize
   const niceSelectInstance = NiceSelect.bind(clientSelect, {
     searchable: true,
     data: dnisFor,
   });
+
+  const niceSelectInstanceBrand = NiceSelect.bind(brandSelect, {
+    searchable: true,
+    data: brandsFor,
+  })
+
 
   // Append options
 
@@ -329,12 +364,32 @@ $(document).ready(async function () {
     clientSelect.append(option);
   });
 
+  brandsFor.forEach((e) => {
+    let option = document.createElement("option");
+    option.value = e.value;
+    option.text = e.text;
+    brandSelect.append(option);
+  })
+
   //Event Listener
   clientSelect.addEventListener("change", function (e) {
     clientInput.value = e.target.value;
     clientInput.CustomValidation.checkInput();
   });
 
+  brandSelect.addEventListener("change", function (e) {
+    brandInput.value = e.target.value;
+    brandInput.CustomValidation.checkInput();
+  });
+
+  brandInput.addEventListener("input", function () {
+    const hasText = brandInput.value.trim().length > 0;
+    if (hasText) {
+      niceSelectInstanceBrand.disable();
+    } else {
+      niceSelectInstanceBrand.enable();
+    }
+  });
   /* ----------------------------
 
   General
@@ -370,6 +425,7 @@ $(document).ready(async function () {
         imeiInput.value,
         problemInput.value,
         entryDateInput.value,
+        brandInput.value,
         depositedInput.value,
         amountInput.value
       );
@@ -379,7 +435,7 @@ $(document).ready(async function () {
         body: "Haz ingresado con exito un nuevo cliente",
       });
       resetForm();
-      await saveBenefit(benefit)
+      await saveBenefit(benefit);
     } catch (error) {
       console.log(error);
     }

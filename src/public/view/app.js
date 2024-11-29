@@ -53,6 +53,10 @@ async function getTotalBenefitsPerDni(dni) {
   return await main.getTotalBenefitsPerDni(dni);
 }
 
+async function getPhoneBrands() {
+  return await main.getPhoneBrands();
+}
+
 async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }

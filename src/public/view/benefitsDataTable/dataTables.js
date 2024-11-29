@@ -57,6 +57,7 @@ $(document).ready(function () {
         },
       },
       { title: "F. Ingreso" },
+      { title: "Marca" },
       {
         title: "Seña",
         data: null,
@@ -64,8 +65,8 @@ $(document).ready(function () {
         render: function (data, type, row, meta) {
 
           return `
-            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[4]} ${data[8]}" >
-             $${data[4]}
+            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[5]} ${data[9]}" >
+             $${data[5]}
             </button>
             <!-- Modal -->
             <div
@@ -170,8 +171,8 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[8]}">
-                ${data[5]}
+            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[6]} ${data[9]}">
+                ${data[6]}
             </button>
             <!-- Modal -->
             <div
@@ -278,7 +279,7 @@ $(document).ready(function () {
       },
       {
         title: "Arreglado",
-        targets: 6,
+        targets: 7,
         data: null,
         className: "text-center",
         searchable: false,
@@ -294,7 +295,7 @@ $(document).ready(function () {
       },
       {
         title: "Retirado",
-        targets: 7,
+        targets: 8,
         data: null,
         className: "text-center",
         searchable: false,
