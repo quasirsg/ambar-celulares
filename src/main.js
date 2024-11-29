@@ -50,7 +50,7 @@ const getBenefits = async (dni, page, limit) => {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
     const benefits = await conn.query(`
-        SELECT imei, device, problem, entry_date, total_amount, deposited, fixed, retired, idbenefits
+        SELECT imei, device, problem, entry_date, amount, deposited, fixed, retired, idbenefits
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?
@@ -82,11 +82,11 @@ const getTotalBenefitsPerDni = async (dni) => {
   }
 }
 
-const updateTotalAmount = async (id, total_amount) => {
+const updateAmount = async (id, amount) => {
   try {
     const conn = await getConnection();
     return await conn.query(`UPDATE benefits b
-    SET b.total_amount = ${total_amount}
+    SET b.amount = ${amount}
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
@@ -180,7 +180,7 @@ module.exports = {
   saveBenefit,
   getBenefits,
   getTotalBenefitsPerDni,
-  updateTotalAmount,
+  updateAmount,
   updateDeposited,
   updateChecks,
   verifyUser,

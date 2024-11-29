@@ -8,7 +8,7 @@ const checksOfRetired = document.getElementsByClassName("checks_of_retired");
 const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposited_out");
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
-const amountButtons = document.getElementsByClassName("total-amount-button");
+const amountButtons = document.getElementsByClassName("amount-button");
 const problemButtons = document.getElementsByClassName("problem-button")
 
 let dni;
@@ -65,14 +65,14 @@ async function reloadData(dni, state) {
   }
 }
 
-async function editTotalAmount(id, amountInput, change, buttonToDisable) {
+async function editAmount(id, amountInput, change, buttonToDisable) {
   try {
     buttonToDisable.disabled = "disabled";
     if (change === "change-amount") {
-      validToaster("Importe Total");
-      await updateTotalAmount(id, amountInput.value);
+      validToaster("el Importe");
+      await updateAmount(id, amountInput.value);
     } else {
-      validToaster("Deposito");
+      validToaster("la Seña");
       await updateDeposited(id, amountInput.value);
     }
   } catch (error) {
@@ -228,29 +228,29 @@ async function paginationButtonsEvents(dni, state) {
 
 
 function toggleModals() {
-  const editMountModal = document.getElementById("edit-amount-form");
+  const editAmountModal = document.getElementById("edit-amount-form");
   const editDepositedModal = document.getElementById("edit-deposited-form");
   const amountInput = document.getElementById("amountModal-input");
   const depositedInput = document.getElementById("depositedModal-input");
-  const submitButtonTotalAmount = document.getElementById("submit_button_amount");
+  const submitButtonAmount = document.getElementById("submit_button_amount");
   const submitButtonDeposited = document.getElementById("submit_button_deposited");
   const closeButtons = document.getElementsByClassName("close_modal")
 
-  editMountModal.addEventListener("submit", async function (e) {
+  editAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editTotalAmount(idClient, amountInput, "change-amount", submitButtonTotalAmount);
+    await editAmount(idClient, amountInput, "change-amount", submitButtonAmount);
     amountInput.value = "";
   });
   editDepositedModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editTotalAmount(idClient, depositedInput, "change-deposited", submitButtonDeposited);
+    await editAmount(idClient, depositedInput, "change-deposited", submitButtonDeposited);
     depositedInput.value = "";
   });
 
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
-      submitButtonTotalAmount.removeAttribute("disabled");
+      submitButtonAmount.removeAttribute("disabled");
       submitButtonDeposited.removeAttribute("disabled");
       await reloadData(dni, paginationState)
       toggleModals()
@@ -296,7 +296,7 @@ const invalidToaster = function (error, diferent) {
 };
 
 const validToaster = function (diferent) {
-  if (diferent === "Importe Total") {
+  if (diferent === "el Importe") {
     var alerta = document.getElementById("amount_alert");
   } else {
     var alerta = document.getElementById("deposited_alert");
@@ -304,7 +304,7 @@ const validToaster = function (diferent) {
   alerta.style.cssText =
     "display: block; background-color: #dff0d8; color: #3c763d;";
   alerta.innerHTML =
-    "<strong>¡Bien hecho!</strong> Cambiaste el " +
+    "<strong>¡Bien hecho!</strong> Cambiaste " +
     `${diferent}` +
     " con exito.";
   setTimeout(function () {
@@ -323,13 +323,13 @@ form.addEventListener("submit", async function (e) {
   toggleModals();
   validateIfChecksComeTrue(
     checksOfRetired,
-    7,
+    6,
     addUpdateStateToEventClick,
     "fixed"
   );
   validateIfChecksComeTrue(
     checksOfFixed,
-    8,
+    7,
     addUpdateStateToEventClick,
     "retired"
   );

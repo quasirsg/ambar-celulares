@@ -134,14 +134,14 @@ $(document).ready(function () {
                       <span aria-hidden="true">&times;</span>
                       <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Editar Deposito</h4>
+                    <h4 class="modal-title" id="myModalLabel">Editar Seña</h4>
                   </div>
         
                   <!-- Modal Body -->
                   <div class="modal-body">
                     <form role="form" id="edit-deposited-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Seña Depositada</label>
+                        <label for="exampleInputEmail1">Seña depositada</label>
                         <input
                           type="number"
                           class="form-control"
@@ -170,7 +170,7 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg total-amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[4]} ${data[8]}">
+            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[4]} ${data[8]}">
                 ${data[4]}
             </button>
             <!-- Modal -->
@@ -247,7 +247,7 @@ $(document).ready(function () {
                   <div class="modal-body">
                     <form role="form" id="edit-amount-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Importe Total</label>
+                        <label for="exampleInputEmail1">Importe</label>
                         <input
                           type="number"
                           class="form-control"

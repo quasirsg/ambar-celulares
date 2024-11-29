@@ -28,7 +28,7 @@ $(document).ready(async function () {
     problem,
     entry_date,
     deposited,
-    total_amount
+    amount
   ) {
     controlInputs(dni, problem);
     return {
@@ -38,7 +38,7 @@ $(document).ready(async function () {
       problem,
       entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
       deposited: Number(deposited),
-      total_amount: Number(total_amount),
+      amount: Number(amount),
       fixed: false,
       retired: false,
     };
@@ -104,8 +104,8 @@ $(document).ready(async function () {
     "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
-    "total_amount_incomplete",
-    "Porfavor ingrese el monto correctamente para poder avanzar"
+    "amount_incomplete",
+    "Porfavor ingrese el importe correctamente para poder avanzar"
   );
   errorsMap.set(
     "problem_incomplete",
@@ -230,7 +230,7 @@ $(document).ready(async function () {
     },
   ];
 
-  const totalAmountValidityChecks = [
+  const amountValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[0-9]{1,15}$/;
@@ -240,7 +240,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-totalAmount"] .input-requirements li:nth-child(1)'
+        'div[id="div-amount"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -285,7 +285,7 @@ $(document).ready(async function () {
   const problemInput = document.getElementById("problem");
   const depositedInput = document.getElementById("deposited");
   const entryDateInput = document.getElementById("entryDate");
-  const totalAmountInput = document.getElementById("totalAmount");
+  const amountInput = document.getElementById("amount");
 
   [
     clientInput,
@@ -294,7 +294,7 @@ $(document).ready(async function () {
     problemInput,
     depositedInput,
     entryDateInput,
-    totalAmountInput,
+    amountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
   clientInput.CustomValidation.validityChecks = clientValidityChecks;
@@ -303,7 +303,7 @@ $(document).ready(async function () {
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
   entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
-  totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
+  amountInput.CustomValidation.validityChecks = amountValidityChecks;
   /* ----------------------------
 
   NiceSelect
@@ -371,9 +371,8 @@ $(document).ready(async function () {
         problemInput.value,
         entryDateInput.value,
         depositedInput.value,
-        totalAmountInput.value
+        amountInput.value
       );
-      console.log(benefit);
 
       validToaster();
       new Notification("Registro Exitoso", {
