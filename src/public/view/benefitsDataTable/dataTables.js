@@ -64,8 +64,8 @@ $(document).ready(function () {
         render: function (data, type, row, meta) {
 
           return `
-            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[5]} ${data[8]}" >
-             $${data[5]}
+            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[4]} ${data[8]}" >
+             $${data[4]}
             </button>
             <!-- Modal -->
             <div
@@ -170,8 +170,8 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[4]} ${data[8]}">
-                ${data[4]}
+            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[8]}">
+                ${data[5]}
             </button>
             <!-- Modal -->
             <div
