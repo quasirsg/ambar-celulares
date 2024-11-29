@@ -243,7 +243,7 @@ $(document).ready(async function () {
   const brandValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9]{5,30}$/;
+        const regex = /^[A-z-0-9]{2,30}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
