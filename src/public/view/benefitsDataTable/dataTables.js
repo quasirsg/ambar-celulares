@@ -172,7 +172,7 @@ $(document).ready(function () {
         render: function (data, type, row, meta) {
           return `
             <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[6]} ${data[9]}">
-                ${data[6]}
+                $${data[6]}
             </button>
             <!-- Modal -->
             <div
@@ -285,11 +285,97 @@ $(document).ready(function () {
         searchable: false,
         orderable: false,
         render: function (data) {
-          return (
-            '<input type="checkbox" class="checks_of_retired" name="check" value="' +
-            data +
-            '">'
-          );
+
+
+          /* console.log(data[1], data[9]); */
+
+          return data[7] == false
+            ?
+            `<input type="checkbox" class="checks_of_fixed" data-toggle="modal" data-target="#updatefixedModal" name="check" value="${data[1]},${data[7]}, ${data[9]}">
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="updatefixedModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="updatefixedModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel">Observaciones</h4>
+                    </div>
+            
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <form role="form" id="submit-observation-form">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Agregar observacion</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="updateObservation-input"
+                            placeholder="Añadir observación"
+                          />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit_button_observation">Submit</button>
+                      </form>
+                    </div>
+            
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default close_modal" id="close_modal_fixed" data-dismiss="modal">
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+
+            : `<button class="btn btn-primary btn-lg fixed-button" data-toggle="modal" data-target="#fixedModal" value="${data}">
+                 Ver
+               </button>
+
+               <!-- Modal -->
+            <div
+              class="modal fade"
+              id="fixedModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="fixedModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="fixedModalLabel">Observaciones del dispositivo</h4>
+                  </div>
+          
+                  <!-- Modal Body -->
+                  <div class="modal-body">
+                    <p id="fixed-input"></p>
+                  </div>
+          
+                  <!-- Modal Footer -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>`
         },
         width: "1%",
       },
@@ -302,13 +388,15 @@ $(document).ready(function () {
         orderable: false,
         render: function (data) {
           return (
-            '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
-            data +
-            '">'
-          );
+            `<input type="checkbox" class="checks_of_retired" name="check" value="${data[8]}, ${data[9]}">`
+          )
         },
         width: "1%",
       },
     ],
+    lengthMenu: [
+      [10, 25, 50, -1],
+      [10, 25, 50, 'All']
+    ]
   });
 });

@@ -50,7 +50,7 @@ const getBenefits = async (dni, page, limit) => {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
     const benefits = await conn.query(`
-        SELECT imei, device, problem, entry_date, brand, deposited, amount, fixed, retired, idbenefits
+        SELECT imei, device, problem, entry_date, brand, deposited, amount, fixed, retired, idbenefits, observations, date_fixed
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?
@@ -129,6 +129,21 @@ const updateChecks = async (id, columnName) => {
   }
 };
 
+const updateObservationsAndDateFixed = async (observation, dateFixed, id) => {
+  try {
+    const conn = await getConnection();
+    return await conn.query(
+      `UPDATE benefits b
+       SET b.observations = ?, b.date_fixed = ?
+       WHERE b.idbenefits = ?`,
+      [observation, dateFixed, id]
+    );
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 const get2faUser = async () => {
   try {
     const user2fa = await axios.post("http://localhost:3000/api/register");
@@ -195,6 +210,7 @@ module.exports = {
   updateAmount,
   updateDeposited,
   updateChecks,
+  updateObservationsAndDateFixed,
   verifyUser,
   validateToken,
   get2faUser,

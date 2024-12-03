@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `amount` INT NULL,
   `fixed` BOOLEAN,
   `retired` BOOLEAN,
+  `obvervations`VARCHAR(255) NOT NULL,
+  `date_fixed` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC) VISIBLE,
   CONSTRAINT `fk_client_benefits`
@@ -41,11 +43,11 @@ INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES 
 
 SELECT dni FROM `ambar`.`clients`;
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42525591, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 'Motorola', 3050, 6000,false,false);
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`, `observations`, `date_fixed`) 
+VALUES (DEFAULT, 42525591, 'g532m', '111111111111111','Problema en la batería', '27/07/2022', 'Motorola', 3050, 6000,false,false, 'Cambio de modulo y ficha SIM', '29/11/2024');
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`) 
-VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 'Samsung', 3050, 6000,false,false);
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `brand`, `deposited`, `amount`,`fixed`,`retired`, `observations`, `date_fixed`) 
+VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 'Samsung', 3050, 6000,false,false, 'Cambio de modulo y ficha SIM', '29/11/2024');
 
 INSERT INTO `ambar`.`brands` (`name`) VALUES
 ('Samsung'),

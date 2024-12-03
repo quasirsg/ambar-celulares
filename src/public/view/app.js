@@ -69,6 +69,10 @@ async function updateDeposited(id, deposited) {
   return await main.updateDeposited(id, deposited);
 }
 
+async function updateObservationsAndDateFixed(observation, dateFixed, id) {
+  return await main.updateObservationsAndDateFixed(observation, dateFixed, id);
+}
+
 /* ----------------------------
   2fa
 ---------------------------- */
