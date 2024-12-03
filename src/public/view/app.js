@@ -49,8 +49,8 @@ async function getBenefits(dni, page, limit) {
   return await main.getBenefits(dni, page, limit);
 }
 
-async function getTotalBenefitsPerDni(dni) {
-  return await main.getTotalBenefitsPerDni(dni);
+async function getAllBenefitsByDni(dni) {
+  return await main.getAllBenefitsByDni(dni);
 }
 
 async function updateChecks(id, columnName) {
