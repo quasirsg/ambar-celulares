@@ -45,19 +45,42 @@ const saveBenefit = async (benefit) => {
   }
 };
 
-const getBenefits = async (dni) => {
+const getBenefits = async (dni, page, limit) => {
   try {
     const conn = await getConnection();
-    const benefits =
-      await conn.query(`SELECT imei,phone_number,device,description,date_received,total_amount,deposited,fixed,retired,idbenefits FROM clients c INNER JOIN benefits b ON 
-    c.dni = b.dni WHERE c.dni = ${dni}`);
-    benefits.forEach((benefit) => (benefit.total_amount = `$${benefit.total_amount}`));
+    const offset = (page - 1) * limit;
+    const benefits = await conn.query(`
+        SELECT imei, phone_number, device, description, date_received, total_amount, deposited, fixed, retired, idbenefits
+        FROM ambar.clients c
+        INNER JOIN ambar.benefits b ON c.dni = b.dni
+        WHERE c.dni = ?
+        ORDER BY idbenefits DESC
+        LIMIT ? OFFSET ?;
+    `, [dni, limit, offset]);
     return benefits;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
+
+const getAllBenefitsByDni = async (dni) => {
+  try {
+    const conn = await getConnection();
+    const countBenefits = await conn.query(
+      `SELECT COUNT(*) as total 
+            FROM clients c 
+            INNER JOIN benefits b 
+            ON c.dni = b.dni 
+            WHERE c.dni = ?`,
+      [dni]
+    );
+    return countBenefits;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 const updateTotalAmount = async (id, total_amount) => {
   try {
@@ -79,7 +102,7 @@ const updateDeposited = async (id, deposited) => {
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -156,6 +179,7 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
+  getAllBenefitsByDni,
   updateTotalAmount,
   updateDeposited,
   updateChecks,

@@ -16,8 +16,12 @@ let checks = [];
 let client;
 let modalToShow;
 let idClient;
+const paginationState = {
+  currentPage: 1,
+  rowsPerPage: 5,
+};
 /* ----------------------------
-	Control errors
+  Control errors
 ---------------------------- */
 
 const errorsMap = new Map();
@@ -28,35 +32,33 @@ errorsMap.set(
 );
 errorsMap.set(
   "client_inexistent",
-  "El cliente seleccionado no cuenta con beneficios"
+  "El cliente seleccionado no cuenta con dispositivos asociados"
 );
 errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 /* ----------------------------
-	Async Functions 
+  Async Functions 
 ---------------------------- */
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-  
   return exists.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
 }
 
-async function getBenefitArr(dni) {
-  const benefits = await getBenefits(dni);
+async function getBenefitArr(dni, state) {
+  const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage);
   const benefitsArr = benefits.map((value) => Object.values(value));
-  console.log(benefitsArr);
-  
   return benefitsArr;
 }
 
-async function reloadData(dni) {
+async function reloadData(dni, state) {
   if (await clientExist(dni)) {
-    const benefitsArr = await getBenefitArr(dni);
+    const benefitsArr = await getBenefitArr(dni, state);
     if (benefitsArr.length) {
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
+      $("#example").DataTable().order([]).draw();
     } else {
       invalidToaster({ code: "client_inexistent" });
     }
@@ -79,7 +81,7 @@ async function editTotalAmount(id, amountInput, change, buttonToDisable) {
 }
 
 /* ----------------------------
-	Básic Validations
+  Básic Validations
 ---------------------------- */
 function isNumber(toValidate) {
   return typeof toValidate === "number";
@@ -164,12 +166,75 @@ function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
   });
 }
 
- function toggleModalOfDescription(buttons) { 
-   Array.from(buttons).forEach((button) => {
+function toggleModalOfDescription(buttons) {
+  Array.from(buttons).forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
       $(`#description-input`).text(`${button.value}`);
     });
+  });
+}
+
+/**
+ * Manage function of the events at the pagination dataTables
+ */
+async function paginationSettingsToButtons(dni, state) {
+  const countBenefits = await getAllBenefitsByDni(dni);
+  const countTotalBenefits = countBenefits[0].total;
+  const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
+  $(".paginate_button.current").text(state.currentPage);
+
+  updateButtonStates(state, totalPages);
+  await eventListenerPaginationButtons(dni, state, totalPages);
+}
+
+/**
+ *  Handles the state op pagination buttons based on the current page and pagination
+ */
+function updateButtonStates(state, pagination) {
+  if (state.currentPage <= 1) {
+    $("#example_previous").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_previous").addClass("enabled").removeClass("disabled");
+  }
+
+  if (state.currentPage >= pagination) {
+    $("#example_next").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_next").addClass("enabled").removeClass("disabled");
+  }
+}
+
+/**
+ * Add logic to the dataTables pagination buttons and controll the events of the current page
+ */
+async function eventListenerPaginationButtons(dni, state, pagination) {
+  $("#example_previous").off("click").on("click", async function (e) {
+    e.preventDefault();
+    if ($(this).hasClass("disabled")) {
+      console.log("El botón 'Previous' está deshabilitado, no se realizará la acción.");
+      return;
+    }
+    if (state.currentPage > 1) {
+      state.currentPage--;
+      await reloadData(dni, state);
+      updateButtonStates(state, pagination);
+      toggleModals();
+    }
+  });
+
+  $("#example_next").off("click").on("click", async function (e) {
+    e.preventDefault();
+    if ($(this).hasClass("disabled")) {
+      console.log("El botón 'Next' está deshabilitado, no se realizará la acción.");
+      return;
+    }
+    if (state.currentPage < pagination) {
+      state.currentPage++;
+      await reloadData(dni, state);
+      updateButtonStates(state, pagination);
+      toggleModals();
+    }
   });
 }
 
@@ -195,20 +260,21 @@ function toggleModals() {
 
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
-       e.preventDefault();
-       submitButtonTotalAmount.removeAttribute("disabled");
-       submitButtonDeposited.removeAttribute("disabled");
-       await reloadData(dni)
-       toggleModals()
-      });
+      e.preventDefault();
+      submitButtonTotalAmount.removeAttribute("disabled");
+      submitButtonDeposited.removeAttribute("disabled");
+      await reloadData(dni, paginationState)
+      toggleModals()
+    });
   });
 
   toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
   toggleModalOfDescription(descriptionButtons)
+  paginationSettingsToButtons(dni, paginationState)
 }
 /* ----------------------------
-	Search Benefits by DNI
+  Search Benefits by DNI
 ---------------------------- */
 
 searchInput.addEventListener("change", function (e) {
@@ -219,13 +285,13 @@ searchInput.addEventListener("change", function (e) {
 });
 
 /* ----------------------------
-	Toasters
+  Toasters
 ---------------------------- */
 
 const invalidToaster = function (error, diferent) {
   if (diferent === "second_alert") {
     var alerta = document.getElementById("second_alert");
-  } else if(diferent === "first_alert"){
+  } else if (diferent === "first_alert") {
     var alerta = document.getElementById("first_alert");
   } else {
     var alerta = document.getElementById("alert")
@@ -258,13 +324,13 @@ const validToaster = function (diferent) {
 };
 
 /* ----------------------------
-	Add submit logic to dataTable fields
+  Add submit logic to dataTable fields
 ---------------------------- */
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-  
-  if (verifyIsValidDni(dni)) await reloadData(dni);
+
+  if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
   toggleModals();
   validateIfChecksComeTrue(
     checksOfRetired,

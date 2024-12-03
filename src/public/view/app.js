@@ -2,7 +2,7 @@ const { remote } = require("electron");
 const main = remote.require("./main");
 
 /* ----------------------------
-	Client
+  Client
 ---------------------------- */
 /**
  * este metodo devuelve un cliente de la base de datos a partir de un dni
@@ -30,7 +30,7 @@ async function getDni() {
 }
 
 /* ----------------------------
-	Benefit and BenefitDataTable
+  Benefit and BenefitDataTable
 ---------------------------- */
 /**
  * este metodo guarda la informacion de una nueva benefit en la db
@@ -45,14 +45,18 @@ async function saveBenefit(benefit) {
  * @param {String} dni
  * @returns {BenefitObject}
  */
-async function getBenefits(dni) {
-  return await main.getBenefits(dni);
+async function getBenefits(dni, page, limit) {
+  return await main.getBenefits(dni, page, limit);
+}
+
+async function getAllBenefitsByDni(dni) {
+  return await main.getAllBenefitsByDni(dni);
 }
 
 async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
-  
+
 async function updateTotalAmount(id, total_amount) {
   return await main.updateTotalAmount(id, total_amount);
 }
@@ -62,7 +66,7 @@ async function updateDeposited(id, deposited) {
 }
 
 /* ----------------------------
-	2fa
+  2fa
 ---------------------------- */
 async function verifyUser(userId, token) {
   return await main.verifyUser(userId, token);
