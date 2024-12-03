@@ -3,7 +3,7 @@
  * DataTables
  *
  */
- $(document).ready(function () {
+$(document).ready(function () {
   $("#example").DataTable({
     data: client,
     columns: [
@@ -17,7 +17,7 @@
         render: function (data, type, row, meta) {
           return `
             <button class="btn btn-primary btn-lg description-button" data-toggle="modal" data-target="#descriptionModal" value="${data[3]}">
-              Ver descripción
+              Ampliar
             </button>
       
             <!-- Modal -->
@@ -56,14 +56,14 @@
             </div>
           `;
         },
-      },      
+      },
       { title: "Entrada" },
       {
         title: "Deposito",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
-          
+
           return `
             <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[6]} ${data[9]}" >
              $${data[6]}
