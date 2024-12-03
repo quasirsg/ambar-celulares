@@ -64,7 +64,7 @@ const getBenefits = async (dni, page, limit) => {
   }
 };
 
-const getTotalBenefitsPerDni = async (dni) => {
+const getAllBenefitsByDni = async (dni) => {
   try {
     const conn = await getConnection();
     const countBenefits = await conn.query(
@@ -179,7 +179,7 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
-  getTotalBenefitsPerDni,
+  getAllBenefitsByDni,
   updateAmount,
   updateDeposited,
   updateChecks,

@@ -32,7 +32,7 @@ errorsMap.set(
 );
 errorsMap.set(
   "client_inexistent",
-  "El cliente seleccionado no cuenta con beneficios"
+  "El cliente seleccionado no cuenta con dispositivos asociados"
 );
 errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
@@ -175,28 +175,40 @@ function toggleModalOfProblem(buttons) {
   });
 }
 
-async function paginationButtonsEvents(dni, state) {
-  const countBenefits = await getTotalBenefitsPerDni(dni);
+/**
+ * Manage function of the events at the pagination dataTables
+ */
+async function paginationSettingsToButtons(dni, state) {
+  const countBenefits = await getAllBenefitsByDni(dni);
   const countTotalBenefits = countBenefits[0].total;
   const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
   $(".paginate_button.current").text(state.currentPage);
 
-  function updateButtonStates() {
-    if (state.currentPage <= 1) {
-      $("#example_previous").addClass("disabled").removeClass("enabled");
-    } else {
-      $("#example_previous").addClass("enabled").removeClass("disabled");
-    }
+  updateButtonStates(state, totalPages);
+  await eventListenerPaginationButtons(dni, state, totalPages);
+}
 
-    if (state.currentPage >= totalPages) {
-      $("#example_next").addClass("disabled").removeClass("enabled");
-    } else {
-      $("#example_next").addClass("enabled").removeClass("disabled");
-    }
+/**
+ *  Handles the state op pagination buttons based on the current page and pagination
+ */
+function updateButtonStates(state, pagination) {
+  if (state.currentPage <= 1) {
+    $("#example_previous").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_previous").addClass("enabled").removeClass("disabled");
   }
 
-  updateButtonStates();
+  if (state.currentPage >= pagination) {
+    $("#example_next").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_next").addClass("enabled").removeClass("disabled");
+  }
+}
 
+/**
+ * Add logic to the dataTables pagination buttons and controll the events of the current page
+ */
+async function eventListenerPaginationButtons(dni, state, pagination) {
   $("#example_previous").off("click").on("click", async function (e) {
     e.preventDefault();
     if ($(this).hasClass("disabled")) {
@@ -206,7 +218,7 @@ async function paginationButtonsEvents(dni, state) {
     if (state.currentPage > 1) {
       state.currentPage--;
       await reloadData(dni, state);
-      updateButtonStates();
+      updateButtonStates(state, pagination);
       toggleModals();
     }
   });
@@ -217,15 +229,14 @@ async function paginationButtonsEvents(dni, state) {
       console.log("El botón 'Next' está deshabilitado, no se realizará la acción.");
       return;
     }
-    if (state.currentPage < totalPages) {
+    if (state.currentPage < pagination) {
       state.currentPage++;
       await reloadData(dni, state);
-      updateButtonStates();
+      updateButtonStates(state, pagination);
       toggleModals();
     }
   });
 }
-
 
 function toggleModals() {
   const editAmountModal = document.getElementById("edit-amount-form");
@@ -259,8 +270,8 @@ function toggleModals() {
 
   toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
-  toggleModalOfProblem(problemButtons)
-  paginationButtonsEvents(dni, paginationState)
+  toggleModalOfProblem(problemButtons);
+  paginationSettingsToButtons(dni, paginationState)
 }
 /* ----------------------------
   Search Benefits by DNI
