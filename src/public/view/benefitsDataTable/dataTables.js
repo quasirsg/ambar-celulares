@@ -8,25 +8,24 @@ $(document).ready(function () {
     data: client,
     columns: [
       { title: "Imei" },
-      { title: "Contacto" },
       { title: "Dispositivo" },
       {
-        title: "Descripción",
+        title: "Problema",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg description-button" data-toggle="modal" data-target="#descriptionModal" value="${data[3]}">
+            <button class="btn btn-primary btn-lg problem-button" data-toggle="modal" data-target="#problemModal" value="${data[3]}">
               Ampliar
             </button>
       
             <!-- Modal -->
             <div
               class="modal fade"
-              id="descriptionModal"
+              id="problemModal"
               tabindex="-1"
               role="dialog"
-              aria-labelledby="descriptionModalLabel"
+              aria-labelledby="problemModalLabel"
               aria-hidden="true"
             >
               <div class="modal-dialog">
@@ -37,12 +36,12 @@ $(document).ready(function () {
                       <span aria-hidden="true">&times;</span>
                       <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="descriptionModalLabel">Descripción</h4>
+                    <h4 class="modal-title" id="problemModalLabel">Descripción del Problema</h4>
                   </div>
           
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <p id="description-input"></p>
+                    <p id="problem-input"></p>
                   </div>
           
                   <!-- Modal Footer -->
@@ -57,16 +56,16 @@ $(document).ready(function () {
           `;
         },
       },
-      { title: "Entrada" },
+      { title: "F. Ingreso" },
       {
-        title: "Deposito",
+        title: "Seña",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
 
           return `
-            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[6]} ${data[9]}" >
-             $${data[6]}
+            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[4]} ${data[8]}" >
+             $${data[4]}
             </button>
             <!-- Modal -->
             <div
@@ -135,14 +134,14 @@ $(document).ready(function () {
                       <span aria-hidden="true">&times;</span>
                       <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Editar Deposito</h4>
+                    <h4 class="modal-title" id="myModalLabel">Editar Seña</h4>
                   </div>
         
                   <!-- Modal Body -->
                   <div class="modal-body">
                     <form role="form" id="edit-deposited-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Deposito</label>
+                        <label for="exampleInputEmail1">Seña depositada</label>
                         <input
                           type="number"
                           class="form-control"
@@ -171,7 +170,7 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg total-amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[9]}">
+            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[8]}">
                 ${data[5]}
             </button>
             <!-- Modal -->
@@ -248,7 +247,7 @@ $(document).ready(function () {
                   <div class="modal-body">
                     <form role="form" id="edit-amount-form">
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Importe Total</label>
+                        <label for="exampleInputEmail1">Importe</label>
                         <input
                           type="number"
                           class="form-control"
@@ -279,7 +278,7 @@ $(document).ready(function () {
       },
       {
         title: "Arreglado",
-        targets: 7,
+        targets: 6,
         data: null,
         className: "text-center",
         searchable: false,
@@ -295,7 +294,7 @@ $(document).ready(function () {
       },
       {
         title: "Retirado",
-        targets: 8,
+        targets: 7,
         data: null,
         className: "text-center",
         searchable: false,

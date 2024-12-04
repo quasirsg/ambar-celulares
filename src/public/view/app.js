@@ -57,8 +57,8 @@ async function updateChecks(id, columnName) {
   return await main.updateChecks(id, columnName);
 }
 
-async function updateTotalAmount(id, total_amount) {
-  return await main.updateTotalAmount(id, total_amount);
+async function updateAmount(id, amount) {
+  return await main.updateAmount(id, amount);
 }
 
 async function updateDeposited(id, deposited) {
