@@ -39,34 +39,34 @@ VALUES (DEFAULT, 42525591, 'g532m', '111111111111111','Problema en la batería',
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`,`fixed`,`retired`) 
 VALUES (DEFAULT, 42523334, 'j700m', '111111111111111','Problema en la batería', '27/06/2022', 3050, 6000,false,false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'j700m', '111111111111111', 'Problema en la batería', '27/06/2022', 3050, 6000, false, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'a10', '222222222222222', 'Pantalla rota', '12/07/2023', 2000, 5500, true, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'samsung s21', '333333333333333', 'Problema de software', '01/08/2023', 1500, 8000, true, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'iphone 11', '444444444444444', 'No enciende', '05/08/2023', 1000, 4000, false, true);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'poco x3', '555555555555555', 'Baja duración de batería', '15/09/2023', 2300, 7000, true, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'mi 10', '666666666666666', 'Falta de señal', '22/09/2023', 1900, 4800, false, true);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'huawei p30', '777777777777777', 'Problemas con cámara', '30/09/2023', 2500, 6500, true, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'nokia 5.4', '888888888888888', 'Fallo en el touch', '10/10/2023', 2100, 5500, false, false);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'xiaomi redmi note 10', '999999999999999', 'Fallo en la pantalla táctil', '18/10/2023', 3000, 6000, true, true);
 
-INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `description`, `date_received`, `deposited`, `total_amount`, `fixed`, `retired`) 
+INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `entry_date`, `deposited`, `amount`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'galaxy s20', '101010101010101', 'El dispositivo se apaga solo', '20/10/2023', 2200, 7000, false, false);
 
 SELECT * FROM `ambar`.`clients` c INNER JOIN `ambar`.`benefits` b ON 
