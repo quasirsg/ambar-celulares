@@ -15,8 +15,8 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg problem-button" data-toggle="modal" data-target="#problemModal" value="${data[2]}">
-              Ver descripción
+            <button class="btn btn-primary btn-lg description-button" data-toggle="modal" data-target="#descriptionModal" value="${data[3]}">
+              Ampliar
             </button>
       
             <!-- Modal -->
