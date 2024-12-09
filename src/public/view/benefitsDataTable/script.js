@@ -8,7 +8,7 @@ const checksOfRetired = document.getElementsByClassName("checks_of_retired");
 const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposited_out");
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
-const amountButtons = document.getElementsByClassName("amount-button");
+const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
 const problemButtons = document.getElementsByClassName("problem-button")
 
 let dni;
@@ -49,6 +49,8 @@ async function clientExist(dni) {
 async function getBenefitArr(dni, state) {
   const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage);
   const benefitsArr = benefits.map((value) => Object.values(value));
+  console.log(benefitsArr);
+
   return benefitsArr;
 }
 
@@ -65,15 +67,15 @@ async function reloadData(dni, state) {
   }
 }
 
-async function editAmount(id, amountInput, change, buttonToDisable) {
+async function editTotalAmount(id, amountInput, change, buttonToDisable) {
   try {
     buttonToDisable.disabled = "disabled";
-    if (change === "change-amount") {
+    if (change === "change-totalAmount") {
       validToaster("el Importe");
-      await updateAmount(id, amountInput.value);
+      await updateTotalAmount(id, amountInput.value);
     } else {
       validToaster("la Seña");
-      await updateDeposited(id, amountInput.value);
+      await updateDepositedMoney(id, amountInput.value);
     }
   } catch (error) {
     console.log(error);
@@ -102,7 +104,7 @@ function isValidTokenAnd2faUser(token, get2faUser) {
 Add events to fields of dataTables
 ---------------------------- */
 
-async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
+async function validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt) {
   const get2faUser = get2faUserInLocalStorage();
   const token = parseInt(codeInput.value);
   try {
@@ -120,7 +122,7 @@ async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
   }
 }
 
-function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
+function verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt) {
   const verifyCodesModal = document.getElementById(
     `verify-code-for-edit-${modalId}`
   );
@@ -128,7 +130,7 @@ function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
 
   async function name(e) {
     e.preventDefault();
-    await validateTokenAndToggleEditMountModal(codeInput, modalId, dt);
+    await validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt);
     codeInput.value = "";
   }
 
@@ -138,7 +140,7 @@ function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
 function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
   const editMountHidden = document.getElementById("edit-amount-hidden");
 
-  verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt);
+  verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt);
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -239,36 +241,36 @@ async function eventListenerPaginationButtons(dni, state, pagination) {
 }
 
 function toggleModals() {
-  const editAmountModal = document.getElementById("edit-amount-form");
-  const editDepositedModal = document.getElementById("edit-deposited-form");
-  const amountInput = document.getElementById("amountModal-input");
-  const depositedInput = document.getElementById("depositedModal-input");
-  const submitButtonAmount = document.getElementById("submit_button_amount");
-  const submitButtonDeposited = document.getElementById("submit_button_deposited");
+  const editTotalAmountModal = document.getElementById("edit-total-amount-form");
+  const editDepositedMoneyModal = document.getElementById("edit-deposited-money-form");
+  const totalAmountInput = document.getElementById("totalAmountModal-input");
+  const depositedMoneyInput = document.getElementById("depositedMoneyModal-input");
+  const submitButtonTotalAmount = document.getElementById("submit_button_total_amount");
+  const submitButtonDepositedMoney = document.getElementById("submit_button_deposited_money");
   const closeButtons = document.getElementsByClassName("close_modal")
 
-  editAmountModal.addEventListener("submit", async function (e) {
+  editTotalAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editAmount(idClient, amountInput, "change-amount", submitButtonAmount);
-    amountInput.value = "";
+    await editTotalAmount(idClient, totalAmountInput, "change-totalAmount", submitButtonTotalAmount);
+    totalAmountInput.value = "";
   });
-  editDepositedModal.addEventListener("submit", async function (e) {
+  editDepositedMoneyModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editAmount(idClient, depositedInput, "change-deposited", submitButtonDeposited);
-    depositedInput.value = "";
+    await editTotalAmount(idClient, depositedMoneyInput, "change-deposited", submitButtonDepositedMoney);
+    depositedMoneyInput.value = "";
   });
 
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
-      submitButtonAmount.removeAttribute("disabled");
-      submitButtonDeposited.removeAttribute("disabled");
+      submitButtonTotalAmount.removeAttribute("disabled");
+      submitButtonDepositedMoney.removeAttribute("disabled");
       await reloadData(dni, paginationState)
       toggleModals()
     });
   });
 
-  toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
+  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
   toggleModalOfProblem(problemButtons);
   paginationSettingsToButtons(dni, paginationState)

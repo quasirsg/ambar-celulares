@@ -15,7 +15,7 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg problem-button" data-toggle="modal" data-target="#problemModal" value="${data[3]}">
+            <button class="btn btn-primary btn-lg problem-button" data-toggle="modal" data-target="#problemModal" value="${data[2]}">
               Ampliar
             </button>
       
@@ -58,14 +58,14 @@ $(document).ready(function () {
       },
       { title: "F. Ingreso" },
       {
-        title: "Seña",
+        title: "Deposito",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
 
           return `
-            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[4]} ${data[8]}" >
-             $${data[4]}
+            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[5]} ${data[8]}" >
+             $${data[5]}
             </button>
             <!-- Modal -->
             <div
@@ -139,17 +139,17 @@ $(document).ready(function () {
         
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form role="form" id="edit-deposited-form">
+                    <form role="form" id="edit-deposited-money-form">
                       <div class="form-group">
                         <label for="exampleInputEmail1">Seña depositada</label>
                         <input
                           type="number"
                           class="form-control"
-                          id="depositedModal-input"
+                          id="depositedMoneyModal-input"
                           placeholder="Replace amount"
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary" id="submit_button_deposited">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="submit_button_deposited_money">Submit</button>
                     </form>
                   </div>
 
@@ -165,13 +165,13 @@ $(document).ready(function () {
             `}
       },
       {
-        title: "Total",
+        title: "Importe Total",
         data: null,
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg amount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[8]}">
-                ${data[5]}
+            <button class="btn btn-primary btn-lg totalAmount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[4]} ${data[8]}">
+                $${data[4]}
             </button>
             <!-- Modal -->
             <div
@@ -197,13 +197,13 @@ $(document).ready(function () {
         
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form role="form" id="verify-code-for-edit-amountModal">
+                    <form role="form" id="verify-code-for-edit-totalAmountModal">
                       <div class="form-group">
                         <label for="">Verificar Token</label>
                         <input
                           type="text"
                           class="form-control"
-                          id="code-amountModal"
+                          id="code-totalAmountModal"
                           placeholder="Enter 2fa code"
                         />
                       </div>
@@ -224,7 +224,7 @@ $(document).ready(function () {
             <!-- Modal 2-->
             <div
               class="modal fade"
-              id="amountModal"
+              id="totalAmountModal"
               tabindex="-1"
               role="dialog"
               aria-labelledby="myModalLabel"
@@ -245,13 +245,13 @@ $(document).ready(function () {
         
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <form role="form" id="edit-amount-form">
+                    <form role="form" id="edit-total-amount-form">
                       <div class="form-group">
                         <label for="exampleInputEmail1">Importe</label>
                         <input
                           type="number"
                           class="form-control"
-                          id="amountModal-input"
+                          id="totalAmountModal-input"
                           placeholder="Replace amount"
                         />
                         <input
@@ -260,7 +260,7 @@ $(document).ready(function () {
                           id="edit-amount-hidden"
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary" id="submit_button_amount">Submit</button>
+                      <button type="submit" class="btn btn-primary" id="submit_button_total_amount">Submit</button>
                     </form>
                   </div>
 
