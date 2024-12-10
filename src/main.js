@@ -50,7 +50,7 @@ const getBenefits = async (dni, page, limit) => {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
     const benefits = await conn.query(`
-        SELECT imei, device, problem, date_received_phone, total_amount_for_service, deposited_money, fixed, retired, idbenefits
+        SELECT imei, device, problem, date_received_phone, brand, total_amount_for_service, deposited_money, fixed, retired, idbenefits
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?
@@ -76,6 +76,17 @@ const getAllBenefitsByDni = async (dni) => {
       [dni]
     );
     return countBenefits;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+const getPhoneBrands = async () => {
+  try {
+    const conn = await getConnection();
+    const brands = await conn.query('SELECT name FROM brands');
+    return brands;
   } catch (error) {
     console.log(error);
     throw error;
@@ -180,6 +191,7 @@ module.exports = {
   saveBenefit,
   getBenefits,
   getAllBenefitsByDni,
+  getPhoneBrands,
   updateTotalAmount,
   updateDepositedMoney,
   updateChecks,
