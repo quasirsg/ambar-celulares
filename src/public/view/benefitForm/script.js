@@ -34,10 +34,10 @@ $(document).ready(async function () {
     device,
     imei,
     problem,
-    entry_date,
+    date_received_phone,
     brand,
-    deposited,
-    amount
+    deposited_money,
+    total_amount_for_service
   ) {
     controlInputs(dni, problem);
     return {
@@ -45,10 +45,10 @@ $(document).ready(async function () {
       device,
       imei,
       problem,
-      entry_date: String(entry_date).replace(/[,.-]/gi, "/"),
+      date_received_phone: String(date_received_phone).replace(/[,.-]/gi, "/"),
       brand,
-      deposited: Number(deposited),
-      amount: Number(amount),
+      deposited_money: Number(deposited_money),
+      total_amount_for_service: Number(total_amount_for_service),
       fixed: false,
       retired: false,
     };
@@ -110,7 +110,7 @@ $(document).ready(async function () {
     "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
   );
   errorsMap.set(
-    "entryDate_incomplete",
+    "dateReceivedPhone_incomplete",
     "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
@@ -209,7 +209,7 @@ $(document).ready(async function () {
     },
   ];
 
-  const depositedValidityChecks = [
+  const depositedMoneyValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[0-9]{1,15}$/;
@@ -219,12 +219,12 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-deposited"] .input-requirements li:nth-child(1)'
+        'div[id="div-deposited_money"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
 
-  const entryDateValidityChecks = [
+  const dateReceivedPhoneValidityChecks = [
     {
       isInvalid: function (input) {
         const regex =
@@ -235,7 +235,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "dd/mm/yyyy",
       element: document.querySelector(
-        'div[id="div-entryDate"] .input-requirements li:nth-child(1)'
+        'div[id="div-date_received_phone"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -255,7 +255,7 @@ $(document).ready(async function () {
     },
   ];
 
-  const amountValidityChecks = [
+  const totalAmountValidityChecks = [
     {
       isInvalid: function (input) {
         const regex = /^[0-9]{1,15}$/;
@@ -265,7 +265,7 @@ $(document).ready(async function () {
       },
       invalidityMessage: "Solo numeros",
       element: document.querySelector(
-        'div[id="div-amount"] .input-requirements li:nth-child(1)'
+        'div[id="div-total_amount"] .input-requirements li:nth-child(1)'
       ),
     },
   ];
@@ -308,30 +308,30 @@ $(document).ready(async function () {
   const deviceInput = document.getElementById("device");
   const imeiInput = document.getElementById("imei");
   const problemInput = document.getElementById("problem");
-  const depositedInput = document.getElementById("deposited");
-  const entryDateInput = document.getElementById("entryDate");
+  const depositedMoneyInput = document.getElementById("deposited_money");
+  const dateReceivedPhoneInput = document.getElementById("date_received_phone");
   const brandInput = document.getElementById("brand");
-  const amountInput = document.getElementById("amount");
+  const totalAmountInput = document.getElementById("total_amount");
 
   [
     clientInput,
     deviceInput,
     imeiInput,
     problemInput,
-    depositedInput,
-    entryDateInput,
+    depositedMoneyInput,
+    dateReceivedPhoneInput,
     brandInput,
-    amountInput,
+    totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
   clientInput.CustomValidation.validityChecks = clientValidityChecks;
   deviceInput.CustomValidation.validityChecks = deviceValidityChecks;
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
-  depositedInput.CustomValidation.validityChecks = depositedValidityChecks;
-  entryDateInput.CustomValidation.validityChecks = entryDateValidityChecks;
+  depositedMoneyInput.CustomValidation.validityChecks = depositedMoneyValidityChecks;
+  dateReceivedPhoneInput.CustomValidation.validityChecks = dateReceivedPhoneValidityChecks;
   brandInput.CustomValidation.validityChecks = brandValidityChecks;
-  amountInput.CustomValidation.validityChecks = amountValidityChecks;
+  totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
 
   NiceSelect
@@ -424,10 +424,10 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         problemInput.value,
-        entryDateInput.value,
+        dateReceivedPhoneInput.value,
         brandInput.value,
-        depositedInput.value,
-        amountInput.value
+        depositedMoneyInput.value,
+        totalAmountInput.value
       );
 
       validToaster();
