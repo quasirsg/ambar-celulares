@@ -4,6 +4,7 @@
  *
  */
 $(document).ready(function () {
+
   $("#example").DataTable({
     data: client,
     columns: [
@@ -284,10 +285,6 @@ $(document).ready(function () {
         searchable: false,
         orderable: false,
         render: function (data) {
-
-
-          /* console.log(data[1], data[9]); */
-
           return data[7] == false
             ?
             `<input type="checkbox" class="checks_of_fixed" data-toggle="modal" data-target="#updatefixedModal" name="check" value="${data[1]},${data[7]}, ${data[9]}">
@@ -393,9 +390,10 @@ $(document).ready(function () {
         width: "1%",
       },
     ],
-    lengthMenu: [
-      [10, 25, 50, -1],
-      [10, 25, 50, 'All']
-    ]
+
+    /* SETTINGS OF DATATABLE*/
+    ordering: false, /* disable order in the rows of datatable*/
+    info: false, /* disable info show entries, leyend: "Showing 1 to 5 of 5 entries" */
+    dom: 'rtip', /* disable buton show entries (10/15/20/50) */
   });
 });
