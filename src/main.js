@@ -50,7 +50,7 @@ const getBenefits = async (dni, page, limit) => {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
     const benefits = await conn.query(`
-        SELECT imei, device, problem, entry_date, brand, deposited, amount, fixed, retired, idbenefits, observations, date_fixed
+        SELECT imei, device, problem, date_received_phone, brand, total_amount_for_service, deposited_money, fixed, retired, idbenefits
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?
@@ -64,7 +64,7 @@ const getBenefits = async (dni, page, limit) => {
   }
 };
 
-const getTotalBenefitsPerDni = async (dni) => {
+const getAllBenefitsByDni = async (dni) => {
   try {
     const conn = await getConnection();
     const countBenefits = await conn.query(
@@ -93,11 +93,11 @@ const getPhoneBrands = async () => {
   }
 }
 
-const updateAmount = async (id, amount) => {
+const updateTotalAmount = async (id, totalAmount) => {
   try {
     const conn = await getConnection();
     return await conn.query(`UPDATE benefits b
-    SET b.amount = ${amount}
+    SET b.total_amount_for_service = ${totalAmount}
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
@@ -105,11 +105,11 @@ const updateAmount = async (id, amount) => {
   }
 };
 
-const updateDeposited = async (id, deposited) => {
+const updateDepositedMoney = async (id, depositedMoney) => {
   try {
     const conn = await getConnection();
     return await conn.query(`UPDATE benefits b
-    SET b.deposited = ${deposited}
+    SET b.deposited_money = ${depositedMoney}
     WHERE b.idbenefits = ${id}`);
   } catch (error) {
     console.log(error);
@@ -205,10 +205,10 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
-  getTotalBenefitsPerDni,
+  getAllBenefitsByDni,
   getPhoneBrands,
-  updateAmount,
-  updateDeposited,
+  updateTotalAmount,
+  updateDepositedMoney,
   updateChecks,
   updateObservationsAndDateFixed,
   verifyUser,

@@ -8,7 +8,7 @@ const checksOfRetired = document.getElementsByClassName("checks_of_retired");
 const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposited_out");
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
-const amountButtons = document.getElementsByClassName("amount-button");
+const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
 const problemButtons = document.getElementsByClassName("problem-button")
 /* const fixedButtons = document.getElementsByClassName("fixed-button")
 const closeButtonFixed = document.getElementById("close_modal_fixed"); */
@@ -34,7 +34,7 @@ errorsMap.set(
 );
 errorsMap.set(
   "client_inexistent",
-  "El cliente seleccionado no cuenta con beneficios"
+  "El cliente seleccionado no cuenta con dispositivos asociados"
 );
 errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
@@ -75,15 +75,15 @@ function getCurrentDate() {
   return `${day}/${month}/${year}`;
 }
 
-async function editAmount(id, amountInput, change, buttonToDisable) {
+async function editTotalAmount(id, amountInput, change, buttonToDisable) {
   try {
     buttonToDisable.disabled = "disabled";
-    if (change === "change-amount") {
+    if (change === "change-totalAmount") {
       validToaster("el Importe");
-      await updateAmount(id, amountInput.value);
+      await updateTotalAmount(id, amountInput.value);
     } else {
       validToaster("la Seña");
-      await updateDeposited(id, amountInput.value);
+      await updateDepositedMoney(id, amountInput.value);
     }
   } catch (error) {
     console.log(error);
@@ -114,7 +114,7 @@ function isValidTokenAnd2faUser(token, get2faUser) {
 Add events to fields of dataTables
 ---------------------------- */
 
-async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
+async function validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt) {
   const get2faUser = get2faUserInLocalStorage();
   const token = parseInt(codeInput.value);
   try {
@@ -132,7 +132,7 @@ async function validateTokenAndToggleEditMountModal(codeInput, modalId, dt) {
   }
 }
 
-function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
+function verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt) {
   const verifyCodesModal = document.getElementById(
     `verify-code-for-edit-${modalId}`
   );
@@ -140,7 +140,7 @@ function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
 
   async function name(e) {
     e.preventDefault();
-    await validateTokenAndToggleEditMountModal(codeInput, modalId, dt);
+    await validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt);
     codeInput.value = "";
   }
 
@@ -150,7 +150,7 @@ function verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt) {
 function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
   const editMountHidden = document.getElementById("edit-amount-hidden");
 
-  verifyCodesModalAddEventToShowDepositedOrMountModal(modalId, dt);
+  verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt);
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -164,12 +164,12 @@ function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
 function validateIfChecksComeTrue(checks, action, columnName, buttonDisable) {
   Array.from(checks).forEach((check) => {
     if (columnName === "fixed") {
-      console.log(check.value);
+      /* console.log(check.value); */
     } // PROBAMOS LOS BOTONES Y SUS VALORES
 
     let valuesArr = check.value.split(",");
     idClient = valuesArr[1];
-    console.log(idClient, "SOY EL PUTO ID"); //SETEAMOS EL ID AL CARGAR LOS BOTONES DE FIXED PARA PASARLO A LOS MODALES
+    console.log(idClient); //SETEAMOS EL ID AL CARGAR LOS BOTONES DE FIXED PARA PASARLO A LOS MODALES
 
     /*    if (valuesArr[0] == true) check.checked = true;
        if (check.checked == true) check.disabled = "disabled";
@@ -188,7 +188,7 @@ async function updateObsAndDateFixed(id, observationInput, buttonToDisable) {
   try {
     buttonToDisable.disabled = "disabled";
     let fechaActual = getCurrentDate();
-    console.log(observationInput.value, fechaActual, id);
+    /* console.log(observationInput.value, fechaActual, id); */
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
   } catch (error) {
     console.log(error);
@@ -205,8 +205,6 @@ function toggleModalOfProblem(buttons) {
 }
 
 function toggleModalOfObservation(buttons) {
-  console.log(buttons);
-
   Array.from(buttons).forEach((button) => {
     button.addEventListener("check", function (e) {
       e.preventDefault();
@@ -218,28 +216,37 @@ function toggleModalOfObservation(buttons) {
   });
 }
 
-async function paginationButtonsEvents(dni, state) {
-  const countBenefits = await getTotalBenefitsPerDni(dni);
+async function paginationSettingsToButtons(dni, state) {
+  const countBenefits = await getAllBenefitsByDni(dni);
   const countTotalBenefits = countBenefits[0].total;
   const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
   $(".paginate_button.current").text(state.currentPage);
 
-  function updateButtonStates() {
-    if (state.currentPage <= 1) {
-      $("#example_previous").addClass("disabled").removeClass("enabled");
-    } else {
-      $("#example_previous").addClass("enabled").removeClass("disabled");
-    }
+  updateButtonStates(state, totalPages);
+  await eventListenerPaginationButtons(dni, state, totalPages);
+}
 
-    if (state.currentPage >= totalPages) {
-      $("#example_next").addClass("disabled").removeClass("enabled");
-    } else {
-      $("#example_next").addClass("enabled").removeClass("disabled");
-    }
+/**
+ *  Handles the state op pagination buttons based on the current page and pagination
+ */
+function updateButtonStates(state, pagination) {
+  if (state.currentPage <= 1) {
+    $("#example_previous").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_previous").addClass("enabled").removeClass("disabled");
   }
 
-  updateButtonStates();
+  if (state.currentPage >= pagination) {
+    $("#example_next").addClass("disabled").removeClass("enabled");
+  } else {
+    $("#example_next").addClass("enabled").removeClass("disabled");
+  }
+}
 
+/**
+ * Add logic to the dataTables pagination buttons and controll the events of the current page
+ */
+async function eventListenerPaginationButtons(dni, state, pagination) {
   $("#example_previous").off("click").on("click", async function (e) {
     e.preventDefault();
     if ($(this).hasClass("disabled")) {
@@ -249,7 +256,7 @@ async function paginationButtonsEvents(dni, state) {
     if (state.currentPage > 1) {
       state.currentPage--;
       await reloadData(dni, state);
-      updateButtonStates();
+      updateButtonStates(state, pagination);
       toggleModals();
     }
   });
@@ -260,36 +267,36 @@ async function paginationButtonsEvents(dni, state) {
       console.log("El botón 'Next' está deshabilitado, no se realizará la acción.");
       return;
     }
-    if (state.currentPage < totalPages) {
+    if (state.currentPage < pagination) {
       state.currentPage++;
       await reloadData(dni, state);
-      updateButtonStates();
+      updateButtonStates(state, pagination);
       toggleModals();
     }
   });
 }
 
 function toggleModals() {
-  const editAmountModal = document.getElementById("edit-amount-form");
-  const editDepositedModal = document.getElementById("edit-deposited-form");
+  const editTotalAmountModal = document.getElementById("edit-total-amount-form");
+  const editDepositedMoneyModal = document.getElementById("edit-deposited-money-form");
   const updateObservation = document.getElementById("submit-observation-form");
-  const amountInput = document.getElementById("amountModal-input");
-  const depositedInput = document.getElementById("depositedModal-input");
+  const totalAmountInput = document.getElementById("totalAmountModal-input");
+  const depositedMoneyInput = document.getElementById("depositedMoneyModal-input");
   const observationInput = document.getElementById("updateObservation-input");
-  const submitButtonAmount = document.getElementById("submit_button_amount");
-  const submitButtonDeposited = document.getElementById("submit_button_deposited");
+  const submitButtonTotalAmount = document.getElementById("submit_button_total_amount");
+  const submitButtonDepositedMoney = document.getElementById("submit_button_deposited_money");
   const submitButtonObservation = document.getElementById("submit_button_observation");
   const closeButtons = document.getElementsByClassName("close_modal");
 
-  editAmountModal.addEventListener("submit", async function (e) {
+  editTotalAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editAmount(idClient, amountInput, "change-amount", submitButtonAmount);
-    amountInput.value = "";
+    await editTotalAmount(idClient, totalAmountInput, "change-totalAmount", submitButtonTotalAmount);
+    totalAmountInput.value = "";
   });
-  editDepositedModal.addEventListener("submit", async function (e) {
+  editDepositedMoneyModal.addEventListener("submit", async function (e) {
     e.preventDefault();
-    await editAmount(idClient, depositedInput, "change-deposited", submitButtonDeposited);
-    depositedInput.value = "";
+    await editTotalAmount(idClient, depositedMoneyInput, "change-deposited", submitButtonDepositedMoney);
+    depositedMoneyInput.value = "";
   });
 
 
@@ -303,20 +310,20 @@ function toggleModals() {
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
-      submitButtonAmount.removeAttribute("disabled");
-      submitButtonDeposited.removeAttribute("disabled");
+      submitButtonTotalAmount.removeAttribute("disabled");
+      submitButtonDepositedMoney.removeAttribute("disabled");
       await reloadData(dni, paginationState)
       toggleModals()
     });
   });
 
-  toggleModalsOfTotalAmountAndDeposited(amountButtons, "amountModal", "tokenModal");
+  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
   validateIfChecksComeTrue(checksOfFixed, addUpdateStateToEventClick, "fixed");
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
   /* toggleModalOfObservation(fixedButtons); */
   toggleModalOfProblem(problemButtons);
-  paginationButtonsEvents(dni, paginationState);
+  paginationSettingsToButtons(dni, paginationState);
 }
 /* ----------------------------
   Search Benefits by DNI
