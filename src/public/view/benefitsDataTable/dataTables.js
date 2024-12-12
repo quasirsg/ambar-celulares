@@ -78,10 +78,10 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            
+            <div class="modal-dialog">
             <div class="alert" role="alert" id="second_alert" style="display: none"></div>
-
-              <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -126,9 +126,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="deposited_alert" style="display: none"></div>
             
             <div class="modal-dialog">
+            <div class="alert" role="alert" id="deposited_alert" style="display: none"></div>
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -184,9 +184,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            
+            <div class="modal-dialog">
             <div class="alert" role="alert" id="first_alert" style="display: none"></div>
-
-              <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -232,9 +232,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="amount_alert" style="display: none"></div>
             
             <div class="modal-dialog">
+            <div class="alert" role="alert" id="amount_alert" style="display: none"></div>
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -287,7 +287,7 @@ $(document).ready(function () {
         render: function (data) {
           return data[7] == false
             ?
-            `<input type="checkbox" class="checks_of_fixed" data-toggle="modal" data-target="#updatefixedModal" name="check" value="${data[1]},${data[7]}, ${data[9]}">
+            `<input type="checkbox" class="checks_of_fixed" data-toggle="modal" data-target="#updatefixedModal" name="check" value="${data[7]}|${data[9]}">
               <!-- Modal -->
               <div
                 class="modal fade"
@@ -297,8 +297,9 @@ $(document).ready(function () {
                 aria-labelledby="updatefixedModalLabel"
                 aria-hidden="true"
               >
-                <div class="modal-dialog">
-                  <div class="modal-content">
+              <div class="modal-dialog">
+              <div class="alert" role="alert" id="observation_alert" style="display: none"></div>
+              <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">
@@ -334,7 +335,7 @@ $(document).ready(function () {
                 </div>
               </div>`
 
-            : `<button class="btn btn-primary btn-lg fixed-button" data-toggle="modal" data-target="#fixedModal" value="${data}">
+            : `<button class="btn btn-primary btn-lg fixed-button" data-toggle="modal" data-target="#fixedModal" value="${data[11]}|${data[10]}">
                  Ver
                </button>
 
@@ -347,6 +348,7 @@ $(document).ready(function () {
               aria-labelledby="fixedModalLabel"
               aria-hidden="true"
             >
+            
               <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
@@ -360,14 +362,17 @@ $(document).ready(function () {
           
                   <!-- Modal Body -->
                   <div class="modal-body">
-                    <p id="fixed-input"></p>
+                  <p id="fixed-input"></p>
                   </div>
-          
+                  
                   <!-- Modal Footer -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      Cerrar
-                    </button>
+                  <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="form-group" style="margin: 0; padding: 0; display: flex; flex-grow: 1; justify-content: space-between;">
+                      <p id="date-fixed-input" class="mb-0" style="flex-grow: 1; text-align: left;"></p>
+                      <button type="button" class="btn btn-default" style="margin-left: auto;" data-dismiss="modal">
+                        Cerrar
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -384,7 +389,7 @@ $(document).ready(function () {
         orderable: false,
         render: function (data) {
           return (
-            `<input type="checkbox" class="checks_of_retired" name="check" value="${data[8]}, ${data[9]}">`
+            `<input type="checkbox" class="checks_of_retired" name="check" value="${data[8]}| ${data[9]}">`
           )
         },
         width: "1%",

@@ -10,8 +10,8 @@ const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
 const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
 const problemButtons = document.getElementsByClassName("problem-button")
-/* const fixedButtons = document.getElementsByClassName("fixed-button")
-const closeButtonFixed = document.getElementById("close_modal_fixed"); */
+const fixedButtons = document.getElementsByClassName("fixed-button")
+const closeButtonFixed = document.getElementById("close_modal_fixed");
 
 let dni;
 let checks = [];
@@ -82,7 +82,7 @@ async function editTotalAmount(id, amountInput, change, buttonToDisable) {
       validToaster("el Importe");
       await updateTotalAmount(id, amountInput.value);
     } else {
-      validToaster("la Seña");
+      validToaster("el Deposito");
       await updateDepositedMoney(id, amountInput.value);
     }
   } catch (error) {
@@ -161,35 +161,34 @@ function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
   });
 }
 
-function validateIfChecksComeTrue(checks, action, columnName, buttonDisable) {
+function validateIfChecksComeTrue(checks, action, columnName) { /* el action pasa la funcion: addUpdateStateToEventClick */
   Array.from(checks).forEach((check) => {
-    if (columnName === "fixed") {
-      /* console.log(check.value); */
-    } // PROBAMOS LOS BOTONES Y SUS VALORES
-
-    let valuesArr = check.value.split(",");
-    idClient = valuesArr[1];
-    console.log(idClient); //SETEAMOS EL ID AL CARGAR LOS BOTONES DE FIXED PARA PASARLO A LOS MODALES
-
-    /*    if (valuesArr[0] == true) check.checked = true;
-       if (check.checked == true) check.disabled = "disabled";
-       action(check, id, columnName); */
+    let valuesArr = check.value.split("|");
+    if (valuesArr[0] == true) check.checked = true;
+    if (check.checked == true) check.disabled = "disabled";
+    action(check, columnName);
   });
 }
 
-function addUpdateStateToEventClick(check, id, columnName) {
+function addUpdateStateToEventClick(check, columnName) {
   check.addEventListener("click", async () => {
-    check.disabled = "disabled";
-    await updateChecks(id, columnName);
+    if (columnName === "retired") check.disabled = "disabled";
+    let valuesArr = check.value.split("|");
+    idClient = valuesArr[1];
+    if (columnName === "retired") await updateChecks(idClient, columnName);
   });
 }
 
-async function updateObsAndDateFixed(id, observationInput, buttonToDisable) {
+/**
+ * Funcion que controla el submit del formulario de la observacion para cargar en la bd, disablea el boton de submit
+ */
+async function updateObsAndDateFixed(id, observationInput, submitButton) {
   try {
-    buttonToDisable.disabled = "disabled";
+    validToaster("la observacion");
     let fechaActual = getCurrentDate();
-    /* console.log(observationInput.value, fechaActual, id); */
+    await updateChecks(id, "fixed");
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
+    submitButton.disabled = "disabled";
   } catch (error) {
     console.log(error);
   }
@@ -206,12 +205,13 @@ function toggleModalOfProblem(buttons) {
 
 function toggleModalOfObservation(buttons) {
   Array.from(buttons).forEach((button) => {
-    button.addEventListener("check", function (e) {
+    button.addEventListener("click", function (e) {
       e.preventDefault();
-      let valueToSplit = button.value.split(" ");
-      idClient = valueToSplit[1]; // SETEAMOS EL IDCLIENT CADA VEZ QUE SE APRIETA EL BOTON DE FIXED
+      console.log(button.value);
 
-      $(`#fixed-input`).text(`${button.value[0]}`);
+      let valueToSplit = button.value.split("|");
+      $(`#date-fixed-input`).text(`Fecha arreglado:${valueToSplit[0]}`);
+      $(`#fixed-input`).text(`${valueToSplit[1]}`);
     });
   });
 }
@@ -299,21 +299,21 @@ function toggleModals() {
     depositedMoneyInput.value = "";
   });
 
-
-  updateObservation.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    await updateObsAndDateFixed(idClient, observationInput, submitButtonObservation);
-    observationInput.value = "";
-  });
-
+  if (updateObservation) {
+    updateObservation.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      await updateObsAndDateFixed(idClient, observationInput, submitButtonObservation);
+      observationInput.value = "";
+    });
+  }
 
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
       submitButtonTotalAmount.removeAttribute("disabled");
       submitButtonDepositedMoney.removeAttribute("disabled");
-      await reloadData(dni, paginationState)
-      toggleModals()
+      await reloadData(dni, paginationState);
+      toggleModals();
     });
   });
 
@@ -321,7 +321,7 @@ function toggleModals() {
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
   validateIfChecksComeTrue(checksOfFixed, addUpdateStateToEventClick, "fixed");
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
-  /* toggleModalOfObservation(fixedButtons); */
+  toggleModalOfObservation(fixedButtons);
   toggleModalOfProblem(problemButtons);
   paginationSettingsToButtons(dni, paginationState);
 }
@@ -361,13 +361,15 @@ const invalidToaster = function (error, diferent) {
 const validToaster = function (diferent) {
   if (diferent === "el Importe") {
     var alerta = document.getElementById("amount_alert");
-  } else {
+  } else if (diferent === "el Deposito") {
     var alerta = document.getElementById("deposited_alert");
+  } else {
+    var alerta = document.getElementById("observation_alert");
   }
   alerta.style.cssText =
     "display: block; background-color: #dff0d8; color: #3c763d;";
   alerta.innerHTML =
-    "<strong>¡Bien hecho!</strong> Cambiaste " +
+    "<strong>¡Bien hecho!</strong> Modificaste " +
     `${diferent}` +
     " con exito.";
   setTimeout(function () {
