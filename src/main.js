@@ -45,18 +45,37 @@ const saveBenefit = async (benefit) => {
   }
 };
 
-const getBenefits = async (dni, page, limit) => {
+const getBenefits = async (dni, page, limit, filter = {}) => {
   try {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
-    const benefits = await conn.query(`
+    let query = `
         SELECT imei, device, problem, date_received_phone, brand, total_amount_for_service, deposited_money, fixed, retired, idbenefits, observations, date_fixed
         FROM ambar.clients c
         INNER JOIN ambar.benefits b ON c.dni = b.dni
         WHERE c.dni = ?
-        ORDER BY idbenefits DESC
-        LIMIT ? OFFSET ?;
-    `, [dni, limit, offset]);
+    `;
+    let params = [dni];
+
+    // Depuración de los filtros
+    const filterParams = [];
+    if (filter.imei) {
+      query += ` AND b.imei LIKE ?`;
+      filterParams.push(`%${filter.imei}%`);
+    }
+
+    if (filter.date_received_phone) {
+      query += ` AND b.date_received_phone LIKE ?`;
+      filterParams.push(`%${filter.date_received_phone}%`);
+    }
+
+    // Concatenar los filtros a los parámetros principales
+    params = [...params, ...filterParams];
+
+    query += ` ORDER BY idbenefits DESC LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+
+    const benefits = await conn.query(query, params);
     return benefits;
   } catch (error) {
     console.log(error);
@@ -64,17 +83,28 @@ const getBenefits = async (dni, page, limit) => {
   }
 };
 
-const getAllBenefitsByDni = async (dni) => {
+
+const getTotalBenefits = async (dni, filter = {}) => {
   try {
     const conn = await getConnection();
-    const countBenefits = await conn.query(
-      `SELECT COUNT(*) as total 
-            FROM clients c 
-            INNER JOIN benefits b 
-            ON c.dni = b.dni 
-            WHERE c.dni = ?`,
-      [dni]
-    );
+    let query = `SELECT COUNT(*) as total 
+                  FROM ambar.clients c 
+                  INNER JOIN ambar.benefits b 
+                  ON c.dni = b.dni 
+                  WHERE c.dni = ?`;
+    let params = [dni];
+
+    if (filter.imei) {
+      query += ` AND b.imei LIKE ?`;
+      params.push(filter.imei);
+    }
+
+    if (filter.date_received_phone) {
+      query += ` AND b.date_received_phone LIKE ?`;
+      params.push(`%${filter.date_received_phone}%`);
+    }
+
+    const countBenefits = await conn.query(query, params);
     return countBenefits;
   } catch (error) {
     console.log(error);
@@ -205,7 +235,7 @@ module.exports = {
   saveClient,
   saveBenefit,
   getBenefits,
-  getAllBenefitsByDni,
+  getTotalBenefits,
   getPhoneBrands,
   updateTotalAmount,
   updateDepositedMoney,
