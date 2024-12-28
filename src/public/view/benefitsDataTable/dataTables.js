@@ -399,6 +399,12 @@ $(document).ready(function () {
     /* SETTINGS OF DATATABLE*/
     ordering: false, /* disable order in the rows of datatable*/
     info: false, /* disable info show entries, leyend: "Showing 1 to 5 of 5 entries" */
-    dom: 'rtip', /* disable buton show entries (10/15/20/50) */
+    lengthChange: false, /* disable length entries select input */
+    /* dom: 'rtip', */ /* disable buton show entries (10/15/20/50) */
+    /* columnDefs: [{ searchable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] }], */ /* disable search for the columns*/
+    search: false,
+    /* search: {
+      return: true,
+    }, */
   });
 });
