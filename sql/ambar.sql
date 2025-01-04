@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `total_amount_for_service` INT NULL, /*CAMBIAMOS amount*/
   `fixed` BOOLEAN,
   `retired` BOOLEAN,
-  `obvervations` VARCHAR(255) NOT NULL,
+  `observations` VARCHAR(255) NOT NULL,
   `date_fixed` INT NOT NULL,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC),
