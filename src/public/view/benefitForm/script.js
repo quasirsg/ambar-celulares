@@ -45,7 +45,7 @@ $(document).ready(async function () {
       device,
       imei,
       problem,
-      date_received_phone: String(date_received_phone).replace(/[,.-]/gi, "/"),
+      date_received_phone: Number(moment(date_received_phone).format('YYYYMMDD')),
       brand,
       deposited_money: Number(deposited_money),
       total_amount_for_service: Number(total_amount_for_service),
@@ -102,19 +102,23 @@ $(document).ready(async function () {
     "Porfavor ingrese el nombre del dispositivio correctamente para poder avanzar"
   );
   errorsMap.set(
+    "brand_incomplete",
+    "Porfavor ingrese la marca del dispositivio correctamente para poder avanzar"
+  );
+  errorsMap.set(
     "imei_incomplete",
     "Porfavor ingrese el imei correctamente para poder avanzar"
   );
   errorsMap.set(
-    "deposited_incomplete",
-    "Porfavor ingrese las partes a cambiar correctamente para poder avanzar"
+    "deposited_money_incomplete",
+    "Porfavor ingrese el deposito correctamente para poder avanzar"
   );
   errorsMap.set(
-    "dateReceivedPhone_incomplete",
+    "date_received_phone_incomplete",
     "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
-    "amount_incomplete",
+    "total_amount_incomplete",
     "Porfavor ingrese el importe correctamente para poder avanzar"
   );
   errorsMap.set(
@@ -197,7 +201,7 @@ $(document).ready(async function () {
   const problemValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9 ]{2,255}$/;
+        const regex = /^[A-z0-9 ,.!?'"@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{2,255}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
@@ -227,13 +231,12 @@ $(document).ready(async function () {
   const dateReceivedPhoneValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex =
-          /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2)\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+        const regex = /^((?:19|20)\d\d)[-\/\.](0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
       },
-      invalidityMessage: "dd/mm/yyyy",
+      invalidityMessage: "YYYY/MM/DD",
       element: document.querySelector(
         'div[id="div-date_received_phone"] .input-requirements li:nth-child(1)'
       ),
@@ -435,6 +438,8 @@ $(document).ready(async function () {
         body: "Haz ingresado con exito un nuevo cliente",
       });
       resetForm();
+      console.log(benefit);
+
       await saveBenefit(benefit);
     } catch (error) {
       console.log(error);

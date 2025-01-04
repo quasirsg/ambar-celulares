@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="../../assets/css/nice-select2.css" />
+  <!-- Moment.js -->
+  <script type="text/javascript" src="../../../../node_modules/moment/min/moment.min.js"></script>
   <title>Ingreso de un dispositivo</title>
 </head>
 
@@ -90,7 +92,7 @@
                 <input class="form-control" type="text" id="date_received_phone"
                   placeholder="Ingrese la fecha de recepcion del dispositivo" maxlength="10" />
                 <ul class="input-requirements">
-                  <li>dd/mm/yyyy</li>
+                  <li>YYYY/MM/DD</li>
                 </ul>
               </div>
             </div>
@@ -100,8 +102,8 @@
             <div class="col-sm-6" id="div-total_amount">
               <div class="form-group" style="margin-bottom: 10px">
                 <span>Importe Total</span>
-                <input class="form-control" type="text" id="total_amount" placeholder="Ingrese el monto" maxlength="10"
-                  value="Ingrese el importe total del trabajo" />
+                <input class="form-control" type="text" id="total_amount"
+                  placeholder="Ingrese el importe total del trabajo" maxlength="10" />
                 <ul class="input-requirements">
                   <li>Solo numeros</li>
                 </ul>
@@ -112,7 +114,8 @@
               <div class="form-group" style="margin-bottom: 10px">
                 <span>Deposito</span>
                 <span></span>
-                <input class="form-control" id="deposited_money" type="text" placeholder="Seña del cliente" />
+                <input class="form-control" id="deposited_money" type="text"
+                  placeholder="Ingrese la seña del cliente" />
                 <ul class="input-requirements">
                   <li>Solo numeros</li>
                 </ul>
