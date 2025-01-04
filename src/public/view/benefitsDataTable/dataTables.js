@@ -1,8 +1,8 @@
 /**
  *
  * DataTables
- *
- */
+*
+*/
 $(document).ready(function () {
 
   $("#example").DataTable({
@@ -57,7 +57,14 @@ $(document).ready(function () {
           `;
         },
       },
-      { title: "F. Ingreso" },
+      {
+        title: "F. Ingreso",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          const isoDateReceived = moment(data, 'YYYYMMDD').format('YYYY/MM/DD');
+          return isoDateReceived;
+        }
+      },
       { title: "Marca" },
       {
         title: "Deposito",
@@ -327,7 +334,7 @@ $(document).ready(function () {
             
                     <!-- Modal Footer -->
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default close_modal" id="close_modal_fixed" data-dismiss="modal">
+                      <button type="button" class="btn btn-default close_modal" data-dismiss="modal">
                         Cerrar
                       </button>
                     </div>
