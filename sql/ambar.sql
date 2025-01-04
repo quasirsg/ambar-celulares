@@ -70,28 +70,28 @@ INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`
 VALUES (DEFAULT, 42523334, 'j700m', '111111111111111', 'Problema en la batería', 20220627, 'Samsung', 3050, 6000, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
-VALUES (DEFAULT, 42523334, 'a10', '222222222222222', 'Pantalla rota', 20230712, 'Oppo', 2000, 5500, true, false);
+VALUES (DEFAULT, 42523334, 'a10', '222222222222222', 'Pantalla rota', 20230712, 'Oppo', 2000, 5500, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
-VALUES (DEFAULT, 42523334, 'samsung s21', '333333333333333', 'Problema de software', 20230801, 'Samsung', 1500, 8000, true, false);
+VALUES (DEFAULT, 42523334, 'samsung s21', '333333333333333', 'Problema de software', 20230801, 'Samsung', 1500, 8000, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'iphone 11', '444444444444444', 'No enciende', 20230805, 'Apple', 1000, 4000, false, true);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
-VALUES (DEFAULT, 42523334, 'poco x3', '555555555555555', 'Baja duración de batería', 20230915, 'ZTE', 2300, 7000, true, false);
+VALUES (DEFAULT, 42523334, 'poco x3', '555555555555555', 'Baja duración de batería', 20230915, 'ZTE', 2300, 7000, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'mi 10', '666666666666666', 'Falta de señal', 20230922, 'Alcatel', 1900, 4800, false, true);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
-VALUES (DEFAULT, 42523334, 'huawei p30', '777777777777777', 'Problemas con cámara', 20230930, 'Huawei', 2500, 6500, true, false);
+VALUES (DEFAULT, 42523334, 'huawei p30', '777777777777777', 'Problemas con cámara', 20230930, 'Huawei', 2500, 6500, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'nokia 5.4', '888888888888888', 'Fallo en el touch', 20231010, 'Nokia', 2100, 5500, false, false);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
-VALUES (DEFAULT, 42523334, 'xiaomi redmi note 10', '999999999999999', 'Fallo en la pantalla táctil', 20231018, 'Xiaomi', 3000, 6000, true, true);
+VALUES (DEFAULT, 42523334, 'xiaomi redmi note 10', '999999999999999', 'Fallo en la pantalla táctil', 20231018, 'Xiaomi', 3000, 6000, false, true);
 
 INSERT INTO `ambar`.`benefits` (`idbenefits`, `dni`, `device`, `imei`, `problem`, `date_received_phone`, `brand`, `deposited_money`, `total_amount_for_service`, `fixed`, `retired`) 
 VALUES (DEFAULT, 42523334, 'galaxy s20', '101010101010101', 'El dispositivo se apaga solo', 20231020, 'Samsung', 2200, 7000, false, false);
