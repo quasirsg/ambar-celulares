@@ -1,4 +1,3 @@
-
 /* ----------------------------
   
 ---------------------------- */
@@ -9,9 +8,8 @@ const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposite
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
 const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
-const problemButtons = document.getElementsByClassName("problem-button")
-const fixedButtons = document.getElementsByClassName("fixed-button")
-const closeButtonFixed = document.getElementById("close_modal_fixed");
+const problemButtons = document.getElementsByClassName("problem-button");
+const fixedButtons = document.getElementsByClassName("fixed-button");
 
 let dni;
 let checks = [];
@@ -22,6 +20,8 @@ const paginationState = {
   currentPage: 1,
   rowsPerPage: 5,
 };
+let filter = {};
+let isSearching = false;
 /* ----------------------------
   Control errors
 ---------------------------- */
@@ -48,31 +48,25 @@ async function clientExist(dni) {
   return exists.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
 }
 
-async function getBenefitArr(dni, state) {
-  const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage);
+async function getBenefitArr(dni, state, filter) {
+  const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage, filter);
   const benefitsArr = benefits.map((value) => Object.values(value));
   return benefitsArr;
 }
 
-async function reloadData(dni, state) {
+async function reloadData(dni, state, filter = {}) {
   if (await clientExist(dni)) {
-    const benefitsArr = await getBenefitArr(dni, state);
+    const benefitsArr = await getBenefitArr(dni, state, filter);
     if (benefitsArr.length) {
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
       $("#example").DataTable().draw();
+      toggleModals();
+      paginationSettingsToButtons(dni, paginationState, filter);
     } else {
       invalidToaster({ code: "client_inexistent" });
     }
   }
-}
-
-function getCurrentDate() {
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, '0'); // Asegura que tenga 2 dígitos
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses comienzan en 0
-  const year = today.getFullYear();
-  return `${day}/${month}/${year}`;
 }
 
 async function editTotalAmount(id, amountInput, change, buttonToDisable) {
@@ -185,7 +179,9 @@ function addUpdateStateToEventClick(check, columnName) {
 async function updateObsAndDateFixed(id, observationInput, submitButton) {
   try {
     validToaster("la observacion");
-    let fechaActual = getCurrentDate();
+    let fechaActual = Number(moment.utc().format('YYYYMMDD'));
+    console.log(fechaActual);
+
     await updateChecks(id, "fixed");
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
     submitButton.disabled = "disabled";
@@ -207,27 +203,28 @@ function toggleModalOfObservation(buttons) {
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
-      console.log(button.value);
-
       let valueToSplit = button.value.split("|");
-      $(`#date-fixed-input`).text(`Fecha arreglado:${valueToSplit[0]}`);
+      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('YYYY/MM/DD');
+      $(`#date-fixed-input`).text(`Fecha arreglado: ${isoDateObservation}`);
       $(`#fixed-input`).text(`${valueToSplit[1]}`);
     });
   });
 }
 
-async function paginationSettingsToButtons(dni, state) {
-  const countBenefits = await getAllBenefitsByDni(dni);
+/**
+ *  Configures pagination buttons based on provided parameters, including calculating total pages, updating button states, and adding event listeners
+ */
+async function paginationSettingsToButtons(dni, state, filter = {}) {
+  const countBenefits = await getTotalBenefits(dni, filter);
   const countTotalBenefits = countBenefits[0].total;
   const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
   $(".paginate_button.current").text(state.currentPage);
-
   updateButtonStates(state, totalPages);
-  await eventListenerPaginationButtons(dni, state, totalPages);
+  await eventListenerPaginationButtons(dni, state, totalPages, filter);
 }
 
 /**
- *  Handles the state op pagination buttons based on the current page and pagination
+ *  Handles the state of pagination buttons based on the current page and pagination
  */
 function updateButtonStates(state, pagination) {
   if (state.currentPage <= 1) {
@@ -246,7 +243,7 @@ function updateButtonStates(state, pagination) {
 /**
  * Add logic to the dataTables pagination buttons and controll the events of the current page
  */
-async function eventListenerPaginationButtons(dni, state, pagination) {
+async function eventListenerPaginationButtons(dni, state, pagination, filter) {
   $("#example_previous").off("click").on("click", async function (e) {
     e.preventDefault();
     if ($(this).hasClass("disabled")) {
@@ -255,7 +252,7 @@ async function eventListenerPaginationButtons(dni, state, pagination) {
     }
     if (state.currentPage > 1) {
       state.currentPage--;
-      await reloadData(dni, state);
+      await reloadData(dni, state, filter);
       updateButtonStates(state, pagination);
       toggleModals();
     }
@@ -269,11 +266,39 @@ async function eventListenerPaginationButtons(dni, state, pagination) {
     }
     if (state.currentPage < pagination) {
       state.currentPage++;
-      await reloadData(dni, state);
+      await reloadData(dni, state, filter);
       updateButtonStates(state, pagination);
       toggleModals();
     }
   });
+}
+
+/**
+ * Busqueda y control por el input de dataTables
+ */
+async function settingsSearchInput(inputValue, state, dni) {
+  if (isSearching) return;
+  isSearching = true;
+
+  if (!inputValue) {
+    delete filter.imei;
+    delete filter.date_received_phone;
+  } else if (inputValue.includes('-')) {
+    filter.date_received_phone = String(inputValue).trim();
+    delete filter.imei;
+  } else {
+    filter.imei = inputValue;
+    delete filter.date_received_phone;
+  }
+
+  state.currentPage = 1;
+  await reloadAndUpdatePagination(dni, state, filter);
+  isSearching = false;
+}
+
+async function reloadAndUpdatePagination(dni, state, filter) {
+  await reloadData(dni, state, filter);
+  await paginationSettingsToButtons(dni, state, filter);
 }
 
 function toggleModals() {
@@ -312,8 +337,7 @@ function toggleModals() {
       e.preventDefault();
       submitButtonTotalAmount.removeAttribute("disabled");
       submitButtonDepositedMoney.removeAttribute("disabled");
-      await reloadData(dni, paginationState);
-      toggleModals();
+      await reloadData(dni, paginationState, filter);
     });
   });
 
@@ -323,8 +347,21 @@ function toggleModals() {
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
   toggleModalOfObservation(fixedButtons);
   toggleModalOfProblem(problemButtons);
-  paginationSettingsToButtons(dni, paginationState);
 }
+
+/* ----------------------------
+  Search Benefits by imei or date_received_phone for the input of dataTable
+---------------------------- */
+
+function assignInputEvent() {
+  const searchInputDataTable = $('#example_filter label input');
+  searchInputDataTable.on('input', async function (e) {
+    e.preventDefault();
+    let inputValue = $(this).val();
+    settingsSearchInput(inputValue, paginationState, dni);
+  });
+}
+
 /* ----------------------------
   Search Benefits by DNI
 ---------------------------- */
@@ -385,5 +422,6 @@ form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
-  toggleModals();
+  /* toggleModals(filter); */
 });
+$(document).ready(assignInputEvent);
