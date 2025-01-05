@@ -51,6 +51,7 @@ async function clientExist(dni) {
 async function getBenefitArr(dni, state, filter) {
   const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage, filter);
   const benefitsArr = benefits.map((value) => Object.values(value));
+  
   return benefitsArr;
 }
 
@@ -317,7 +318,10 @@ const searchStrategies = {
 };
 
 const applySearchStrategy = (inputValue) => {
-  Object.values(searchStrategies).forEach(strategy => strategy(inputValue));
+  Object.values(searchStrategies).forEach(strategy => {
+  
+    return strategy(inputValue)
+  });
 };
 
 async function settingsSearchInput1(inputValue, state, dni) {
@@ -332,6 +336,8 @@ async function settingsSearchInput1(inputValue, state, dni) {
 }
 
 async function reloadAndUpdatePagination(dni, state, filter) {
+  console.log("trayendo");
+
   await reloadData(dni, state, filter);
   await paginationSettingsToButtons(dni, state, filter);
 }
@@ -388,12 +394,15 @@ function toggleModals() {
   Search Benefits by imei or date_received_phone for the input of dataTable
 ---------------------------- */
 
+
 function assignInputEvent() {
   $('#example_filter label input')
     .attr('maxlength', 15)
     .attr('placeholder', 'Ingrese fecha o IMEI');
-  const searchInputDataTable = $('#example_filter label input');
   let timeoutId = null;
+  const searchInputDataTable = $('#example_filter label input');
+
+  searchInputDataTable.off();
 
   searchInputDataTable.on('input', function (e) {
     e.preventDefault();
