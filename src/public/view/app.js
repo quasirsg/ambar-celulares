@@ -45,12 +45,16 @@ async function saveBenefit(benefit) {
  * @param {String} dni
  * @returns {BenefitObject}
  */
-async function getBenefits(dni, page, limit) {
-  return await main.getBenefits(dni, page, limit);
+async function getBenefits(dni, page, limit, filter) {
+  return await main.getBenefits(dni, page, limit, filter);
 }
 
-async function getAllBenefitsByDni(dni) {
+/* async function getAllBenefitsByDni(dni) {
   return await main.getAllBenefitsByDni(dni);
+} */
+
+async function getTotalBenefits(dni, filter) {
+  return await main.getTotalBenefits(dni, filter);
 }
 
 async function getPhoneBrands() {
@@ -67,6 +71,10 @@ async function updateTotalAmount(id, totalAmount) {
 
 async function updateDepositedMoney(id, depositedMoney) {
   return await main.updateDepositedMoney(id, depositedMoney);
+}
+
+async function updateObservationsAndDateFixed(observation, dateFixed, id) {
+  return await main.updateObservationsAndDateFixed(observation, dateFixed, id);
 }
 
 /* ----------------------------

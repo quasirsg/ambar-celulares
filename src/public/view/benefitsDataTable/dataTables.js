@@ -1,9 +1,10 @@
 /**
  *
  * DataTables
- *
- */
+*
+*/
 $(document).ready(function () {
+
   $("#example").DataTable({
     data: client,
     columns: [
@@ -56,7 +57,14 @@ $(document).ready(function () {
           `;
         },
       },
-      { title: "F. Ingreso" },
+      {
+        title: "F. Ingreso",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          const isoDateReceived = moment(data, 'YYYYMMDD').format('YYYY/MM/DD');
+          return isoDateReceived;
+        }
+      },
       { title: "Marca" },
       {
         title: "Deposito",
@@ -77,10 +85,10 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            
+            <div class="modal-dialog">
             <div class="alert" role="alert" id="second_alert" style="display: none"></div>
-
-              <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -125,9 +133,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="deposited_alert" style="display: none"></div>
             
             <div class="modal-dialog">
+            <div class="alert" role="alert" id="deposited_alert" style="display: none"></div>
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -183,9 +191,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
+            
+            <div class="modal-dialog">
             <div class="alert" role="alert" id="first_alert" style="display: none"></div>
-
-              <div class="modal-dialog">
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -231,9 +239,9 @@ $(document).ready(function () {
               aria-labelledby="myModalLabel"
               aria-hidden="true"
             >
-            <div class="alert" role="alert" id="amount_alert" style="display: none"></div>
             
             <div class="modal-dialog">
+            <div class="alert" role="alert" id="amount_alert" style="display: none"></div>
                 <div class="modal-content">
                   <!-- Modal Header -->
                   <div class="modal-header">
@@ -284,11 +292,98 @@ $(document).ready(function () {
         searchable: false,
         orderable: false,
         render: function (data) {
-          return (
-            '<input type="checkbox" class="checks_of_retired" name="check" value="' +
-            data +
-            '">'
-          );
+          return data[7] == false
+            ?
+            `<input type="checkbox" class="checks_of_fixed" data-toggle="modal" data-target="#updatefixedModal" name="check" value="${data[7]}|${data[9]}">
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="updatefixedModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="updatefixedModalLabel"
+                aria-hidden="true"
+              >
+              <div class="modal-dialog">
+              <div class="alert" role="alert" id="observation_alert" style="display: none"></div>
+              <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel">Observaciones</h4>
+                    </div>
+            
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <form role="form" id="submit-observation-form">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Agregar observacion</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="updateObservation-input"
+                            placeholder="Añadir observación"
+                          />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit_button_observation">Submit</button>
+                      </form>
+                    </div>
+            
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default close_modal" data-dismiss="modal">
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+
+            : `<button class="btn btn-primary btn-lg fixed-button" data-toggle="modal" data-target="#fixedModal" value="${data[11]}|${data[10]}">
+                 Ver
+               </button>
+
+               <!-- Modal -->
+            <div
+              class="modal fade"
+              id="fixedModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="fixedModalLabel"
+              aria-hidden="true"
+            >
+            
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="fixedModalLabel">Observaciones del dispositivo</h4>
+                  </div>
+          
+                  <!-- Modal Body -->
+                  <div class="modal-body">
+                  <p id="fixed-input"></p>
+                  </div>
+                  
+                  <!-- Modal Footer -->
+                  <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="form-group" style="margin: 0; padding: 0; display: flex; flex-grow: 1; justify-content: space-between;">
+                      <p id="date-fixed-input" class="mb-0" style="flex-grow: 1; text-align: left;"></p>
+                      <button type="button" class="btn btn-default" style="margin-left: auto;" data-dismiss="modal">
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>`
         },
         width: "1%",
       },
@@ -301,13 +396,22 @@ $(document).ready(function () {
         orderable: false,
         render: function (data) {
           return (
-            '<input type="checkbox" class="checks_of_fixed" name="check" value="' +
-            data +
-            '">'
-          );
+            `<input type="checkbox" class="checks_of_retired" name="check" value="${data[8]}| ${data[9]}">`
+          )
         },
         width: "1%",
       },
     ],
+
+    /* SETTINGS OF DATATABLE*/
+    ordering: false, /* disable order in the rows of datatable*/
+    info: false, /* disable info show entries, leyend: "Showing 1 to 5 of 5 entries" */
+    lengthChange: false, /* disable length entries select input */
+    /* dom: 'rtip', */ /* disable buton show entries (10/15/20/50) */
+    /* columnDefs: [{ searchable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] }], */ /* disable search for the columns*/
+    search: false,
+    /* search: {
+      return: true,
+    }, */
   });
 });

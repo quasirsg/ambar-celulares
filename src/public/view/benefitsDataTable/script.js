@@ -1,4 +1,3 @@
-
 /* ----------------------------
   
 ---------------------------- */
@@ -9,17 +8,22 @@ const checksOfDepositedOut = document.getElementsByClassName("checks_of_deposite
 const checksOfFixed = document.getElementsByClassName("checks_of_fixed");
 const depositedButtons = document.getElementsByClassName("deposited-button");
 const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
-const problemButtons = document.getElementsByClassName("problem-button")
+const problemButtons = document.getElementsByClassName("problem-button");
+const fixedButtons = document.getElementsByClassName("fixed-button");
 
 let dni;
 let checks = [];
 let client;
+let timeoutId = null;
 let modalToShow;
 let idClient;
 const paginationState = {
   currentPage: 1,
   rowsPerPage: 5,
 };
+let filter = {};
+let isSearching = false;
+let currentInputValue = '';
 /* ----------------------------
   Control errors
 ---------------------------- */
@@ -46,21 +50,22 @@ async function clientExist(dni) {
   return exists.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
 }
 
-async function getBenefitArr(dni, state) {
-  const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage);
+async function getBenefitArr(dni, state, filter) {
+  const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage, filter);
   const benefitsArr = benefits.map((value) => Object.values(value));
-  console.log(benefitsArr);
-
   return benefitsArr;
 }
 
-async function reloadData(dni, state) {
+async function reloadData(dni, state, filter = {}) {
   if (await clientExist(dni)) {
-    const benefitsArr = await getBenefitArr(dni, state);
+    const benefitsArr = await getBenefitArr(dni, state, filter);
     if (benefitsArr.length) {
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
-      $("#example").DataTable().order([]).draw();
+      $("#example").DataTable().draw();
+      toggleModals();
+      paginationSettingsToButtons(dni, paginationState, filter);
+      $('#example_filter label input').val(currentInputValue);
     } else {
       invalidToaster({ code: "client_inexistent" });
     }
@@ -74,13 +79,15 @@ async function editTotalAmount(id, amountInput, change, buttonToDisable) {
       validToaster("el Importe");
       await updateTotalAmount(id, amountInput.value);
     } else {
-      validToaster("la Seña");
+      validToaster("el Deposito");
       await updateDepositedMoney(id, amountInput.value);
     }
   } catch (error) {
     console.log(error);
   }
 }
+
+
 
 /* ----------------------------
   Básic Validations
@@ -151,21 +158,37 @@ function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
   });
 }
 
-function validateIfChecksComeTrue(checks, position, action, columnName) {
+function validateIfChecksComeTrue(checks, action, columnName) { /* el action pasa la funcion: addUpdateStateToEventClick */
   Array.from(checks).forEach((check) => {
-    let valuesArr = check.value.split(",");
-    let length = valuesArr.length;
-    if (valuesArr[position] == true) check.checked = true;
+    let valuesArr = check.value.split("|");
+    if (valuesArr[0] == true) check.checked = true;
     if (check.checked == true) check.disabled = "disabled";
-    action(check, valuesArr, length, columnName);
+    action(check, columnName);
   });
 }
 
-function addUpdateStateToEventClick(check, valuesArr, length, columnName) {
+function addUpdateStateToEventClick(check, columnName) {
   check.addEventListener("click", async () => {
-    check.disabled = "disabled";
-    await updateChecks(valuesArr[length - 1], columnName);
+    if (columnName === "retired") check.disabled = "disabled";
+    let valuesArr = check.value.split("|");
+    idClient = valuesArr[1];
+    if (columnName === "retired") await updateChecks(idClient, columnName);
   });
+}
+
+/**
+ * Funcion que controla el submit del formulario de la observacion para cargar en la bd, disablea el boton de submit
+ */
+async function updateObsAndDateFixed(id, observationInput, submitButton) {
+  try {
+    validToaster("la observacion");
+    let fechaActual = Number(moment.utc().format('YYYYMMDD'));
+    await updateChecks(id, "fixed");
+    await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
+    submitButton.disabled = "disabled";
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function toggleModalOfProblem(buttons) {
@@ -177,21 +200,32 @@ function toggleModalOfProblem(buttons) {
   });
 }
 
-/**
- * Manage function of the events at the pagination dataTables
- */
-async function paginationSettingsToButtons(dni, state) {
-  const countBenefits = await getAllBenefitsByDni(dni);
-  const countTotalBenefits = countBenefits[0].total;
-  const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
-  $(".paginate_button.current").text(state.currentPage);
-
-  updateButtonStates(state, totalPages);
-  await eventListenerPaginationButtons(dni, state, totalPages);
+function toggleModalOfObservation(buttons) {
+  Array.from(buttons).forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      let valueToSplit = button.value.split("|");
+      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('YYYY/MM/DD');
+      $(`#date-fixed-input`).text(`Fecha arreglado: ${isoDateObservation}`);
+      $(`#fixed-input`).text(`${valueToSplit[1]}`);
+    });
+  });
 }
 
 /**
- *  Handles the state op pagination buttons based on the current page and pagination
+ *  Configures pagination buttons based on provided parameters, including calculating total pages, updating button states, and adding event listeners
+ */
+async function paginationSettingsToButtons(dni, state, filter = {}) {
+  const countBenefits = await getTotalBenefits(dni, filter);
+  const countTotalBenefits = countBenefits[0].total;
+  const totalPages = Math.ceil(countTotalBenefits / state.rowsPerPage);
+  $(".paginate_button.current").text(state.currentPage);
+  updateButtonStates(state, totalPages);
+  await eventListenerPaginationButtons(dni, state, totalPages, filter);
+}
+
+/**
+ *  Handles the state of pagination buttons based on the current page and pagination
  */
 function updateButtonStates(state, pagination) {
   if (state.currentPage <= 1) {
@@ -210,7 +244,7 @@ function updateButtonStates(state, pagination) {
 /**
  * Add logic to the dataTables pagination buttons and controll the events of the current page
  */
-async function eventListenerPaginationButtons(dni, state, pagination) {
+async function eventListenerPaginationButtons(dni, state, pagination, filter) {
   $("#example_previous").off("click").on("click", async function (e) {
     e.preventDefault();
     if ($(this).hasClass("disabled")) {
@@ -219,7 +253,7 @@ async function eventListenerPaginationButtons(dni, state, pagination) {
     }
     if (state.currentPage > 1) {
       state.currentPage--;
-      await reloadData(dni, state);
+      await reloadData(dni, state, filter);
       updateButtonStates(state, pagination);
       toggleModals();
     }
@@ -233,21 +267,62 @@ async function eventListenerPaginationButtons(dni, state, pagination) {
     }
     if (state.currentPage < pagination) {
       state.currentPage++;
-      await reloadData(dni, state);
+      await reloadData(dni, state, filter);
       updateButtonStates(state, pagination);
       toggleModals();
     }
   });
 }
 
+const searchStrategies = {
+  date: (inputValue) => {
+    if (inputValue.length === 10) {
+      filter.date_received_phone = Number(moment(inputValue).format('YYYYMMDD'));
+      delete filter.imei;
+    }
+  },
+  imei: (inputValue) => {
+    if (inputValue.length === 15) {
+      filter.imei = inputValue;
+      delete filter.date_received_phone;
+    }
+  }
+};
+
+const applySearchStrategy = (inputValue) => {
+  Object.values(searchStrategies).forEach(strategy => {
+
+    return strategy(inputValue)
+  });
+};
+
+async function settingsSearchInput1(inputValue, state, dni) {
+  if (isSearching) return;
+  isSearching = true;
+
+  applySearchStrategy(inputValue);
+
+  state.currentPage = 1;
+  await reloadAndUpdatePagination(dni, state, filter);
+  isSearching = false;
+}
+
+async function reloadAndUpdatePagination(dni, state, filter) {
+  await reloadData(dni, state, filter);
+  await paginationSettingsToButtons(dni, state, filter);
+}
+
 function toggleModals() {
   const editTotalAmountModal = document.getElementById("edit-total-amount-form");
   const editDepositedMoneyModal = document.getElementById("edit-deposited-money-form");
+  const updateObservation = document.getElementById("submit-observation-form");
   const totalAmountInput = document.getElementById("totalAmountModal-input");
   const depositedMoneyInput = document.getElementById("depositedMoneyModal-input");
+  const observationInput = document.getElementById("updateObservation-input");
   const submitButtonTotalAmount = document.getElementById("submit_button_total_amount");
   const submitButtonDepositedMoney = document.getElementById("submit_button_deposited_money");
-  const closeButtons = document.getElementsByClassName("close_modal")
+  const submitButtonObservation = document.getElementById("submit_button_observation");
+  const closeButtons = document.getElementsByClassName("close_modal");
 
   editTotalAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -260,30 +335,78 @@ function toggleModals() {
     depositedMoneyInput.value = "";
   });
 
+  if (updateObservation) {
+    updateObservation.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      await updateObsAndDateFixed(idClient, observationInput, submitButtonObservation);
+      observationInput.value = "";
+    });
+  }
+
   Array.from(closeButtons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
       submitButtonTotalAmount.removeAttribute("disabled");
       submitButtonDepositedMoney.removeAttribute("disabled");
-      await reloadData(dni, paginationState)
-      toggleModals()
+      await reloadData(dni, paginationState, filter);
     });
   });
 
   toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal", "tokenModal");
   toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
+  validateIfChecksComeTrue(checksOfFixed, addUpdateStateToEventClick, "fixed");
+  validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
+  toggleModalOfObservation(fixedButtons);
   toggleModalOfProblem(problemButtons);
-  paginationSettingsToButtons(dni, paginationState)
 }
+
+/* ----------------------------
+  Search Benefits by imei or date_received_phone for the input of dataTable
+---------------------------- */
+
+
+function assignInputEvent() {
+  $('#example_filter label input')
+    .attr('maxlength', 15)
+    .attr('placeholder', 'Ingrese fecha o IMEI');
+  const searchInputDataTable = $('#example_filter label input');
+
+  searchInputDataTable.off();
+
+  searchInputDataTable.on('input', function (e) {
+    e.preventDefault();
+    clearTimeout(timeoutId);
+
+    currentInputValue = $(this).val();
+    timeoutId = setTimeout(async function () {
+      if (currentInputValue.length === 10 || currentInputValue.length === 15) {
+        settingsSearchInput1(currentInputValue, paginationState, dni);
+      } else if (currentInputValue.length === 0) {
+        // Llamar a la función que recarga la data
+        reloadData(dni, paginationState);
+      }
+    }, 1300);
+  });
+}
+
 /* ----------------------------
   Search Benefits by DNI
 ---------------------------- */
 
-searchInput.addEventListener("change", function (e) {
-  e = e.target.value;
-  if (verifyIsValidDni(e)) {
-    dni = e;
-  }
+searchInput.addEventListener("input", function (e) {
+  const dniValue = e.target.value;
+
+  clearTimeout(timeoutId);
+
+  timeoutId = setTimeout(async () => {
+    if (dniValue.length === 0) {
+      $("#example").dataTable().fnClearTable();
+      dni = null;
+    } else if (verifyIsValidDni(dniValue)) {
+      dni = dniValue;
+      await reloadData(dni, paginationState);
+    }
+  }, 1000);
 });
 
 /* ----------------------------
@@ -311,13 +434,15 @@ const invalidToaster = function (error, diferent) {
 const validToaster = function (diferent) {
   if (diferent === "el Importe") {
     var alerta = document.getElementById("amount_alert");
-  } else {
+  } else if (diferent === "el Deposito") {
     var alerta = document.getElementById("deposited_alert");
+  } else {
+    var alerta = document.getElementById("observation_alert");
   }
   alerta.style.cssText =
     "display: block; background-color: #dff0d8; color: #3c763d;";
   alerta.innerHTML =
-    "<strong>¡Bien hecho!</strong> Cambiaste " +
+    "<strong>¡Bien hecho!</strong> Modificaste " +
     `${diferent}` +
     " con exito.";
   setTimeout(function () {
@@ -331,19 +456,7 @@ const validToaster = function (diferent) {
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-
   if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
-  toggleModals();
-  validateIfChecksComeTrue(
-    checksOfRetired,
-    6,
-    addUpdateStateToEventClick,
-    "fixed"
-  );
-  validateIfChecksComeTrue(
-    checksOfFixed,
-    7,
-    addUpdateStateToEventClick,
-    "retired"
-  );
+  /* toggleModals(filter); */
 });
+$(document).ready(assignInputEvent);
