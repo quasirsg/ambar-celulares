@@ -9,6 +9,13 @@ $(document).ready(async function () {
       text: e.dni.toString(),
     };
   });
+  const brands = await getPhoneBrands();
+  const brandsFor = brands.map((e) => {
+    return {
+      value: e.name,
+      text: e.name,
+    }
+  });
 
   /* ----------------------------
   BD
@@ -18,6 +25,7 @@ $(document).ready(async function () {
   function resetForm() {
     form.reset();
     niceSelectInstance.clear();
+    niceSelectInstanceBrand.clear();
   }
 
   // Method to create a benefit plain object
@@ -27,6 +35,7 @@ $(document).ready(async function () {
     imei,
     problem,
     date_received_phone,
+    brand,
     deposited_money,
     total_amount_for_service
   ) {
@@ -37,6 +46,7 @@ $(document).ready(async function () {
       imei,
       problem,
       date_received_phone: String(date_received_phone).replace(/[,.-]/gi, "/"),
+      brand,
       deposited_money: Number(deposited_money),
       total_amount_for_service: Number(total_amount_for_service),
       fixed: false,
@@ -230,6 +240,21 @@ $(document).ready(async function () {
     },
   ];
 
+  const brandValidityChecks = [
+    {
+      isInvalid: function (input) {
+        const regex = /^[A-z-0-9]{2,30}$/;
+        const caracters = input.value;
+        const test = regex.test(caracters);
+        return test ? false : true;
+      },
+      invalidityMessage: "Campo requerido",
+      element: document.querySelector(
+        'div[id="div-brand"] .input-requirements li:nth-child(1)'
+      ),
+    },
+  ];
+
   const totalAmountValidityChecks = [
     {
       isInvalid: function (input) {
@@ -285,6 +310,7 @@ $(document).ready(async function () {
   const problemInput = document.getElementById("problem");
   const depositedMoneyInput = document.getElementById("deposited_money");
   const dateReceivedPhoneInput = document.getElementById("date_received_phone");
+  const brandInput = document.getElementById("brand");
   const totalAmountInput = document.getElementById("total_amount");
 
   [
@@ -294,6 +320,7 @@ $(document).ready(async function () {
     problemInput,
     depositedMoneyInput,
     dateReceivedPhoneInput,
+    brandInput,
     totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
 
@@ -303,6 +330,7 @@ $(document).ready(async function () {
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedMoneyInput.CustomValidation.validityChecks = depositedMoneyValidityChecks;
   dateReceivedPhoneInput.CustomValidation.validityChecks = dateReceivedPhoneValidityChecks;
+  brandInput.CustomValidation.validityChecks = brandValidityChecks;
   totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
 
@@ -313,12 +341,19 @@ $(document).ready(async function () {
   // get element
 
   const clientSelect = document.getElementById("searchable-select-client");
+  const brandSelect = document.getElementById("searchable-select-brand")
 
   // Initialize
   const niceSelectInstance = NiceSelect.bind(clientSelect, {
     searchable: true,
     data: dnisFor,
   });
+
+  const niceSelectInstanceBrand = NiceSelect.bind(brandSelect, {
+    searchable: true,
+    data: brandsFor,
+  })
+
 
   // Append options
 
@@ -329,12 +364,32 @@ $(document).ready(async function () {
     clientSelect.append(option);
   });
 
+  brandsFor.forEach((e) => {
+    let option = document.createElement("option");
+    option.value = e.value;
+    option.text = e.text;
+    brandSelect.append(option);
+  })
+
   //Event Listener
   clientSelect.addEventListener("change", function (e) {
     clientInput.value = e.target.value;
     clientInput.CustomValidation.checkInput();
   });
 
+  brandSelect.addEventListener("change", function (e) {
+    brandInput.value = e.target.value;
+    brandInput.CustomValidation.checkInput();
+  });
+
+  brandInput.addEventListener("input", function () {
+    const hasText = brandInput.value.trim().length > 0;
+    if (hasText) {
+      niceSelectInstanceBrand.disable();
+    } else {
+      niceSelectInstanceBrand.enable();
+    }
+  });
   /* ----------------------------
 
   General
@@ -370,6 +425,7 @@ $(document).ready(async function () {
         imeiInput.value,
         problemInput.value,
         dateReceivedPhoneInput.value,
+        brandInput.value,
         depositedMoneyInput.value,
         totalAmountInput.value
       );
@@ -379,7 +435,7 @@ $(document).ready(async function () {
         body: "Haz ingresado con exito un nuevo cliente",
       });
       resetForm();
-      await saveBenefit(benefit)
+      await saveBenefit(benefit);
     } catch (error) {
       console.log(error);
     }

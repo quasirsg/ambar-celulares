@@ -29,7 +29,7 @@
         <div class="col-sm-12" id="div-client">
           <div class="form-group" style="margin-bottom: 10px">
             <span>Buscar cliente</span>
-            <select id="searchable-select-client" class="wide">
+            <select id="searchable-select-client" class="wide" placeholder="Seleccione una opción">
               <option data-display="Select"></option>
               <div>
                 <button>a</button>
@@ -53,66 +53,88 @@
           </div>
         </div>
 
-        <div class="col-sm-6" id="div-imei">
-          <div class="form-group" style="margin-bottom: 10px">
-            <span>Imei</span>
-            <input class="form-control" type="text" id="imei" placeholder="Ingrese el imei del dispositivo"
-              maxlength="15" />
-            <ul class="input-requirements">
-              <li>un Imei esta conformado por numeros</li>
-              <li>un Imei esta conformado por 15 digitos</li>
-            </ul>
+        <div class="inline">
+          <div class="col-sm-6" id="div-brand">
+            <div class="form-group" style="margin-bottom: 10px">
+              <span>Marca del celular</span>
+              <input class="form-control" type="text" id="brand" placeholder="Ingrese un dispositivo" maxlength="15">
+              <select id="searchable-select-brand" class="right" placeholder="Seleccione una opción">
+                <option data-display="Select"></option>
+                <div>
+                  <button>a</button>
+                  <button>b</button>
+                </div>
+              </select>
+              <ul class="input-requirements">
+                <li>Campo requerido</li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <div class="col-sm-6" id="div-deposited_money">
-          <div class="form-group" style="margin-bottom: 10px">
-            <span>Deposito</span>
-            <span></span>
-            <input class="form-control" id="deposited_money" type="text" placeholder="Seña del cliente" />
-            <ul class="input-requirements">
-              <li>Solo numeros</li>
-            </ul>
+          <div class="row">
+            <div class="col-sm-6" id="div-imei">
+              <div class="form-group" style="margin-left: 15px">
+                <span>Imei</span>
+                <input class="form-control" type="text" id="imei" placeholder="Ingrese el imei del dispositivo"
+                  maxlength="15" />
+                <ul class="input-requirements">
+                  <li>un Imei esta conformado por numeros</li>
+                  <li>un Imei esta conformado por 15 digitos</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-sm-6" id="div-date_received_phone">
+              <div class="form-group" style="margin-right: 15px">
+                <span>Fecha recibido</span>
+                <input class="form-control" type="text" id="date_received_phone"
+                  placeholder="Ingrese la fecha de recepcion del dispositivo" maxlength="10" />
+                <ul class="input-requirements">
+                  <li>dd/mm/yyyy</li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="col-sm-6" id="div-date_received_phone">
-          <div class="form-group" style="margin-bottom: 10px">
-            <span>Fecha recibido</span>
-            <input class="form-control" type="text" id="date_received_phone"
-              placeholder="Ingrese la fecha de recepcion del dispositivo" maxlength="10" />
-            <ul class="input-requirements">
-              <li>dd/mm/yyyy</li>
-            </ul>
+          <div class="inline">
+            <div class="col-sm-6" id="div-total_amount">
+              <div class="form-group" style="margin-bottom: 10px">
+                <span>Importe Total</span>
+                <input class="form-control" type="text" id="total_amount" placeholder="Ingrese el monto" maxlength="10"
+                  value="Ingrese el importe total del trabajo" />
+                <ul class="input-requirements">
+                  <li>Solo numeros</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-sm-6" id="div-deposited_money">
+              <div class="form-group" style="margin-bottom: 10px">
+                <span>Deposito</span>
+                <span></span>
+                <input class="form-control" id="deposited_money" type="text" placeholder="Seña del cliente" />
+                <ul class="input-requirements">
+                  <li>Solo numeros</li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="col-sm-6" id="div-total_amount">
-          <div class="form-group" style="margin-bottom: 10px">
-            <span>Importe Total</span>
-            <input class="form-control" type="text" id="total_amount" placeholder="Ingrese el monto" maxlength="10"
-              value="Ingrese el importe total del trabajo" />
-            <ul class="input-requirements">
-              <li>Solo numeros</li>
-            </ul>
+          <div class="col-sm-12" id="div-problem">
+            <div class="form-group" style="margin-bottom: 5px">
+              <span>Describa el problema del telefono</span>
+              <textarea id="text-area-problem" class="form-control" name="problem" cols="30" rows="5"></textarea>
+              <input type="hidden" name="problem" id="problem" />
+              <ul class="input-requirements">
+                <li>Campo requerido</li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <div class="col-sm-12" id="div-problem">
-          <div class="form-group" style="margin-bottom: 5px">
-            <span>Describa el problema del telefono</span>
-            <textarea id="text-area-problem" class="form-control" name="problem" cols="30" rows="5"></textarea>
-            <input type="hidden" name="problem" id="problem" />
-            <ul class="input-requirements">
-              <li>Campo requerido</li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
-      <button type="submit" class="btn btn-primary form-control">
-        Submit
-      </button>
+          <button type="submit" class="btn btn-primary form-control">
+            Submit
+          </button>
     </form>
   </div>
   <!-- Insert this line above script imports  -->
