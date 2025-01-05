@@ -276,7 +276,7 @@ async function eventListenerPaginationButtons(dni, state, pagination, filter) {
 /**
  * Busqueda y control por el input de dataTables
  */
-async function settingsSearchInput(inputValue, state, dni) {
+/* async function settingsSearchInput(inputValue, state, dni) {
   if (isSearching) return;
   isSearching = true;
 
@@ -290,6 +290,41 @@ async function settingsSearchInput(inputValue, state, dni) {
     filter.imei = inputValue;
     delete filter.date_received_phone;
   }
+
+  state.currentPage = 1;
+  await reloadAndUpdatePagination(dni, state, filter);
+  isSearching = false;
+}
+
+async function reloadAndUpdatePagination(dni, state, filter) {
+  await reloadData(dni, state, filter);
+  await paginationSettingsToButtons(dni, state, filter);
+} */
+
+const searchStrategies = {
+  date: (inputValue) => {
+    if (inputValue.length === 10) {
+      filter.date_received_phone = Number(moment(inputValue).format('YYYYMMDD'));
+      delete filter.imei;
+    }
+  },
+  imei: (inputValue) => {
+    if (inputValue.length === 15) {
+      filter.imei = inputValue;
+      delete filter.date_received_phone;
+    }
+  }
+};
+
+const applySearchStrategy = (inputValue) => {
+  Object.values(searchStrategies).forEach(strategy => strategy(inputValue));
+};
+
+async function settingsSearchInput1(inputValue, state, dni) {
+  if (isSearching) return;
+  isSearching = true;
+
+  applySearchStrategy(inputValue);
 
   state.currentPage = 1;
   await reloadAndUpdatePagination(dni, state, filter);
@@ -354,11 +389,22 @@ function toggleModals() {
 ---------------------------- */
 
 function assignInputEvent() {
+  $('#example_filter label input')
+    .attr('maxlength', 15)
+    .attr('placeholder', 'Ingrese fecha o IMEI');
   const searchInputDataTable = $('#example_filter label input');
-  searchInputDataTable.on('input', async function (e) {
+  let timeoutId = null;
+
+  searchInputDataTable.on('input', function (e) {
     e.preventDefault();
+    clearTimeout(timeoutId);
+
     let inputValue = $(this).val();
-    settingsSearchInput(inputValue, paginationState, dni);
+    timeoutId = setTimeout(async function () {
+      if (inputValue.length === 10 || inputValue.length === 15) {
+        settingsSearchInput1(inputValue, paginationState, dni);
+      }
+    }, 3000);
   });
 }
 
