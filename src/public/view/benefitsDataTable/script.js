@@ -14,6 +14,7 @@ const fixedButtons = document.getElementsByClassName("fixed-button");
 let dni;
 let checks = [];
 let client;
+let timeoutId = null;
 let modalToShow;
 let idClient;
 const paginationState = {
@@ -22,6 +23,7 @@ const paginationState = {
 };
 let filter = {};
 let isSearching = false;
+let currentInputValue = '';
 /* ----------------------------
   Control errors
 ---------------------------- */
@@ -51,7 +53,6 @@ async function clientExist(dni) {
 async function getBenefitArr(dni, state, filter) {
   const benefits = await getBenefits(dni, state.currentPage, state.rowsPerPage, filter);
   const benefitsArr = benefits.map((value) => Object.values(value));
-  
   return benefitsArr;
 }
 
@@ -64,6 +65,7 @@ async function reloadData(dni, state, filter = {}) {
       $("#example").DataTable().draw();
       toggleModals();
       paginationSettingsToButtons(dni, paginationState, filter);
+      $('#example_filter label input').val(currentInputValue);
     } else {
       invalidToaster({ code: "client_inexistent" });
     }
@@ -181,8 +183,6 @@ async function updateObsAndDateFixed(id, observationInput, submitButton) {
   try {
     validToaster("la observacion");
     let fechaActual = Number(moment.utc().format('YYYYMMDD'));
-    console.log(fechaActual);
-
     await updateChecks(id, "fixed");
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
     submitButton.disabled = "disabled";
@@ -274,34 +274,6 @@ async function eventListenerPaginationButtons(dni, state, pagination, filter) {
   });
 }
 
-/**
- * Busqueda y control por el input de dataTables
- */
-/* async function settingsSearchInput(inputValue, state, dni) {
-  if (isSearching) return;
-  isSearching = true;
-
-  if (!inputValue) {
-    delete filter.imei;
-    delete filter.date_received_phone;
-  } else if (inputValue.includes('-')) {
-    filter.date_received_phone = String(inputValue).trim();
-    delete filter.imei;
-  } else {
-    filter.imei = inputValue;
-    delete filter.date_received_phone;
-  }
-
-  state.currentPage = 1;
-  await reloadAndUpdatePagination(dni, state, filter);
-  isSearching = false;
-}
-
-async function reloadAndUpdatePagination(dni, state, filter) {
-  await reloadData(dni, state, filter);
-  await paginationSettingsToButtons(dni, state, filter);
-} */
-
 const searchStrategies = {
   date: (inputValue) => {
     if (inputValue.length === 10) {
@@ -319,7 +291,7 @@ const searchStrategies = {
 
 const applySearchStrategy = (inputValue) => {
   Object.values(searchStrategies).forEach(strategy => {
-  
+
     return strategy(inputValue)
   });
 };
@@ -336,8 +308,6 @@ async function settingsSearchInput1(inputValue, state, dni) {
 }
 
 async function reloadAndUpdatePagination(dni, state, filter) {
-  console.log("trayendo");
-
   await reloadData(dni, state, filter);
   await paginationSettingsToButtons(dni, state, filter);
 }
@@ -399,7 +369,6 @@ function assignInputEvent() {
   $('#example_filter label input')
     .attr('maxlength', 15)
     .attr('placeholder', 'Ingrese fecha o IMEI');
-  let timeoutId = null;
   const searchInputDataTable = $('#example_filter label input');
 
   searchInputDataTable.off();
@@ -408,12 +377,15 @@ function assignInputEvent() {
     e.preventDefault();
     clearTimeout(timeoutId);
 
-    let inputValue = $(this).val();
+    currentInputValue = $(this).val();
     timeoutId = setTimeout(async function () {
-      if (inputValue.length === 10 || inputValue.length === 15) {
-        settingsSearchInput1(inputValue, paginationState, dni);
+      if (currentInputValue.length === 10 || currentInputValue.length === 15) {
+        settingsSearchInput1(currentInputValue, paginationState, dni);
+      } else if (currentInputValue.length === 0) {
+        // Llamar a la función que recarga la data
+        reloadData(dni, paginationState);
       }
-    }, 3000);
+    }, 1300);
   });
 }
 
@@ -421,11 +393,20 @@ function assignInputEvent() {
   Search Benefits by DNI
 ---------------------------- */
 
-searchInput.addEventListener("change", function (e) {
-  e = e.target.value;
-  if (verifyIsValidDni(e)) {
-    dni = e;
-  }
+searchInput.addEventListener("input", function (e) {
+  const dniValue = e.target.value;
+
+  clearTimeout(timeoutId);
+
+  timeoutId = setTimeout(async () => {
+    if (dniValue.length === 0) {
+      $("#example").dataTable().fnClearTable();
+      dni = null;
+    } else if (verifyIsValidDni(dniValue)) {
+      dni = dniValue;
+      await reloadData(dni, paginationState);
+    }
+  }, 1000);
 });
 
 /* ----------------------------
@@ -475,7 +456,6 @@ const validToaster = function (diferent) {
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-
   if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
   /* toggleModals(filter); */
 });
