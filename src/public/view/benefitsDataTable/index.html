@@ -1,69 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Buscar cliente</title>
-    <link rel="stylesheet" href="../../assets/css/bootstrap.css" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="../../assets/css/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="../../assets/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="alert" role="alert" id="alert" style="display: none"></div>
-    <div class="container">
-      <div class="row text-left">
-        <a href="../index.html">
-          <div class="container-block" id="item">
-            <div class="block1">
-              <i class="fa fa-home"></i>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="row text-center">
-        <form class="search-bar" id="search-form">
-          <input
-            type="search"
-            id="search"
-            name="search"
-            pattern=".*\S.*"
-            maxlength="8"
-            required
-          />
-          <button class="search-btn" type="submit"></button>
-        </form>
 
-        <table
-          id="example"
-          class="cell-border display compact"
-          style="width: 100%"
-        ></table>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buscar cliente</title>
+  <link rel="stylesheet" href="../../assets/css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../../assets/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="alert" role="alert" id="alert" style="display: none"></div>
+  <div class="container-fluid">
+    <div class="row text-left">
+      <a href="../index.html">
+        <div class="container-block" id="item">
+          <div class="block1">
+            <i class="fa fa-home"></i>
+          </div>
+        </div>
+      </a>
     </div>
 
-    <!-- Insert this line above script imports  -->
-    <script>
-      if (typeof module === "object") {
-        window.module = module;
-        module = undefined;
-      }
-    </script>
-    <script src="../app.js"></script>
-    <script src="../../assets/js/jquery.js"></script>
-    <script src="../../assets/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/jquery.dataTables.min.js"></script>
-    <script src="dataTables.js"></script>
-    <script src="script.js"></script>
-    <!-- Insert this line after script imports -->
-    <script>
-      if (window.module) module = window.module;
-    </script>
-  </body>
+    <div class="search-block" style="width: 100%; position: relative;">
+      <!-- Search Form dentro del div, posicionado en la esquina superior izquierda -->
+      <form class="search-form" id="search-form">
+        <input type="search" value="" id="search" pattern=".*\S.*" name="search"
+          placeholder="Busqueda de cliente por dni" class="search-input">
+        <button type="submit" class="search-button">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+
+    <div class="container" id="client-container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="card">
+            <!-- Título centrado -->
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                <h3 class="card-title">User Data</h3>
+              </div>
+            </div>
+            <div class="row">
+              <!-- Columna Izquierda -->
+              <div class="col-xs-6 left-section">
+                <div class="row">
+                  <div class="col-xs-4"><span class="label">Dni:</span></div>
+                  <div class="col-xs-8">42523334</div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-4"><span class="label">Nombre:</span></div>
+                  <div class="col-xs-8">Leanne Graham</div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-4"><span class="label">EMAIL:</span></div>
+                  <div class="col-xs-8">Sincere@april.biz</div>
+                </div>
+              </div>
+    
+              <!-- Columna Derecha -->
+              <div class="col-xs-6 right-section">
+                <div class="row">
+                  <div class="col-xs-4"><span class="label">Contacto:</span></div>
+                  <div class="col-xs-8">3813302319</div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-4"><span class="label">Dirección</span></div>
+                  <div class="col-xs-8">Facundo Quiroga 201</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+
+    <div id="dataTable-div">
+      <table id="example" class="cell-border display compact" style="width: 100%"></table>
+    </div>
+  </div>
+
+  <script>
+    if (typeof module === "object") {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
+  <script src="../app.js"></script>
+  <script src="../../assets/js/jquery.js"></script>
+  <script src="../../assets/js/bootstrap.min.js"></script>
+  <script src="../../assets/js/jquery.dataTables.min.js"></script>
+  <script src="dataTables.js"></script>
+  <script src="script.js"></script>
+  <script>
+    if (window.module) module = window.module;
+  </script>
+</body>
+
 </html>
