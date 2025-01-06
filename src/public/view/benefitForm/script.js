@@ -2,7 +2,7 @@
   Get data of bd
 ---------------------------- */
 $(document).ready(async function () {
-  const dnis = await getDni();
+  const dnis = await getAllDnis();
   const dnisFor = dnis.map((e) => {
     return {
       value: e.dni.toString(),

@@ -25,8 +25,8 @@ async function saveClient(client) {
  * este metodo devuelve todos los dni registrados en la db
  * @returns {DniObject}
  */
-async function getDni() {
-  return await main.getDni();
+async function getAllDnis() {
+  return await main.getAllDnis();
 }
 
 /* ----------------------------
