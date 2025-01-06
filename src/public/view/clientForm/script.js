@@ -1,5 +1,5 @@
 /* ----------------------------
-	Form and inputs
+  Form and inputs
 ---------------------------- */
 const dniInput = document.getElementById("dni");
 const nameInput = document.getElementById("name");
@@ -14,7 +14,7 @@ function resetForm() {
 }
 function validate() {
   var check = [];
-    inputs.forEach((input) => {
+  inputs.forEach((input) => {
     input.CustomValidation.checkInput();
     if (input.CustomValidation.invalidities.length !== 0) {
       check.push(input.CustomValidation)
@@ -33,9 +33,9 @@ function validate() {
   if (check.length > 3) {
     var allCamps = "All"
     invalidToaster({
-        code: `${allCamps}` + "_incomplete",
-      });
-  }else{
+      code: `${allCamps}` + "_incomplete",
+    });
+  } else {
     for (var i = 0; i < inputs.length; i++) {
       inputs[i].CustomValidation.checkInput();
       if (inputs[i].CustomValidation.invalidities.length === 1) {
@@ -73,7 +73,7 @@ errorsMap.set(
 );
 
 /* ----------------------------
-	BD
+  BD
 ---------------------------- */
 
 // Method to create a client plain object
@@ -88,13 +88,13 @@ function clientInfo(dni, name, surname, phoneNumber) {
 
 /* ----------------------------
 
-	Validity Checks
+  Validity Checks
 
-	The arrays of validity checks for each input
-	Comprised of three things
-		1. isInvalid() - the function to determine if the input fulfills a particular requirement
-		2. invalidityMessage - the error message to display if the field is invalid
-		3. element - The element that states the requirement
+  The arrays of validity checks for each input
+  Comprised of three things
+    1. isInvalid() - the function to determine if the input fulfills a particular requirement
+    2. invalidityMessage - the error message to display if the field is invalid
+    3. element - The element that states the requirement
 
 ---------------------------- */
 
@@ -168,7 +168,7 @@ const phoneNumberValidtyChecks = [
 ];
 
 /* ----------------------------
-	Toaster setup
+  Toaster setup
 ---------------------------- */
 const invalidToaster = function (error) {
   const errorText = errorsMap.get(error.code);
@@ -179,7 +179,7 @@ const invalidToaster = function (error) {
     "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 1500);
+  }, 3000);
 };
 
 const validToaster = function () {
@@ -190,14 +190,14 @@ const validToaster = function () {
     "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito.";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 2000);
+  }, 3000);
 };
 
 /* ----------------------------
-	Setup CustomValidation
+  Setup CustomValidation
 
-	Setup the CustomValidation prototype for each input
-	Also sets which array of validity checks to use for that input
+  Setup the CustomValidation prototype for each input
+  Also sets which array of validity checks to use for that input
 ---------------------------- */
 
 [dniInput, nameInput, surnameInput, phoneNumberInput].forEach(
@@ -210,7 +210,7 @@ surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
 phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
 
 /* ----------------------------
-	Event Listeners
+  Event Listeners
 ---------------------------- */
 submit.addEventListener("click", validate);
 form.addEventListener("submit", async function (e) {
@@ -225,7 +225,7 @@ form.addEventListener("submit", async function (e) {
       phoneNumberInput.value
     );
     resetForm();
-    await saveClient(client);
+    /* await saveClient(client); */
     validToaster();
 
     new Notification("Registro Exitoso", {
