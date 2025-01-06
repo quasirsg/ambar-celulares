@@ -83,13 +83,21 @@ h2 {
 }
 
 .alert {
-  width: 600px;
+  background-color: #dff0d8;
+  color: #3c763d;
+  width: 90%; /* Ajustar el tamaño de la alerta */
   min-height: 70px;
-  border-radius: 50px;
-  position: absolute;
+  border-radius: 10px;
   padding: 20px;
-  margin-top: 7px;
-  margin-left: 180px;
+  margin: 0 auto; /* Centrar horizontalmente */
+  text-align: center; /* Alinear el texto */
+  position: absolute;
+  top: 5%; /* Ajusta la distancia desde la parte superior */
+  left: 50%;
+  transform: translate(-50%, 0); /* Centrar horizontalmente con precisión */
+  z-index: 1050; /* Debe estar encima del modal */
+  display: block; /* Mostrar solo cuando sea necesario */
+  font-size: 1.5em; /* Aumentar el tamaño de la letra */
 }
 
 .container-fluid {

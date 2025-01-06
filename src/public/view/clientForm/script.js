@@ -1,10 +1,11 @@
 /* ----------------------------
-	Form and inputs
+  Form and inputs
 ---------------------------- */
 const dniInput = document.getElementById("dni");
 const nameInput = document.getElementById("name");
 const surnameInput = document.getElementById("surname");
 const phoneNumberInput = document.getElementById("phoneNumber");
+const address = document.getElementById("address");
 var inputs = document.querySelectorAll('input:not([type="submit"])');
 var submit = document.querySelector('button[type="submit"');
 var form = document.getElementById("saveClient");
@@ -14,7 +15,7 @@ function resetForm() {
 }
 function validate() {
   var check = [];
-    inputs.forEach((input) => {
+  inputs.forEach((input) => {
     input.CustomValidation.checkInput();
     if (input.CustomValidation.invalidities.length !== 0) {
       check.push(input.CustomValidation)
@@ -33,9 +34,9 @@ function validate() {
   if (check.length > 3) {
     var allCamps = "All"
     invalidToaster({
-        code: `${allCamps}` + "_incomplete",
-      });
-  }else{
+      code: `${allCamps}` + "_incomplete",
+    });
+  } else {
     for (var i = 0; i < inputs.length; i++) {
       inputs[i].CustomValidation.checkInput();
       if (inputs[i].CustomValidation.invalidities.length === 1) {
@@ -68,33 +69,38 @@ errorsMap.set(
   "Porfavor ingrese su telefono correctamente para poder avanzar"
 );
 errorsMap.set(
+  "address_incomplete",
+  "Porfavor ingrese la dirección correctamente para poder avanzar"
+);
+errorsMap.set(
   "All_incomplete",
   "Porfavor complete todos los campos correctamente para poder avanzar"
 );
 
 /* ----------------------------
-	BD
+  BD
 ---------------------------- */
 
 // Method to create a client plain object
-function clientInfo(dni, name, surname, phoneNumber) {
+function clientInfo(dni, name, surname, phoneNumber, address) {
   return {
     dni: Number(dni),
     name,
     surname,
     phone_number: phoneNumber,
+    address,
   };
 }
 
 /* ----------------------------
 
-	Validity Checks
+  Validity Checks
 
-	The arrays of validity checks for each input
-	Comprised of three things
-		1. isInvalid() - the function to determine if the input fulfills a particular requirement
-		2. invalidityMessage - the error message to display if the field is invalid
-		3. element - The element that states the requirement
+  The arrays of validity checks for each input
+  Comprised of three things
+    1. isInvalid() - the function to determine if the input fulfills a particular requirement
+    2. invalidityMessage - the error message to display if the field is invalid
+    3. element - The element that states the requirement
 
 ---------------------------- */
 
@@ -125,7 +131,7 @@ const dniValidityChecks = [
 const nameValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
+      const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -140,7 +146,7 @@ const nameValidityChecks = [
 const surnameValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
+      const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -167,8 +173,23 @@ const phoneNumberValidtyChecks = [
   },
 ];
 
+const addressValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-zÀ-ÿñÑ0-9\s,.-]{5,75}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Una dirección solo contiene letras y/o numeros",
+    element: document.querySelector(
+      'div[id="div-address"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
 /* ----------------------------
-	Toaster setup
+  Toaster setup
 ---------------------------- */
 const invalidToaster = function (error) {
   const errorText = errorsMap.get(error.code);
@@ -179,7 +200,7 @@ const invalidToaster = function (error) {
     "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 1500);
+  }, 3000);
 };
 
 const validToaster = function () {
@@ -190,17 +211,17 @@ const validToaster = function () {
     "<strong>¡Bien hecho!</strong> Guardaste el usuario con exito.";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 2000);
+  }, 3000);
 };
 
 /* ----------------------------
-	Setup CustomValidation
+  Setup CustomValidation
 
-	Setup the CustomValidation prototype for each input
-	Also sets which array of validity checks to use for that input
+  Setup the CustomValidation prototype for each input
+  Also sets which array of validity checks to use for that input
 ---------------------------- */
 
-[dniInput, nameInput, surnameInput, phoneNumberInput].forEach(
+[dniInput, nameInput, surnameInput, phoneNumberInput, address].forEach(
   (input) => (input.CustomValidation = new CustomValidation(input))
 );
 
@@ -208,9 +229,10 @@ dniInput.CustomValidation.validityChecks = dniValidityChecks;
 nameInput.CustomValidation.validityChecks = nameValidityChecks;
 surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
 phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
+address.CustomValidation.validityChecks = addressValidityChecks;
 
 /* ----------------------------
-	Event Listeners
+  Event Listeners
 ---------------------------- */
 submit.addEventListener("click", validate);
 form.addEventListener("submit", async function (e) {
@@ -222,8 +244,11 @@ form.addEventListener("submit", async function (e) {
       dniInput.value,
       nameInput.value,
       surnameInput.value,
-      phoneNumberInput.value
+      phoneNumberInput.value,
+      address.value
     );
+    console.log(client, "tenemos el cliente y la direccion:", client.address);
+
     resetForm();
     await saveClient(client);
     validToaster();

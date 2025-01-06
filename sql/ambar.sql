@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`clients` (
   `name` VARCHAR(30) NOT NULL,
   `surname` VARCHAR(30) NOT NULL,
   `phone_number` VARCHAR(10) NOT NULL,
+  `address` VARCHAR(70) NOT NULL,
   PRIMARY KEY (`dni`))
 ENGINE = InnoDB;
 
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `ambar`.`brands` (
 
 
 
-INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`) VALUES (42523334, 'Alexis', 'Romano', '3813302319');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (42523334, 'Alexis', 'Romano', '3813302319', 'Republica de Libano 1304');
 
 SELECT dni FROM `ambar`.`clients`;
 

@@ -414,10 +414,10 @@ searchInput.addEventListener("input", function (e) {
 ---------------------------- */
 
 const invalidToaster = function (error, diferent) {
-  if (diferent === "second_alert") {
-    var alerta = document.getElementById("second_alert");
-  } else if (diferent === "first_alert") {
+  if (diferent === "first_alert") {
     var alerta = document.getElementById("first_alert");
+  } else if (diferent === "second_alert") {
+    var alerta = document.getElementById("second_alert");
   } else {
     var alerta = document.getElementById("alert")
   }
