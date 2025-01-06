@@ -5,6 +5,7 @@ const dniInput = document.getElementById("dni");
 const nameInput = document.getElementById("name");
 const surnameInput = document.getElementById("surname");
 const phoneNumberInput = document.getElementById("phoneNumber");
+const address = document.getElementById("address");
 var inputs = document.querySelectorAll('input:not([type="submit"])');
 var submit = document.querySelector('button[type="submit"');
 var form = document.getElementById("saveClient");
@@ -68,6 +69,10 @@ errorsMap.set(
   "Porfavor ingrese su telefono correctamente para poder avanzar"
 );
 errorsMap.set(
+  "address_incomplete",
+  "Porfavor ingrese la dirección correctamente para poder avanzar"
+);
+errorsMap.set(
   "All_incomplete",
   "Porfavor complete todos los campos correctamente para poder avanzar"
 );
@@ -77,12 +82,13 @@ errorsMap.set(
 ---------------------------- */
 
 // Method to create a client plain object
-function clientInfo(dni, name, surname, phoneNumber) {
+function clientInfo(dni, name, surname, phoneNumber, address) {
   return {
     dni: Number(dni),
     name,
     surname,
     phone_number: phoneNumber,
+    address,
   };
 }
 
@@ -125,7 +131,7 @@ const dniValidityChecks = [
 const nameValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
+      const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -140,7 +146,7 @@ const nameValidityChecks = [
 const surnameValidityChecks = [
   {
     isInvalid: function (input) {
-      const regex = /^[A-z]{4,30}$/;
+      const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
       const caracters = input.value;
       const test = regex.test(caracters);
       return test ? false : true;
@@ -163,6 +169,21 @@ const phoneNumberValidtyChecks = [
     invalidityMessage: "Un numero de telefono solo contiene numeros",
     element: document.querySelector(
       'div[id="div-phoneNumber"] .input-requirements li:nth-child(1)'
+    ),
+  },
+];
+
+const addressValidityChecks = [
+  {
+    isInvalid: function (input) {
+      const regex = /^[A-zÀ-ÿñÑ0-9\s,.-]{5,75}$/;
+      const caracters = input.value;
+      const test = regex.test(caracters);
+      return test ? false : true;
+    },
+    invalidityMessage: "Una dirección solo contiene letras y/o numeros",
+    element: document.querySelector(
+      'div[id="div-address"] .input-requirements li:nth-child(1)'
     ),
   },
 ];
@@ -200,7 +221,7 @@ const validToaster = function () {
   Also sets which array of validity checks to use for that input
 ---------------------------- */
 
-[dniInput, nameInput, surnameInput, phoneNumberInput].forEach(
+[dniInput, nameInput, surnameInput, phoneNumberInput, address].forEach(
   (input) => (input.CustomValidation = new CustomValidation(input))
 );
 
@@ -208,6 +229,7 @@ dniInput.CustomValidation.validityChecks = dniValidityChecks;
 nameInput.CustomValidation.validityChecks = nameValidityChecks;
 surnameInput.CustomValidation.validityChecks = surnameValidityChecks;
 phoneNumberInput.CustomValidation.validityChecks = phoneNumberValidtyChecks;
+address.CustomValidation.validityChecks = addressValidityChecks;
 
 /* ----------------------------
   Event Listeners
@@ -222,10 +244,13 @@ form.addEventListener("submit", async function (e) {
       dniInput.value,
       nameInput.value,
       surnameInput.value,
-      phoneNumberInput.value
+      phoneNumberInput.value,
+      address.value
     );
+    console.log(client, "tenemos el cliente y la direccion:", client.address);
+
     resetForm();
-    /* await saveClient(client); */
+    await saveClient(client);
     validToaster();
 
     new Notification("Registro Exitoso", {
