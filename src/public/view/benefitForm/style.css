@@ -97,6 +97,7 @@ h2 {
   transform: translate(-50%, 0); /* Centrar horizontalmente con precisión */
   z-index: 1050; /* Debe estar encima del modal */
   display: block; /* Mostrar solo cuando sea necesario */
+  font-size: 1.5em; /* Aumentar el tamaño de la letra */
 }
 
 .container-fluid {
