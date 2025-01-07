@@ -27,12 +27,12 @@
         </div>
       </a>
     </div>
-    
+
     <div class="search-block" style="width: 100%; position: relative;">
       <!-- Search Form dentro del div, posicionado en la esquina superior izquierda -->
       <form class="search-form" id="search-form">
         <input type="search" value="" id="search" pattern=".*\S.*" name="search"
-          placeholder="Busqueda de cliente por dni" class="search-input">
+          placeholder="Busqueda de cliente por dni" class="search-input" maxlength="8">
         <button type="submit" class="search-button">
           <i class="fa fa-search" aria-hidden="true"></i>
         </button>
@@ -53,35 +53,31 @@
               <!-- Columna Izquierda -->
               <div class="col-xs-6 left-section">
                 <div class="row">
-                  <div class="col-xs-4"><span class="label">Dni:</span></div>
-                  <div class="col-xs-8">42523334</div>
+                  <div class="col-xs-4"><span class="label">DNI:</span></div>
+                  <div class="col-xs-8 reset-client" id="client-dni"></div>
                 </div>
                 <div class="row">
                   <div class="col-xs-4"><span class="label">Nombre:</span></div>
-                  <div class="col-xs-8">Leanne Graham</div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-4"><span class="label">EMAIL:</span></div>
-                  <div class="col-xs-8">Sincere@april.biz</div>
+                  <div class="col-xs-8 reset-client" id="client-name"></div>
                 </div>
               </div>
-    
+
               <!-- Columna Derecha -->
               <div class="col-xs-6 right-section">
                 <div class="row">
                   <div class="col-xs-4"><span class="label">Contacto:</span></div>
-                  <div class="col-xs-8">3813302319</div>
+                  <div class="col-xs-8 reset-client" id="client-contact"></div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-4"><span class="label">Dirección</span></div>
-                  <div class="col-xs-8">Facundo Quiroga 201</div>
+                  <div class="col-xs-4"><span class="label">Dirección:</span></div>
+                  <div class="col-xs-8 reset-client" id="client-address"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>    
+    </div>
 
     <div id="dataTable-div">
       <table id="example" class="cell-border display compact" style="width: 100%"></table>
