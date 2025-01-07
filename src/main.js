@@ -8,7 +8,7 @@ const getClient = async (dni) => {
   try {
     const conn = await getConnection();
     const results = await conn.query(
-      `SELECT dni FROM clients c WHERE c.dni = ${dni}`
+      `SELECT * FROM clients c WHERE c.dni = ${dni}`
     );
     return results;
   } catch (error) {
