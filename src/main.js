@@ -8,7 +8,7 @@ const getClient = async (dni) => {
   try {
     const conn = await getConnection();
     const results = await conn.query(
-      `SELECT dni FROM clients c WHERE c.dni = ${dni}`
+      `SELECT * FROM clients c WHERE c.dni = ${dni}`
     );
     return results;
   } catch (error) {
@@ -17,7 +17,7 @@ const getClient = async (dni) => {
   }
 };
 
-const getDni = async () => {
+const getAllDnis = async () => {
   try {
     const conn = await getConnection();
     const resultsDni = await conn.query("SELECT dni FROM clients");
@@ -231,7 +231,7 @@ const get2faUserInLocalStorage = () => {
 
 module.exports = {
   getClient,
-  getDni,
+  getAllDnis,
   saveClient,
   saveBenefit,
   getBenefits,

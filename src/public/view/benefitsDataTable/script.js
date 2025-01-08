@@ -10,6 +10,7 @@ const depositedButtons = document.getElementsByClassName("deposited-button");
 const totalAmountButtons = document.getElementsByClassName("totalAmount-button");
 const problemButtons = document.getElementsByClassName("problem-button");
 const fixedButtons = document.getElementsByClassName("fixed-button");
+const inputDataClient = document.getElementsByClassName("reset-client");
 
 let dni;
 let checks = [];
@@ -30,14 +31,8 @@ let currentInputValue = '';
 
 const errorsMap = new Map();
 
-errorsMap.set(
-  "dni_incomplete",
-  "Porfavor ingrese el dni correctamente para poder avanzar"
-);
-errorsMap.set(
-  "client_inexistent",
-  "El cliente seleccionado no cuenta con dispositivos asociados"
-);
+errorsMap.set("dni_incomplete", "Porfavor ingrese el dni correctamente para poder avanzar");
+errorsMap.set("client_inexistent", "El cliente seleccionado no cuenta con dispositivos asociados");
 errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
@@ -47,7 +42,8 @@ errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-  return exists.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
+  updateClientData(exists[0]);
+  return exists[0].dni.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
 }
 
 async function getBenefitArr(dni, state, filter) {
@@ -63,13 +59,23 @@ async function reloadData(dni, state, filter = {}) {
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
       $("#example").DataTable().draw();
-      toggleModals();
-      paginationSettingsToButtons(dni, paginationState, filter);
       $('#example_filter label input').val(currentInputValue);
+      paginationSettingsToButtons(dni, paginationState, filter);
+      toggleModals();
     } else {
       invalidToaster({ code: "client_inexistent" });
     }
   }
+}
+
+/* ----------------------------
+  Function to add client data in the new table of client view
+---------------------------- */
+async function updateClientData(client) {
+  document.getElementById('client-dni').textContent = client.dni;
+  document.getElementById('client-name').textContent = `${client.name}` + ` ` + `${client.surname}`;
+  document.getElementById('client-contact').textContent = client.phone_number;
+  document.getElementById('client-address').textContent = client.address;
 }
 
 async function editTotalAmount(id, amountInput, change, buttonToDisable) {
@@ -100,6 +106,7 @@ function verifyIsValidDni(e) {
   if (e.length >= 7 && e.length <= 9 && !isNaN(e)) return true;
   else {
     invalidToaster({ code: "dni_incomplete" });
+    return false
   }
 }
 
@@ -399,14 +406,26 @@ searchInput.addEventListener("input", function (e) {
   clearTimeout(timeoutId);
 
   timeoutId = setTimeout(async () => {
-    if (dniValue.length === 0) {
-      $("#example").dataTable().fnClearTable();
-      dni = null;
-    } else if (verifyIsValidDni(dniValue)) {
-      dni = dniValue;
-      await reloadData(dni, paginationState);
-    }
+    const isDniEmpty = dniValue.length === 0;
+    const isDniValid = verifyIsValidDni(dniValue);
+
+    console.log("el empty:", isDniEmpty, "el valid:", isDniValid);
+
+    dni = isDniEmpty ? null : dniValue;
+    isDniValid ? await reloadData(dni, paginationState) : clearDataTable(), clearInputsView(isDniEmpty);
   }, 1000);
+
+  function clearInputsView(isDniEmpty) {
+    if (isDniEmpty) {
+      Array.from(inputDataClient).forEach(element => {
+        element.innerHTML = "";
+      });
+    }
+  }
+
+  function clearDataTable() {
+    $("#example").dataTable().fnClearTable();
+  }
 });
 
 /* ----------------------------
@@ -428,7 +447,7 @@ const invalidToaster = function (error, diferent) {
     "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 3500);
+  }, 1200);
 };
 
 const validToaster = function (diferent) {
@@ -447,7 +466,7 @@ const validToaster = function (diferent) {
     " con exito.";
   setTimeout(function () {
     alerta.style.display = "none";
-  }, 3500);
+  }, 1200);
 };
 
 /* ----------------------------
