@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Buscar Clientes Registrados</title>
+</head>
+
+<body>
+    <div class="alert" role="alert" id="alert" style="display: none"></div>
+    <div class="container-fluid">
+        <div class="row text-left" id="item">
+            <a href="../index.html">
+                <div class="container-block">
+                    <div class="block1">
+                        <i class="fa fa-home"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <h2>Buscar Cliente</h2>
+        <div class="search-block" style="width: 100%;">
+            <form class="search-form" id="search-form">
+                <button type="submit" class="search-button">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <input type="search" value="" id="search" pattern=".*\S.*" name="search"
+                    placeholder="Busqueda de cliente por dni, nombre y nro de telefono" class="search-input"
+                    maxlength="8">
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <table class="table table-bordered">
+                <thead>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Nombre Completo</th>
+                    <th scope="col">Editar Datos</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td><button type="button" class="btn btn-primary btn-lg">Visualizar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="../app.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
