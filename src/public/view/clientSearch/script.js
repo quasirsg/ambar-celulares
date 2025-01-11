@@ -19,37 +19,46 @@ function verifyIsValidDni(e) {
     if (e.length >= 5 && e.length <= 15 && !isNaN(e)) return true;
 }
 
-function agregarFilasATabla(datos) {
+function agregarFilasATabla(clients) {
     const tabla = document.querySelector('table');
     const tbody = tabla.querySelector('tbody');
     tbody.innerHTML = '';
-    datos.forEach((dato) => {
-        const fila = document.createElement('tr');
-        const dni = document.createElement('td');
-        const nombreCompleto = document.createElement('td');
-        const editarDatos = document.createElement('td');
-        const botonVisualizar = document.createElement('button');
+    clients.forEach((data) => {
+        const createRow = document.createElement('tr');
+        const dniElementRow = document.createElement('td');
+        const nameElementRow = document.createElement('td');
+        const buttonElementRow = document.createElement('td');
+        const buttonEditUser = document.createElement('button');
 
-        dni.textContent = dato.dni;
-        nombreCompleto.textContent = `${dato.name}` + ` ` + `${dato.surname}`;
+        dniElementRow.textContent = data.dni;
+        nameElementRow.textContent = `${data.name}` + ` ` + `${data.surname}`;
 
-        botonVisualizar.type = 'button';
-        botonVisualizar.className = 'btn btn-primary btn-lg';
-        botonVisualizar.textContent = 'Visualizar';
+        buttonEditUser.type = 'button';
+        buttonEditUser.className = 'btn btn-primary btn-lg';
+        buttonEditUser.textContent = 'Visualizar';
 
-        botonVisualizar.addEventListener('click', () => {
+        buttonEditUser.addEventListener('click', () => {
             const modal = document.getElementById('modalVisualizar');
+            const nameInput = modal.querySelector('#name');
+            const surnameInput = modal.querySelector('#surname');
+            const phoneInput = modal.querySelector('#phone');
+            const addressInput = modal.querySelector('#address');
+
+            nameInput.value = data.name;
+            surnameInput.value = data.surname;
+            phoneInput.value = data.phone_number;
+            addressInput.value = data.address;
 
             $(modal).modal('show');
         });
 
-        editarDatos.appendChild(botonVisualizar);
+        buttonElementRow.appendChild(buttonEditUser);
 
-        fila.appendChild(dni);
-        fila.appendChild(nombreCompleto);
-        fila.appendChild(editarDatos);
+        createRow.appendChild(dniElementRow);
+        createRow.appendChild(nameElementRow);
+        createRow.appendChild(buttonElementRow);
 
-        tbody.appendChild(fila);
+        tbody.appendChild(createRow);
     });
 }
 
