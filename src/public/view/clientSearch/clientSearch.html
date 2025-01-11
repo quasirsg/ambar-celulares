@@ -51,37 +51,54 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="modalVisualizar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="modalVisualizar">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Editar datos del cliente</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Editar datos del cliente</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="nombre">Nombre:</label>
-                                <input type="text" class="form-control" id="name" name="nombre">
-                            </div>
-                            <div class="form-group">
-                                <label for="direccion">Apellido:</label>
-                                <input type="text" class="form-control" id="surname" name="direccion">
-                            </div>
-                            <div class="form-group">
-                                <label for="direccion">Telefono:</label>
-                                <input type="text" class="form-control" id="phone" name="direccion">
-                            </div>
-                            <div class="form-group">
-                                <label for="direccion">Direccion:</label>
-                                <input type="text" class="form-control" id="address" name="direccion">
-                            </div>
-                        </form>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>DNI:</th>
+                                <td><input type="text" class="form-control" id="dni-input" name="dni" readonly></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Nombre:</th>
+                                <td><input type="text" class="form-control" id="name-input" name="name" disabled></td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                            </tr>
+                            <tr>
+                                <th>Apellido:</th>
+                                <td><input type="text" class="form-control" id="surname-input" name="surname" disabled>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                            </tr>
+                            <tr>
+                                <th>Telefono:</th>
+                                <td><input type="text" class="form-control" id="phone-input" name="phone_number"
+                                        disabled></td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                            </tr>
+                            <tr>
+                                <th>Dirección:</th>
+                                <td><input type="text" class="form-control" id="address-input" name="address" disabled>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="btn-delete-confirm"
+                            data-dismiss="modal">Eliminar cliente</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>

@@ -38,18 +38,7 @@ function agregarFilasATabla(clients) {
         buttonEditUser.textContent = 'Visualizar';
 
         buttonEditUser.addEventListener('click', () => {
-            const modal = document.getElementById('modalVisualizar');
-            const nameInput = modal.querySelector('#name');
-            const surnameInput = modal.querySelector('#surname');
-            const phoneInput = modal.querySelector('#phone');
-            const addressInput = modal.querySelector('#address');
-
-            nameInput.value = data.name;
-            surnameInput.value = data.surname;
-            phoneInput.value = data.phone_number;
-            addressInput.value = data.address;
-
-            $(modal).modal('show');
+            modalViewData(data);
         });
 
         buttonElementRow.appendChild(buttonEditUser);
@@ -59,6 +48,46 @@ function agregarFilasATabla(clients) {
         createRow.appendChild(buttonElementRow);
 
         tbody.appendChild(createRow);
+    });
+}
+
+function modalViewData(data) {
+    const modal = document.getElementById('modalVisualizar');
+    const dniInput = modal.querySelector('#dni-input');
+    const nameInput = modal.querySelector('#name-input');
+    const surnameInput = modal.querySelector('#surname-input');
+    const phoneInput = modal.querySelector('#phone-input');
+    const addressInput = modal.querySelector('#address-input');
+
+    dniInput.value = data.dni;
+    nameInput.value = data.name;
+    surnameInput.value = data.surname;
+    phoneInput.value = data.phone_number;
+    addressInput.value = data.address;
+
+    $(modal).modal('show');
+    editButtonsEvents(data);
+}
+
+function editButtonsEvents(data) {
+    const editButtonsModal = document.querySelectorAll('#btn-editar');
+    const confirmButtonsModal = document.querySelectorAll('#btn-confirm-edit');
+    const deleteButtonsModal = document.getElementById('btn-delete-confirm');
+
+    editButtonsModal.forEach((button) => {
+        button.addEventListener('click', () => {
+            const inputValidate = button.closest('tr').querySelector('input');
+            inputValidate.disabled = false;
+        });
+    });
+
+    confirmButtonsModal.forEach((button) => {
+        button.addEventListener('click', () => {
+        });
+    });
+
+    deleteButtonsModal.addEventListener('click', function (e) {
+        e.preventDefault();
     });
 }
 
