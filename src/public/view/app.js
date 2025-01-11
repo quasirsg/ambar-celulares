@@ -29,8 +29,12 @@ async function getAllDnis() {
   return await main.getAllDnis();
 }
 
-async function getAllClients() {
-  return await main.getAllClients();
+async function getAllClients(page, limit) {
+  return await main.getAllClients(page, limit);
+}
+
+async function getTotalClients() {
+  return await main.getTotalClients();
 }
 
 /* ----------------------------

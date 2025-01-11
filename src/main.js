@@ -27,11 +27,22 @@ const getAllDnis = async () => {
   }
 }
 
-const getAllClients = async () => {
+const getAllClients = async (page, limit) => {
   try {
     const conn = await getConnection();
-    const resultsClients = await conn.query("SELECT * FROM clients");
+    const offset = (page - 1) * limit;
+    const resultsClients = await conn.query(`SELECT * FROM clients LIMIT ${limit} OFFSET ${offset}`);
     return resultsClients;
+  } catch (error) {
+    throw error
+  }
+}
+
+const getTotalClients = async () => {
+  try {
+    const conn = await getConnection();
+    const resultsCountClients = await conn.query(`SELECT COUNT(*) as total FROM ambar.clients `);
+    return resultsCountClients;
   } catch (error) {
     throw error
   }
@@ -243,6 +254,7 @@ module.exports = {
   getClient,
   getAllDnis,
   getAllClients,
+  getTotalClients,
   saveClient,
   saveBenefit,
   getBenefits,
