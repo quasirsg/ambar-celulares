@@ -68,37 +68,61 @@
                             </tr>
                             <tr>
                                 <th>Nombre:</th>
-                                <td><input type="text" class="form-control" id="name-input" name="name" disabled></td>
+                                <td id="td-name"><input type="text" class="form-control" id="name-input" name="name"
+                                        disabled>
+                                    <ul class="input-requirements">
+                                        <li>Un nombre solo contiene letras</li>
+                                    </ul>
+                                </td>
                                 <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
-                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Apellido:</th>
-                                <td><input type="text" class="form-control" id="surname-input" name="surname" disabled>
+                                <td id="td-surname"><input type="text" class="form-control" id="surname-input"
+                                        name="surname" disabled>
+                                    <ul class="input-requirements">
+                                        <li>Un apellido solo contiene letras</li>
+                                    </ul>
                                 </td>
                                 <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
-                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Telefono:</th>
-                                <td><input type="text" class="form-control" id="phone-input" name="phone_number"
-                                        disabled></td>
+                                <td id="td-phoneNumber"><input type="text" class="form-control" id="phone-input"
+                                        name="phone_number" disabled>
+                                    <ul class="input-requirements">
+                                        <li>
+                                            Un numero de telefono solo contiene numeros y tiene 10 digitos
+                                        </li>
+                                    </ul>
+                                </td>
                                 <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
-                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Dirección:</th>
-                                <td><input type="text" class="form-control" id="address-input" name="address" disabled>
+                                <td id="td-address"><input type="text" class="form-control" id="address-input"
+                                        name="address" disabled>
+                                    <ul class="input-requirements">
+                                        <li>La dirección debe tener un máximo de 70 caracteres</li>
+                                    </ul>
                                 </td>
                                 <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
-                                <td><button class="btn btn-success" id="btn-confirm-edit">Confirmar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" id="btn-delete-confirm"
                             data-dismiss="modal">Eliminar cliente</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-default" id="btn-close-modal"
+                            data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -123,6 +147,7 @@
         }
     </script>
     <script src="../app.js"></script>
+    <script src="../assets/js/inputsCustomValidationsClient.js"></script>
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
