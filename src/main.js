@@ -27,6 +27,16 @@ const getAllDnis = async () => {
   }
 }
 
+const getAllClients = async () => {
+  try {
+    const conn = await getConnection();
+    const resultsClients = await conn.query("SELECT * FROM clients");
+    return resultsClients;
+  } catch (error) {
+    throw error
+  }
+}
+
 const saveClient = async (client) => {
   try {
     const conn = await getConnection();
@@ -232,6 +242,7 @@ const get2faUserInLocalStorage = () => {
 module.exports = {
   getClient,
   getAllDnis,
+  getAllClients,
   saveClient,
   saveBenefit,
   getBenefits,

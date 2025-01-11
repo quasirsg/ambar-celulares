@@ -29,6 +29,10 @@ async function getAllDnis() {
   return await main.getAllDnis();
 }
 
+async function getAllClients() {
+  return await main.getAllClients();
+}
+
 /* ----------------------------
   Benefit and BenefitDataTable
 ---------------------------- */
