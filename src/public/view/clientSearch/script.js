@@ -127,7 +127,7 @@ function modalViewChargeData(data) {
 
     $(modal).modal('show');
     addEditButtonsEvents(modal);
-    closeButtonsEvents(modal);
+    closeButtonsEvents();
 }
 
 /**
