@@ -172,7 +172,7 @@ function addEditButtonsEvents(modal) {
  */
 function closeButtonsEvents(modal) {
     const deleteButtonsModal = document.getElementById('btn-delete-confirm');
-    const closeButtonsModal = document.getElementById('btn-close-modal');
+    const closeButtonsModal = document.querySelectorAll('#btn-close-modal');
 
     deleteButtonsModal.addEventListener('click', function (e) {
         e.preventDefault();
@@ -182,12 +182,14 @@ function closeButtonsEvents(modal) {
         uploadAllClientsInfo(paginationState);
     });
 
-    closeButtonsModal.addEventListener('click', function (e) {
-        e.preventDefault();
-        console.log("close");
-        resetModalFields()
-        removeEditButtonsEvents(modal);
-        uploadAllClientsInfo(paginationState);
+    closeButtonsModal.forEach((button) => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log("close");
+            resetModalFields()
+            removeEditButtonsEvents(modal);
+            uploadAllClientsInfo(paginationState);
+        })
     });
 }
 
