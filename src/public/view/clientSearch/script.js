@@ -182,6 +182,8 @@ function closeButtonsEvents(modal) {
         resetModalFields()
         removeEditButtonsEvents(modal);
         uploadAllClientsInfo(paginationState);
+        $('#modalAlert').modal('hide');
+        $('#modalVisualizar').modal('hide');
     });
 
     closeButtonsModal.forEach((button) => {
