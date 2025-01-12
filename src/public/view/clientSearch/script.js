@@ -11,6 +11,46 @@ const paginationState = {
     rowsPerPage: 5,
 };
 
+function validate(input) {
+    input.CustomValidation.invalidities = [];
+    input.CustomValidation.checkValidity(input);
+
+    if (input.CustomValidation.invalidities.length === 0 && input.value !== "") {
+        input.setCustomValidity("");
+        return true;
+    } else {
+        var message = input.CustomValidation.getInvalidities();
+        input.setCustomValidity(message);
+        invalidToaster({
+            code: `${input.name}_incomplete`,
+        });
+        return false;
+    }
+}
+
+
+const errorsMap = new Map();
+
+errorsMap.set(
+    "name_incomplete",
+    "Porfavor ingrese el nombre correctamente para poder avanzar"
+);
+errorsMap.set(
+    "surname_incomplete",
+    "Porfavor ingrese el apellido correctamente para poder avanzar"
+);
+errorsMap.set(
+    "phone_number_incomplete",
+    "Porfavor ingrese el telefono correctamente para poder avanzar"
+);
+errorsMap.set(
+    "address_incomplete",
+    "Porfavor ingrese la direccion correctamente para poder avanzar"
+);
+
+/**
+ * Function to get data client from db
+ */
 async function uploadAllClientsInfo(state) {
     const clientData = await getAllClients(state.currentPage, state.rowsPerPage);
     renderClientTableRows(clientData);
@@ -25,7 +65,7 @@ function verifyIsValidDni(e) {
     if (e.length >= 5 && e.length <= 15 && !isNaN(e)) return true;
 }
 
-function removeEditButtonsEvents(modal) {
+function removeEditButtonsEvents() {
     editButtonsEventListeners.forEach(({ button, clickListener }) => {
         button.removeEventListener('click', clickListener);
     });
@@ -128,7 +168,7 @@ function modalViewChargeData(data) {
 
     $(modal).modal('show');
     addEditButtonsEvents(modal);
-    closeButtonsEvents();
+    /* closeButtonsEvents(); */
 }
 
 /**
@@ -137,6 +177,8 @@ function modalViewChargeData(data) {
 function addEditButtonsEvents(modal) {
     const editButtonsModal = modal.querySelectorAll('#btn-editar');
     confirmButtonsModal = modal.querySelectorAll('#btn-confirm-edit');
+    const confirmModalButtonEdit = document.getElementById('btn-edit-confirm');
+
 
     editButtonsModal.forEach((button) => {
         const clickListener = () => {
@@ -144,8 +186,6 @@ function addEditButtonsEvents(modal) {
             const confirmButton = button.closest('tr').querySelector('#btn-confirm-edit');
 
             toggleInputAndConfirmButton(inputToValidate, confirmButton);
-
-            console.log("evento edit");
 
             if (!inputToValidate.disabled) {
                 validateParams(inputToValidate);
@@ -159,28 +199,39 @@ function addEditButtonsEvents(modal) {
     confirmButtonsModal.forEach((button) => {
         const clickListener = async (e) => {
             e.preventDefault();
+            const confirmModal = document.getElementById("modalEdit");
             const inputValue = button.closest('tr').querySelector('input');
-            await updateClientField(dni, inputValue.name, inputValue.value);
-            resetModalFields();
+            if (validate(inputValue)) {
+                $(confirmModal).modal('show');
+                handleConfirmButtonEditEvent(dni, inputValue.name, inputValue.value);
+            }
         };
 
         button.addEventListener('click', clickListener);
         editButtonsEventListeners.push({ button, clickListener });
     });
+
+    const handleConfirmButtonEditEvent = (dni, field, newValue) => {
+        confirmModalButtonEdit.addEventListener('click', async () => {
+            await updateClientField(dni, field, newValue);
+            validToaster();
+            resetModalFields();
+        })
+    };
 }
 
 /**
  * Events of close and delete buttons of modal
  */
-function closeButtonsEvents(modal) {
+(function closeButtonsEvents() {
     const deleteButtonsModal = document.getElementById('btn-delete-confirm');
     const closeButtonsModal = document.querySelectorAll('#btn-close-modal');
 
     deleteButtonsModal.addEventListener('click', async function (e) {
         e.preventDefault();
-        await deleteClientByDni(dni);
+        /* await deleteClientByDni(dni); */
         resetModalFields()
-        removeEditButtonsEvents(modal);
+        removeEditButtonsEvents();
         uploadAllClientsInfo(paginationState);
         $('#modalAlert').modal('hide');
         $('#modalVisualizar').modal('hide');
@@ -191,22 +242,24 @@ function closeButtonsEvents(modal) {
             e.preventDefault();
             console.log("close");
             resetModalFields()
-            removeEditButtonsEvents(modal);
+            removeEditButtonsEvents();
             uploadAllClientsInfo(paginationState);
         })
     });
-}
+})();
 
 /**
  * Inputs validations
  */
 function validateParams(inputValidate) {
-    const validityChecks = [
+    let validityChecks;
+
+    const nameValidityChecks = [
         {
             isInvalid: function (input) {
                 const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
-                const characters = input.value;
-                const test = regex.test(characters);
+                const caracters = input.value;
+                const test = regex.test(caracters);
                 return test ? false : true;
             },
             invalidityMessage: "Un nombre solo contiene letras",
@@ -214,11 +267,14 @@ function validateParams(inputValidate) {
                 'td[id="td-name"] ul.input-requirements li:nth-child(1)'
             ),
         },
+    ];
+
+    const surnameValidityChecks = [
         {
             isInvalid: function (input) {
                 const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
-                const characters = input.value;
-                const test = regex.test(characters);
+                const caracters = input.value;
+                const test = regex.test(caracters);
                 return test ? false : true;
             },
             invalidityMessage: "Un apellido solo contiene letras",
@@ -226,23 +282,29 @@ function validateParams(inputValidate) {
                 'td[id="td-surname"] ul.input-requirements li:nth-child(1)'
             ),
         },
+    ];
+
+    const phoneNumberValidtyChecks = [
         {
             isInvalid: function (input) {
                 const regex = /^[0-9]{10,10}$/;
-                const characters = input.value;
-                const test = regex.test(characters);
+                const caracters = input.value;
+                const test = regex.test(caracters);
                 return test ? false : true;
             },
-            invalidityMessage: "Un numero de telefono solo contiene numeros y tiene 10 dígitos",
+            invalidityMessage: "Un numero de telefono solo contiene numeros",
             element: document.querySelector(
                 'td[id="td-phoneNumber"] ul.input-requirements li:nth-child(1)'
             ),
         },
+    ];
+
+    const addressValidityChecks = [
         {
             isInvalid: function (input) {
                 const regex = /^[A-zÀ-ÿñÑ0-9\s,.-]{5,70}$/;
-                const characters = input.value;
-                const test = regex.test(characters);
+                const caracters = input.value;
+                const test = regex.test(caracters);
                 return test ? false : true;
             },
             invalidityMessage: "La dirección debe tener entre 5 y 70 caracteres y solo contener letras, números y los siguientes caracteres: , . -",
@@ -251,6 +313,24 @@ function validateParams(inputValidate) {
             ),
         },
     ];
+
+    switch (inputValidate.name) {
+        case "name":
+            validityChecks = nameValidityChecks;
+            break;
+        case "surname":
+            validityChecks = surnameValidityChecks;
+            break;
+        case "phone_number":
+            validityChecks = phoneNumberValidtyChecks;
+            break;
+        case "address":
+            validityChecks = addressValidityChecks;
+            break;
+        default:
+            validityChecks = [];
+            break;
+    }
 
     inputValidate.CustomValidation = new CustomValidation(inputValidate);
     inputValidate.CustomValidation.validityChecks = validityChecks;
@@ -314,6 +394,32 @@ async function eventListenerPaginationButtons(dni, state, totalPages, filter) {
         }
     });
 }
+
+/**
+ * Alert Toasters 
+ */
+const invalidToaster = function (error) {
+    const errorText = errorsMap.get(error.code);
+    var alerta = document.getElementById("alert");
+    alerta.style.cssText =
+        "display: block; background-color: #f2dede; color: #a94442;";
+    alerta.innerHTML =
+        "<strong>¡Algo salió mal! </strong>" + `${errorText}` + ".";
+    setTimeout(function () {
+        alerta.style.display = "none";
+    }, 1600);
+};
+
+const validToaster = function () {
+    var alerta = document.getElementById("alert");
+    alerta.style.cssText =
+        "display: block; background-color: #dff0d8; color: #3c763d;";
+    alerta.innerHTML =
+        "<strong>¡Bien hecho!</strong> Editaste el usuario con exito.";
+    setTimeout(function () {
+        alerta.style.display = "none";
+    }, 1600);
+};
 
 /**
  * Submit form
