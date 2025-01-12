@@ -119,6 +119,7 @@ function modalViewChargeData(data) {
     const phoneInput = modal.querySelector('#phone-input');
     const addressInput = modal.querySelector('#address-input');
 
+    dni = data.dni
     dniInput.value = data.dni;
     nameInput.value = data.name;
     surnameInput.value = data.surname;
@@ -156,10 +157,11 @@ function addEditButtonsEvents(modal) {
     });
 
     confirmButtonsModal.forEach((button) => {
-        const clickListener = (e) => {
+        const clickListener = async (e) => {
             e.preventDefault();
-            console.log("submit");
-            resetModalFields()
+            const inputValue = button.closest('tr').querySelector('input');
+            await updateClientField(dni, inputValue.name, inputValue.value);
+            resetModalFields();
         };
 
         button.addEventListener('click', clickListener);

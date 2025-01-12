@@ -37,6 +37,10 @@ async function getTotalClients() {
   return await main.getTotalClients();
 }
 
+async function updateClientField(dni, field, newValue) {
+  return await main.updateClientField(dni, field, newValue);
+}
+
 /* ----------------------------
   Benefit and BenefitDataTable
 ---------------------------- */

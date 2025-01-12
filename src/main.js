@@ -48,6 +48,20 @@ const getTotalClients = async () => {
   }
 }
 
+const updateClientField = async (dni, field, newValue) => {
+  try {
+    const conn = await getConnection();
+    const updateClientFieldQuery = await conn.query(`
+      UPDATE ambar.clients
+      SET ${field} = '${newValue}'
+      WHERE dni = '${dni}'
+    `);
+    return updateClientFieldQuery;
+  } catch (error) {
+    throw error;
+  }
+}
+
 const saveClient = async (client) => {
   try {
     const conn = await getConnection();
@@ -255,6 +269,7 @@ module.exports = {
   getAllDnis,
   getAllClients,
   getTotalClients,
+  updateClientField,
   saveClient,
   saveBenefit,
   getBenefits,
