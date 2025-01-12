@@ -176,9 +176,9 @@ function closeButtonsEvents(modal) {
     const deleteButtonsModal = document.getElementById('btn-delete-confirm');
     const closeButtonsModal = document.querySelectorAll('#btn-close-modal');
 
-    deleteButtonsModal.addEventListener('click', function (e) {
+    deleteButtonsModal.addEventListener('click', async function (e) {
         e.preventDefault();
-        console.log("delete");
+        await deleteClientByDni(dni);
         resetModalFields()
         removeEditButtonsEvents(modal);
         uploadAllClientsInfo(paginationState);

@@ -41,6 +41,10 @@ async function updateClientField(dni, field, newValue) {
   return await main.updateClientField(dni, field, newValue);
 }
 
+async function deleteClientByDni(dni) {
+  return await main.deleteClientByDni(dni);
+}
+
 /* ----------------------------
   Benefit and BenefitDataTable
 ---------------------------- */

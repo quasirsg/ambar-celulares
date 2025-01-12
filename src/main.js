@@ -71,6 +71,19 @@ const saveClient = async (client) => {
   }
 };
 
+const deleteClientByDni = async (dni) => {
+  try {
+    const conn = await getConnection();
+    const benefitDeleted = await conn.query("DELETE FROM ambar.benefits WHERE dni = ?", [dni]);
+    const clientDeleted = await conn.query("DELETE FROM ambar.clients WHERE dni = ?", [dni]);
+    return { clientDeleted, benefitDeleted };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 const saveBenefit = async (benefit) => {
   try {
     const conn = await getConnection();
@@ -272,6 +285,7 @@ module.exports = {
   updateClientField,
   saveClient,
   saveBenefit,
+  deleteClientByDni,
   getBenefits,
   getTotalBenefits,
   getPhoneBrands,
