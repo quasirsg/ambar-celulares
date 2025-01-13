@@ -27,26 +27,49 @@ const getAllDnis = async () => {
   }
 }
 
-const getAllClients = async (page, limit) => {
+const getAllClientsOrFiltered = async (page, limit, searchType, searchValue) => {
   try {
     const conn = await getConnection();
     const offset = (page - 1) * limit;
-    const resultsClients = await conn.query(`SELECT * FROM clients LIMIT ${limit} OFFSET ${offset}`);
+
+    let query = 'SELECT * FROM clients';
+    let params = [];
+
+    if (searchValue) {
+      query += ` WHERE ${searchType} LIKE ?`;
+      params.push(`%${searchValue}%`);
+    }
+
+    query += ' LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const resultsClients = await conn.query(query, params);
     return resultsClients;
   } catch (error) {
-    throw error
+    throw error;
+  }
+};
+
+
+const getTotalClients = async (searchType, searchValue) => {
+  try {
+    const conn = await getConnection();
+
+    let query = 'SELECT COUNT(*) as total FROM ambar.clients';
+    let params = [];
+
+    if (searchValue) {
+      query += ` WHERE ${searchType} LIKE ?`;
+      params.push(`%${searchValue}%`);
+    }
+
+    const resultsCountClients = await conn.query(query, params);
+    return resultsCountClients;
+  } catch (error) {
+    throw error;
   }
 }
 
-const getTotalClients = async () => {
-  try {
-    const conn = await getConnection();
-    const resultsCountClients = await conn.query(`SELECT COUNT(*) as total FROM ambar.clients `);
-    return resultsCountClients;
-  } catch (error) {
-    throw error
-  }
-}
 
 const updateClientField = async (dni, field, newValue) => {
   try {
@@ -280,7 +303,7 @@ const get2faUserInLocalStorage = () => {
 module.exports = {
   getClient,
   getAllDnis,
-  getAllClients,
+  getAllClientsOrFiltered,
   getTotalClients,
   updateClientField,
   saveClient,

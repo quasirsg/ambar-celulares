@@ -29,12 +29,12 @@ async function getAllDnis() {
   return await main.getAllDnis();
 }
 
-async function getAllClients(page, limit) {
-  return await main.getAllClients(page, limit);
+async function getAllClientsOrFiltered(page, limit, searchType, searchValue) {
+  return await main.getAllClientsOrFiltered(page, limit, searchType, searchValue);
 }
 
-async function getTotalClients() {
-  return await main.getTotalClients();
+async function getTotalClients(searchType, searchValue) {
+  return await main.getTotalClients(searchType, searchValue);
 }
 
 async function updateClientField(dni, field, newValue) {
