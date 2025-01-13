@@ -237,7 +237,7 @@ function addEditButtonsEvents(modal) {
 
     deleteButtonsModal.addEventListener('click', async function (e) {
         e.preventDefault();
-        /* await deleteClientByDni(dni); */
+        await deleteClientByDni(dni);
         resetModalFields()
         removeEditButtonsEvents();
         uploadAllClientsInfo(paginationState);
