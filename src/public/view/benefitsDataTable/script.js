@@ -143,7 +143,7 @@ function addUpdateStateToEventClick(check, columnName) {
 async function updateObsAndDateFixed(id, observationInput, submitButton) {
   try {
     validToaster("la observacion");
-    let fechaActual = Number(moment.utc().format('YYYYMMDD'));
+    let fechaActual = Number(moment().format('YYYYMMDD'));
     await updateChecks(id, "fixed");
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
     submitButton.disabled = "disabled";
@@ -166,7 +166,7 @@ function toggleModalOfObservation(buttons) {
     button.addEventListener("click", function (e) {
       e.preventDefault();
       let valueToSplit = button.value.split("|");
-      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('YYYY/MM/DD');
+      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('DD/MM/YYYY');
       $(`#date-fixed-input`).text(`Fecha arreglado: ${isoDateObservation}`);
       $(`#fixed-input`).text(`${valueToSplit[1]}`);
     });
@@ -362,8 +362,6 @@ searchInput.addEventListener("input", function (e) {
   timeoutId = setTimeout(async () => {
     const isDniEmpty = dniValue.length === 0;
     const isDniValid = verifyIsValidDni(dniValue);
-
-    console.log("el empty:", isDniEmpty, "el valid:", isDniValid);
 
     dni = isDniEmpty ? null : dniValue;
     isDniValid ? await reloadData(dni, paginationState) : clearDataTable(), clearInputsView(isDniEmpty);
