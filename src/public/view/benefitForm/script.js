@@ -45,13 +45,18 @@ $(document).ready(async function () {
       device,
       imei,
       problem,
-      date_received_phone: Number(moment(date_received_phone).format('YYYYMMDD')),
+      date_received_phone,
       brand,
       deposited_money: Number(deposited_money),
       total_amount_for_service: Number(total_amount_for_service),
       fixed: false,
       retired: false,
     };
+  }
+
+  // Function to assign the current date
+  function setCurrentDate() {
+    return Number(moment().format('YYYYMMDD'));
   }
 
   function controlInputs(dni, problem) {
@@ -112,10 +117,6 @@ $(document).ready(async function () {
   errorsMap.set(
     "deposited_money_incomplete",
     "Porfavor ingrese el deposito correctamente para poder avanzar"
-  );
-  errorsMap.set(
-    "date_received_phone_incomplete",
-    "Porfavor ingrese una fecha correctamente para poder avanzar"
   );
   errorsMap.set(
     "total_amount_incomplete",
@@ -228,21 +229,6 @@ $(document).ready(async function () {
     },
   ];
 
-  const dateReceivedPhoneValidityChecks = [
-    {
-      isInvalid: function (input) {
-        const regex = /^((?:19|20)\d\d)[-\/\.](0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])$/;
-        const caracters = input.value;
-        const test = regex.test(caracters);
-        return test ? false : true;
-      },
-      invalidityMessage: "YYYY/MM/DD",
-      element: document.querySelector(
-        'div[id="div-date_received_phone"] .input-requirements li:nth-child(1)'
-      ),
-    },
-  ];
-
   const brandValidityChecks = [
     {
       isInvalid: function (input) {
@@ -312,7 +298,6 @@ $(document).ready(async function () {
   const imeiInput = document.getElementById("imei");
   const problemInput = document.getElementById("problem");
   const depositedMoneyInput = document.getElementById("deposited_money");
-  const dateReceivedPhoneInput = document.getElementById("date_received_phone");
   const brandInput = document.getElementById("brand");
   const totalAmountInput = document.getElementById("total_amount");
 
@@ -322,7 +307,6 @@ $(document).ready(async function () {
     imeiInput,
     problemInput,
     depositedMoneyInput,
-    dateReceivedPhoneInput,
     brandInput,
     totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
@@ -332,7 +316,6 @@ $(document).ready(async function () {
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedMoneyInput.CustomValidation.validityChecks = depositedMoneyValidityChecks;
-  dateReceivedPhoneInput.CustomValidation.validityChecks = dateReceivedPhoneValidityChecks;
   brandInput.CustomValidation.validityChecks = brandValidityChecks;
   totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
@@ -427,7 +410,7 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         problemInput.value,
-        dateReceivedPhoneInput.value,
+        setCurrentDate(),
         brandInput.value,
         depositedMoneyInput.value,
         totalAmountInput.value
@@ -440,7 +423,7 @@ $(document).ready(async function () {
       resetForm();
       console.log(benefit);
 
-      await saveBenefit(benefit);
+      /* await saveBenefit(benefit); */
     } catch (error) {
       console.log(error);
     }
