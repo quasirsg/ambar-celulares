@@ -41,8 +41,14 @@ errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-  updateClientData(exists[0]);
-  return exists[0].dni.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
+  console.log(exists.length);
+
+  if (exists.length !== 0) {
+    updateClientData(exists[0])
+    return 1
+  } else {
+    invalidToaster({ code: "client_inexistent" })
+  }
 }
 
 async function getBenefitArr(dni, state, filter) {
