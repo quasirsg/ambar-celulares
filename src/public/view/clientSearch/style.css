@@ -9,6 +9,9 @@
   box-sizing: border-box;
 }
 
+
+
+
 body {
   background-color: #f9fafb;
   font-family: "Open Sans", sans-serif;
@@ -50,6 +53,11 @@ body {
   font-size: 31px;
   color: #616161;
 }
+.block1 i {
+  transition: all 0.4s ease-in;
+  font-size: 31px;
+  color: #6A0DAD;
+}
 #item:focus .block1 i,
 #item:active .block1 i,
 #item:hover .block1 i {
@@ -72,8 +80,6 @@ h2 {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
   }
   
   .search-form {
@@ -294,3 +300,7 @@ h2 {
   margin: 0 auto;
 }
 
+.btn-primary {
+  background-color: #6A0DAD;
+  border-color: #6A0DAD;
+}
