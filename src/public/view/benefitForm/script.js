@@ -17,6 +17,8 @@ $(document).ready(async function () {
     }
   });
 
+  let dni;
+
   /* ----------------------------
   BD
 ---------------------------- */
@@ -60,10 +62,10 @@ $(document).ready(async function () {
   }
 
   function controlInputs(dni, problem) {
-    if (dni === "null")
-      throw new Error(invalidToaster({ code: "client_incomplete" }));
+    if (dni === NaN)
+      (invalidToaster({ code: "client_incomplete" }));
     if (problem === "")
-      throw new Error(invalidToaster({ code: "problem_incomplete" }));
+      (invalidToaster({ code: "problem_incomplete" }));
   }
 
   // Error Control and Validate
@@ -146,7 +148,7 @@ $(document).ready(async function () {
   const clientValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9]{5,30}$/;
+        const regex = /^[0-9]{7,8}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
@@ -359,6 +361,7 @@ $(document).ready(async function () {
 
   //Event Listener
   clientSelect.addEventListener("change", function (e) {
+    dni = clientInput.value
     clientInput.value = e.target.value;
     clientInput.CustomValidation.checkInput();
   });
@@ -416,12 +419,16 @@ $(document).ready(async function () {
         totalAmountInput.value
       );
 
-      validToaster();
-      new Notification("Registro Exitoso", {
-        body: "Haz ingresado con exito un nuevo cliente",
-      });
-      resetForm();
-      await saveBenefit(benefit);
+      if (dni !== undefined) {
+        validToaster();
+        new Notification("Registro Exitoso", {
+          body: "Haz ingresado con exito un nuevo cliente",
+        });
+        resetForm();
+        await saveBenefit(benefit);
+      } else {
+        (invalidToaster({ code: "client_incomplete" }))
+      }
     } catch (error) {
       console.log(error);
     }
