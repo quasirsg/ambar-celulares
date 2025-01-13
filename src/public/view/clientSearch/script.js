@@ -1,5 +1,3 @@
-const rowForDni = document.getElementById("row-dni");
-const rowForName = document.getElementById("row-name");
 const inputSearch = document.getElementById("search-input");
 const form = document.getElementById("search-form");
 
@@ -9,6 +7,11 @@ let editButtonsEventListeners = [];
 const paginationState = {
     currentPage: 1,
     rowsPerPage: 5,
+};
+const searchTypes = {
+    dni: term => /^[0-9]{7,8}$/.test(term),
+    phone_number: term => /^[0-9]{10}$/.test(term),
+    name: term => /^[A-zÀ-ÿñÑ\s'.-]{3,30}$/.test(term)
 };
 
 function validate(input) {
@@ -51,11 +54,10 @@ errorsMap.set(
 /**
  * Function to get data client from db
  */
-async function uploadAllClientsInfo(state) {
-    const clientData = await getAllClients(state.currentPage, state.rowsPerPage);
+async function uploadAllClientsInfo(state, searchType, searchValue) {
+    const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
     renderClientTableRows(clientData);
-    await paginationSettingsToButtons(dni, state);
-    /* closeButtonsEvents(); */
+    await paginationSettingsToButtons(state, searchType, searchValue);
 }
 
 /**
@@ -168,7 +170,6 @@ function modalViewChargeData(data) {
 
     $(modal).modal('show');
     addEditButtonsEvents(modal);
-    /* closeButtonsEvents(); */
 }
 
 /**
@@ -240,7 +241,6 @@ function addEditButtonsEvents(modal) {
     closeButtonsModal.forEach((button) => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
-            console.log("close");
             resetModalFields()
             removeEditButtonsEvents();
             uploadAllClientsInfo(paginationState);
@@ -257,7 +257,7 @@ function validateParams(inputValidate) {
     const nameValidityChecks = [
         {
             isInvalid: function (input) {
-                const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
+                const regex = /^[A-zÀ-ÿñÑ\s'.-]{3,30}$/;
                 const caracters = input.value;
                 const test = regex.test(caracters);
                 return test ? false : true;
@@ -272,7 +272,7 @@ function validateParams(inputValidate) {
     const surnameValidityChecks = [
         {
             isInvalid: function (input) {
-                const regex = /^[A-zÀ-ÿñÑ\s'.-]+$/;
+                const regex = /^[A-zÀ-ÿñÑ\s'.-]{3,30}$/;
                 const caracters = input.value;
                 const test = regex.test(caracters);
                 return test ? false : true;
@@ -339,13 +339,13 @@ function validateParams(inputValidate) {
 /**
  * PAGINATION LOGIC
  */
-async function paginationSettingsToButtons(dni, state, filter = {}) {
-    const countClients = await getTotalClients();
+async function paginationSettingsToButtons(state, searchType, searchValue) {
+    const countClients = await getTotalClients(searchType, searchValue);
     const countTotalClients = countClients[0].total;
     const totalPages = Math.ceil(countTotalClients / state.rowsPerPage);
     $(".page-link-current").text(state.currentPage);
     updateButtonStates(state, totalPages);
-    await eventListenerPaginationButtons(dni, state, totalPages, filter);
+    await eventListenerPaginationButtons(state, totalPages, searchType, searchValue);
 }
 /**
  *  Handles the state of pagination buttons based on the current page and pagination
@@ -367,7 +367,7 @@ function updateButtonStates(state, totalPages) {
 /**
  * Add logic to the dataTables pagination buttons and controll the events of the current page
  */
-async function eventListenerPaginationButtons(dni, state, totalPages, filter) {
+async function eventListenerPaginationButtons(state, totalPages, searchType, searchValue) {
     $(".page-item-prev").off("click").on("click", async function (e) {
         e.preventDefault();
         if ($(this).hasClass("disabled")) {
@@ -377,7 +377,7 @@ async function eventListenerPaginationButtons(dni, state, totalPages, filter) {
         if (state.currentPage > 1) {
             state.currentPage--;
             updateButtonStates(state, totalPages);
-            await uploadAllClientsInfo(state);
+            await uploadAllClientsInfo(state, searchType, searchValue);
         }
     });
 
@@ -390,7 +390,7 @@ async function eventListenerPaginationButtons(dni, state, totalPages, filter) {
         if (state.currentPage < totalPages) {
             state.currentPage++;
             updateButtonStates(state, totalPages);
-            await uploadAllClientsInfo(state);
+            await uploadAllClientsInfo(state, searchType, searchValue);
         }
     });
 }
@@ -427,8 +427,10 @@ const validToaster = function () {
 form.addEventListener("submit", async function (e) {
     try {
         e.preventDefault();
-        dni = inputSearch.value
-        /* uploadAllClientsInfo(paginationState); */
+        const searchValue = inputSearch.value.trim();
+        const searchType = Object.keys(searchTypes).find(type => searchTypes[type](searchValue)) || 'name';
+
+        await uploadAllClientsInfo(paginationState, searchType, searchValue);
     } catch (error) {
         console.log(error);
     }
