@@ -61,7 +61,7 @@ $(document).ready(function () {
         title: "F. Ingreso",
         className: "text-center",
         render: function (data, type, row, meta) {
-          const isoDateReceived = moment(data, 'YYYYMMDD').format('YYYY/MM/DD');
+          const isoDateReceived = moment(data, 'YYYYMMDD').format('DD/MM/YYYY');
           return isoDateReceived;
         }
       },
