@@ -103,6 +103,7 @@ function isNumber(toValidate) {
 }
 
 function verifyIsValidDni(e) {
+  if (!e) return false;
   if (e.length >= 7 && e.length <= 9 && !isNaN(e)) return true;
   else {
     invalidToaster({ code: "dni_incomplete" });
@@ -475,7 +476,10 @@ const validToaster = function (diferent) {
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-  if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
-  /* toggleModals(filter); */
+  if (verifyIsValidDni(dni)) {
+    await reloadData(dni, paginationState);
+  } else {
+    invalidToaster({ code: "dni_incomplete" });
+  }
 });
 $(document).ready(assignInputEvent);

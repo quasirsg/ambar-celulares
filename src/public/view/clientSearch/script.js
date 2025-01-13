@@ -33,7 +33,10 @@ function validate(input) {
 
 
 const errorsMap = new Map();
-
+errorsMap.set(
+    "client_inexistent",
+    "Porfavor ingrese los datos correctamente para poder avanzar"
+);
 errorsMap.set(
     "name_incomplete",
     "Porfavor ingrese el nombre correctamente para poder avanzar"
@@ -56,8 +59,12 @@ errorsMap.set(
  */
 async function uploadAllClientsInfo(state, searchType, searchValue) {
     const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
-    renderClientTableRows(clientData);
-    await paginationSettingsToButtons(state, searchType, searchValue);
+    if (clientData.length) {
+        renderClientTableRows(clientData);
+        await paginationSettingsToButtons(state, searchType, searchValue);
+    } else {
+        invalidToaster({ code: "client_inexistent" });
+    }
 }
 
 /**
@@ -400,7 +407,11 @@ async function eventListenerPaginationButtons(state, totalPages, searchType, sea
  */
 const invalidToaster = function (error) {
     const errorText = errorsMap.get(error.code);
-    var alerta = document.getElementById("alert");
+    if (error.code === "client_inexistent") {
+        var alerta = document.getElementById("alert-input");
+    } else {
+        var alerta = document.getElementById("alert");
+    }
     alerta.style.cssText =
         "display: block; background-color: #f2dede; color: #a94442;";
     alerta.innerHTML =
@@ -424,6 +435,13 @@ const validToaster = function () {
 /**
  * Submit form
  */
+form.addEventListener("input", async function (e) {
+    try {
+
+    } catch (error) {
+
+    }
+})
 form.addEventListener("submit", async function (e) {
     try {
         e.preventDefault();
