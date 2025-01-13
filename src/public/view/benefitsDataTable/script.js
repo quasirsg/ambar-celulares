@@ -344,7 +344,7 @@ function assignInputEvent() {
         settingsSearchInput1(currentInputValue, paginationState, dni);
       } else if (currentInputValue.length === 0) {
         // Llamar a la función que recarga la data
-        reloadData(dni, paginationState);
+        reloadData(dni, paginationState, filter = {});
       }
     }, 1300);
   });
