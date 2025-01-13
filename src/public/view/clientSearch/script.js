@@ -2,7 +2,9 @@ const inputSearch = document.getElementById("search-input");
 const form = document.getElementById("search-form");
 
 let dni;
-let confirmButtonsModal
+let tbody;
+let confirmButtonsModal;
+let verifyDataClientLength;
 let editButtonsEventListeners = [];
 const paginationState = {
     currentPage: 1,
@@ -26,6 +28,7 @@ function validate(input) {
         input.setCustomValidity(message);
         invalidToaster({
             code: `${input.name}_incomplete`,
+            element: "alert"
         });
         return false;
     }
@@ -33,6 +36,10 @@ function validate(input) {
 
 
 const errorsMap = new Map();
+errorsMap.set(
+    "clients_inexistents",
+    "No hay clientes registrados para mostrar"
+);
 errorsMap.set(
     "client_inexistent",
     "Porfavor ingrese los datos correctamente para poder avanzar"
@@ -58,12 +65,25 @@ errorsMap.set(
  * Function to get data client from db
  */
 async function uploadAllClientsInfo(state, searchType, searchValue) {
-    const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
-    if (clientData.length) {
-        renderClientTableRows(clientData);
-        await paginationSettingsToButtons(state, searchType, searchValue);
+    let verifyClientsRegistered = await getTotalClients();
+
+    if (verifyClientsRegistered[0].total !== 0) {
+        const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
+        verifyDataClientLength = clientData.length
+        if (clientData.length) {
+            renderClientTableRows(clientData);
+            await paginationSettingsToButtons(state, searchType, searchValue);
+        } else {
+            invalidToaster({
+                code: "client_inexistent",
+                element: "alert-input"
+            });
+        }
     } else {
-        invalidToaster({ code: "client_inexistent" });
+        invalidToaster({
+            code: "clients_inexistents",
+            element: "alert-input"
+        });
     }
 }
 
@@ -126,7 +146,7 @@ function resetModalFields() {
  */
 function renderClientTableRows(clients) {
     const tabla = document.querySelector('table');
-    const tbody = tabla.querySelector('tbody');
+    tbody = tabla.querySelector('tbody');
 
     tbody.innerHTML = '';
     clients.forEach((data) => {
@@ -238,11 +258,21 @@ function addEditButtonsEvents(modal) {
     deleteButtonsModal.addEventListener('click', async function (e) {
         e.preventDefault();
         await deleteClientByDni(dni);
-        resetModalFields()
-        removeEditButtonsEvents();
-        uploadAllClientsInfo(paginationState);
         $('#modalAlert').modal('hide');
         $('#modalVisualizar').modal('hide');
+        if (verifyDataClientLength > 1) {
+            resetModalFields();
+            removeEditButtonsEvents();
+            uploadAllClientsInfo(paginationState);
+        } else {
+            removeEditButtonsEvents();
+            resetModalFields();
+            tbody.innerHTML = '';
+            invalidToaster({
+                code: "clients_inexistents",
+                element: "alert-input"
+            });
+        }
     });
 
     closeButtonsModal.forEach((button) => {
@@ -347,7 +377,7 @@ function validateParams(inputValidate) {
  * PAGINATION LOGIC
  */
 async function paginationSettingsToButtons(state, searchType, searchValue) {
-    const countClients = await getTotalClients(searchType, searchValue);
+    let countClients = await getTotalClients(searchType, searchValue);
     const countTotalClients = countClients[0].total;
     const totalPages = Math.ceil(countTotalClients / state.rowsPerPage);
     $(".page-link-current").text(state.currentPage);
@@ -407,11 +437,7 @@ async function eventListenerPaginationButtons(state, totalPages, searchType, sea
  */
 const invalidToaster = function (error) {
     const errorText = errorsMap.get(error.code);
-    if (error.code === "client_inexistent") {
-        var alerta = document.getElementById("alert-input");
-    } else {
-        var alerta = document.getElementById("alert");
-    }
+    var alerta = document.getElementById(`${error.element}`);
     alerta.style.cssText =
         "display: block; background-color: #f2dede; color: #a94442;";
     alerta.innerHTML =
@@ -435,13 +461,6 @@ const validToaster = function () {
 /**
  * Submit form
  */
-form.addEventListener("input", async function (e) {
-    try {
-
-    } catch (error) {
-
-    }
-})
 form.addEventListener("submit", async function (e) {
     try {
         e.preventDefault();
