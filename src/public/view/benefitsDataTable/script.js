@@ -33,7 +33,6 @@ const errorsMap = new Map();
 
 errorsMap.set("dni_incomplete", "Porfavor ingrese el dni correctamente para poder avanzar");
 errorsMap.set("client_inexistent", "El cliente seleccionado no cuenta con dispositivos asociados");
-errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 /* ----------------------------
@@ -93,15 +92,9 @@ async function editTotalAmount(id, amountInput, change, buttonToDisable) {
   }
 }
 
-
-
 /* ----------------------------
   Básic Validations
 ---------------------------- */
-function isNumber(toValidate) {
-  return typeof toValidate === "number";
-}
-
 function verifyIsValidDni(e) {
   if (!e) return false;
   if (e.length >= 7 && e.length <= 9 && !isNaN(e)) return true;
@@ -111,51 +104,11 @@ function verifyIsValidDni(e) {
   }
 }
 
-function isValidTokenAnd2faUser(token, get2faUser) {
-  return typeof isNumber(token) && get2faUser;
-}
-
 /* ----------------------------
 Add events to fields of dataTables
 ---------------------------- */
 
-async function validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt) {
-  const get2faUser = get2faUserInLocalStorage();
-  const token = parseInt(codeInput.value);
-  try {
-    const isUser = await validateToken(get2faUser, token);
-    if (isUser === true) {
-      $(`#${dt}`).modal("hide");
-      $(`#${modalId}`).modal("show");
-    } else if (dt === "tokenModalForDeposited") {
-      invalidToaster({ code: "invalide_user" }, "second_alert");
-    } else {
-      invalidToaster({ code: "invalide_user" }, "first_alert");
-    }
-  } catch (error) {
-    console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
-  }
-}
-
-function verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt) {
-  const verifyCodesModal = document.getElementById(
-    `verify-code-for-edit-${modalId}`
-  );
-  const codeInput = document.getElementById(`code-${modalId}`);
-
-  async function name(e) {
-    e.preventDefault();
-    await validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt);
-    codeInput.value = "";
-  }
-
-  verifyCodesModal.addEventListener("submit", name);
-}
-
-function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
-  const editMountHidden = document.getElementById("edit-amount-hidden");
-
-  verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt);
+function toggleModalsOfTotalAmountAndDeposited(buttons, modalId) {
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -360,8 +313,8 @@ function toggleModals() {
     });
   });
 
-  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal", "tokenModal");
-  toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
+  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal");
+  toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal");
   validateIfChecksComeTrue(checksOfFixed, addUpdateStateToEventClick, "fixed");
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
   toggleModalOfObservation(fixedButtons);
@@ -433,14 +386,8 @@ searchInput.addEventListener("input", function (e) {
   Toasters
 ---------------------------- */
 
-const invalidToaster = function (error, diferent) {
-  if (diferent === "first_alert") {
-    var alerta = document.getElementById("first_alert");
-  } else if (diferent === "second_alert") {
-    var alerta = document.getElementById("second_alert");
-  } else {
-    var alerta = document.getElementById("alert")
-  }
+const invalidToaster = function (error) {
+  var alerta = document.getElementById("alert")
   const errorText = errorsMap.get(error.code);
   alerta.style.cssText =
     "display: block; background-color: #f2dede; color: #a94442;";
