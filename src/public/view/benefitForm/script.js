@@ -421,9 +421,7 @@ $(document).ready(async function () {
         body: "Haz ingresado con exito un nuevo cliente",
       });
       resetForm();
-      console.log(benefit);
-
-      /* await saveBenefit(benefit); */
+      await saveBenefit(benefit);
     } catch (error) {
       console.log(error);
     }
