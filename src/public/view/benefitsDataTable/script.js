@@ -425,8 +425,6 @@ form.addEventListener("submit", async function (e) {
   e.preventDefault();
   if (verifyIsValidDni(dni)) {
     await reloadData(dni, paginationState);
-  } else {
-    invalidToaster({ code: "dni_incomplete" });
   }
 });
 $(document).ready(assignInputEvent);
