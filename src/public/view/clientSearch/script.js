@@ -64,26 +64,29 @@ errorsMap.set(
 /**
  * Function to get data client from db
  */
-async function uploadAllClientsInfo(state, searchType, searchValue) {
-    let verifyClientsRegistered = await getTotalClients();
 
-    if (verifyClientsRegistered[0].total !== 0) {
-        const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
-        verifyDataClientLength = clientData.length
-        if (clientData.length) {
-            renderClientTableRows(clientData);
-            await paginationSettingsToButtons(state, searchType, searchValue);
-        } else {
-            invalidToaster({
-                code: "client_inexistent",
-                element: "alert-input"
-            });
-        }
-    } else {
+async function uploadAllClientsInfo(state, searchType, searchValue) {
+    const totalClients = await getTotalClients();
+
+    if (totalClients[0].total === 0) {
         invalidToaster({
             code: "clients_inexistents",
-            element: "alert-input"
+            element: "alert-input",
         });
+        return;
+    }
+
+    const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
+    verifyDataClientLength = clientData.length;
+    if (clientData.length === 0) {
+        invalidToaster({
+            code: "client_inexistent",
+            element: "alert-input",
+        });
+        return;
+    } else {
+        renderClientTableRows(clientData);
+        await paginationSettingsToButtons(state, searchType, searchValue);
     }
 }
 
@@ -265,8 +268,6 @@ function addEditButtonsEvents(modal) {
             removeEditButtonsEvents();
             uploadAllClientsInfo(paginationState);
         } else {
-            removeEditButtonsEvents();
-            resetModalFields();
             tbody.innerHTML = '';
             invalidToaster({
                 code: "clients_inexistents",
