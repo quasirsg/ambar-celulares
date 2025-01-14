@@ -371,7 +371,7 @@ searchInput.addEventListener("input", function (e) {
 
     dni = isDniEmpty ? null : dniValue;
     isDniValid ? await reloadData(dni, paginationState) : clearDataTable(), clearInputsView(isDniEmpty);
-  }, 1000);
+  }, 1500);
 
   function clearInputsView(isDniEmpty) {
     if (isDniEmpty) {

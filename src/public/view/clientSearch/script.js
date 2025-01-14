@@ -3,6 +3,8 @@ const form = document.getElementById("search-form");
 
 let dni;
 let tbody;
+let searchType;
+let searchValue;
 let confirmButtonsModal;
 let verifyDataClientLength;
 let editButtonsEventListeners = [];
@@ -66,18 +68,20 @@ errorsMap.set(
  */
 
 async function uploadAllClientsInfo(state, searchType, searchValue) {
-    const totalClients = await getTotalClients();
+    const totalClientsVerify = await getTotalClients();
 
-    if (totalClients[0].total === 0) {
+    if (totalClientsVerify[0].total === 0) {
         invalidToaster({
             code: "clients_inexistents",
             element: "alert-input",
         });
+        tbody.innerHTML = '';
         return;
     }
 
     const clientData = await getAllClientsOrFiltered(state.currentPage, state.rowsPerPage, searchType, searchValue);
     verifyDataClientLength = clientData.length;
+
     if (clientData.length === 0) {
         invalidToaster({
             code: "client_inexistent",
@@ -157,7 +161,10 @@ function renderClientTableRows(clients) {
         const dniElementRow = document.createElement('td');
         const nameElementRow = document.createElement('td');
         const buttonElementRow = document.createElement('td');
+        const buttonDeleteElementRow = document.createElement('td');
         const buttonEditUser = document.createElement('button');
+        const buttonDeleteUser = document.createElement('button');
+
 
         dniElementRow.textContent = data.dni;
         nameElementRow.textContent = `${data.name}` + ` ` + `${data.surname}`;
@@ -166,15 +173,28 @@ function renderClientTableRows(clients) {
         buttonEditUser.className = 'btn btn-primary btn-lg';
         buttonEditUser.textContent = 'Visualizar';
 
+        buttonDeleteUser.type = 'button';
+        buttonDeleteUser.className = 'btn btn-danger btn-lg ';
+        buttonDeleteUser.textContent = 'Eliminar';
+        buttonDeleteUser.value = data.dni;
+        buttonDeleteUser.dataset.toggle = "modal";
+        buttonDeleteUser.dataset.target = "#modalAlert";
+
         buttonEditUser.addEventListener('click', () => {
             modalViewChargeData(data);
         });
 
+        buttonDeleteUser.addEventListener('click', (e) => {
+            deleteButtons(e);
+        });
+
         buttonElementRow.appendChild(buttonEditUser);
+        buttonDeleteElementRow.appendChild(buttonDeleteUser);
 
         createRow.appendChild(dniElementRow);
         createRow.appendChild(nameElementRow);
         createRow.appendChild(buttonElementRow);
+        createRow.appendChild(buttonDeleteElementRow);
 
         tbody.appendChild(createRow);
     });
@@ -254,34 +274,37 @@ function addEditButtonsEvents(modal) {
 /**
  * Events of close and delete buttons of modal
  */
-(function closeButtonsEvents() {
+function deleteButtons(e) {
     const deleteButtonsModal = document.getElementById('btn-delete-confirm');
-    const closeButtonsModal = document.querySelectorAll('#btn-close-modal');
+    const valueDni = e.target.value;
 
     deleteButtonsModal.addEventListener('click', async function (e) {
         e.preventDefault();
-        await deleteClientByDni(dni);
-        $('#modalAlert').modal('hide');
-        $('#modalVisualizar').modal('hide');
-        if (verifyDataClientLength > 1) {
-            resetModalFields();
-            removeEditButtonsEvents();
-            uploadAllClientsInfo(paginationState);
-        } else {
-            tbody.innerHTML = '';
-            invalidToaster({
-                code: "clients_inexistents",
-                element: "alert-input"
-            });
-        }
-    });
+        await deleteClientByDni(valueDni);
+        const totalClients = await getTotalClients(searchType, searchValue);
+        const totalPages = Math.ceil(totalClients[0].total / paginationState.rowsPerPage);
 
+        if (verifyDataClientLength === 1 && paginationState.currentPage > 1) {
+            paginationState.currentPage = Math.min(paginationState.currentPage--, totalPages);
+        }
+
+        $('#modalAlert').modal('hide');
+        await paginationSettingsToButtons(paginationState, searchType, searchValue);
+        await uploadAllClientsInfo(paginationState, searchType, searchValue);
+    });
+}
+
+
+
+
+(function closeButtonsEvents() {
+    const closeButtonsModal = document.querySelectorAll('#btn-close-modal');
     closeButtonsModal.forEach((button) => {
-        button.addEventListener('click', function (e) {
+        button.addEventListener('click', async function (e) {
             e.preventDefault();
             resetModalFields()
             removeEditButtonsEvents();
-            uploadAllClientsInfo(paginationState);
+            await uploadAllClientsInfo(paginationState, searchType, searchValue);
         })
     });
 })();
@@ -465,8 +488,9 @@ const validToaster = function () {
 form.addEventListener("submit", async function (e) {
     try {
         e.preventDefault();
-        const searchValue = inputSearch.value.trim();
-        const searchType = Object.keys(searchTypes).find(type => searchTypes[type](searchValue)) || 'name';
+        searchValue = inputSearch.value.trim();
+        searchType = Object.keys(searchTypes).find(type => searchTypes[type](searchValue)) || 'name';
+        paginationState.currentPage = 1;
 
         await uploadAllClientsInfo(paginationState, searchType, searchValue);
     } catch (error) {
