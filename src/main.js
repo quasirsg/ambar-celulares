@@ -35,7 +35,11 @@ const getAllClientsOrFiltered = async (page, limit, searchType, searchValue) => 
     let query = 'SELECT * FROM clients';
     let params = [];
 
-    if (searchValue) {
+    if (searchType === 'name' && searchValue) {
+      const [name, surname] = searchValue.split(' ')
+      query += ' WHERE name LIKE ? OR surname LIKE ?';
+      params.push(`%${name}%`, `%${surname}%`);
+    } else if (searchValue) {
       query += ` WHERE ${searchType} LIKE ?`;
       params.push(`%${searchValue}%`);
     }
@@ -49,6 +53,7 @@ const getAllClientsOrFiltered = async (page, limit, searchType, searchValue) => 
     throw error;
   }
 };
+
 
 
 const getTotalClients = async (searchType, searchValue) => {
