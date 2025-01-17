@@ -11,6 +11,7 @@ const totalAmountButtons = document.getElementsByClassName("totalAmount-button")
 const problemButtons = document.getElementsByClassName("problem-button");
 const fixedButtons = document.getElementsByClassName("fixed-button");
 const inputDataClient = document.getElementsByClassName("reset-client");
+const buttonsDeleteBenefits = document.getElementsByClassName("delete-benefit-button");
 
 let dni;
 let checks = [];
@@ -25,6 +26,7 @@ const paginationState = {
 let filter = {};
 let isSearching = false;
 let currentInputValue = '';
+let verifyDataClientLength;
 /* ----------------------------
   Control errors
 ---------------------------- */
@@ -41,7 +43,6 @@ errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-  console.log(exists.length);
 
   if (exists.length !== 0) {
     updateClientData(exists[0])
@@ -61,6 +62,7 @@ async function reloadData(dni, state, filter = {}) {
   if (await clientExist(dni)) {
     const benefitsArr = await getBenefitArr(dni, state, filter);
     if (benefitsArr.length) {
+      verifyDataClientLength = benefitsArr.length;
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
       $("#example").DataTable().draw();
@@ -68,6 +70,7 @@ async function reloadData(dni, state, filter = {}) {
       paginationSettingsToButtons(dni, paginationState, filter);
       toggleModals();
     } else {
+      $("#example").dataTable().fnClearTable();
       invalidToaster({ code: "client_inexistent" });
     }
   }
@@ -108,6 +111,31 @@ function verifyIsValidDni(e) {
     invalidToaster({ code: "dni_incomplete" });
     return false
   }
+}
+
+/**
+ * Function to delete a benefit selected
+ */
+function toggleDeleteButtonsModal(buttons, deleteButton) {
+  Array.from(buttons).forEach((button) => {
+    button.addEventListener("click", async function (e) {
+      e.preventDefault();
+      const idBenefitDelete = e.target.value;
+
+      deleteButton.addEventListener("click", async function (e) {
+        e.preventDefault();
+        const totalClients = await getTotalBenefits(dni, filter);
+        const totalPages = Math.ceil(totalClients[0].total / paginationState.rowsPerPage);
+
+        if (verifyDataClientLength === 1 && paginationState.currentPage === totalPages) {
+          paginationState.currentPage = Math.max(paginationState.currentPage - 1, 1);
+        }
+        await deleteBenefitByIdBenefits(idBenefitDelete);
+        await reloadData(dni, paginationState, filter);
+        await paginationSettingsToButtons(dni, paginationState, filter);
+      })
+    });
+  })
 }
 
 /* ----------------------------
@@ -290,6 +318,7 @@ function toggleModals() {
   const submitButtonDepositedMoney = document.getElementById("submit_button_deposited_money");
   const submitButtonObservation = document.getElementById("submit_button_observation");
   const closeButtons = document.getElementsByClassName("close_modal");
+  const confirmDeleteBenefit = document.getElementById("delete-benefit");
 
   editTotalAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -325,12 +354,12 @@ function toggleModals() {
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
   toggleModalOfObservation(fixedButtons);
   toggleModalOfProblem(problemButtons);
+  toggleDeleteButtonsModal(buttonsDeleteBenefits, confirmDeleteBenefit);
 }
 
 /* ----------------------------
   Search Benefits by imei or date_received_phone for the input of dataTable
 ---------------------------- */
-
 
 function assignInputEvent() {
   $('#example_filter label input')
