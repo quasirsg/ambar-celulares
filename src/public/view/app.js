@@ -93,6 +93,10 @@ async function updateObservationsAndDateFixed(observation, dateFixed, id) {
   return await main.updateObservationsAndDateFixed(observation, dateFixed, id);
 }
 
+async function deleteBenefitByIdBenefits(id) {
+  return await main.deleteBenefitByIdBenefits(id);
+}
+
 /* ----------------------------
   2fa
 ---------------------------- */

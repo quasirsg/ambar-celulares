@@ -110,8 +110,6 @@ const deleteClientByDni = async (dni) => {
   }
 };
 
-
-
 const saveBenefit = async (benefit) => {
   try {
     const conn = await getConnection();
@@ -250,6 +248,17 @@ const updateObservationsAndDateFixed = async (observation, dateFixed, id) => {
   }
 }
 
+const deleteBenefitByIdBenefits = async (id) => {
+  try {
+    const conn = await getConnection();
+    const benefitToDelete = await conn.query("DELETE FROM ambar.benefits WHERE idbenefits = ?", [id]);
+    return benefitToDelete;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const get2faUser = async () => {
   try {
     const user2fa = await axios.post("http://localhost:3000/api/register");
@@ -321,6 +330,7 @@ module.exports = {
   updateDepositedMoney,
   updateChecks,
   updateObservationsAndDateFixed,
+  deleteBenefitByIdBenefits,
   verifyUser,
   validateToken,
   get2faUser,
