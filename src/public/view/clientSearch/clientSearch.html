@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Buscar Clientes Registrados</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row text-left" id="item">
+            <a href="../index.html">
+                <div class="container-block">
+                    <div class="block1">
+                        <i class="fa fa-home"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="alert" role="alert" id="alert-input" style="display: none"></div>
+        <div class="search-block" style="width: 100%;">
+            <form class="search-form" id="search-form">
+                <button type="submit" class="search-button">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <input type="search" value="" id="search-input" pattern=".*\S.*" name="search"
+                    placeholder="Busqueda de cliente por dni, nombre y nro de telefono" class="search-input"
+                    maxlength="30">
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <table class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 20%;">DNI</th>
+                        <th scope="col" style="width: 40%;">Nombre Completo</th>
+                        <th scope="col" style="width: 20%;">Editar Datos</th>
+                        <th scope="col" style="width: 20%;">Eliminar Cliente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal -->
+
+        <div class="modal fade" id="modalVisualizar">
+            <div class="modal-dialog">
+                <div class="alert" role="alert" id="alert" style="display: none"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" id="btn-close-modal" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Editar datos del cliente</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>DNI:</th>
+                                <td><input type="text" class="form-control" id="dni-input" name="dni" readonly></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>Nombre:</th>
+                                <td id="td-name"><input type="text" class="form-control" id="name-input" name="name"
+                                        maxlength="30" disabled>
+                                    <ul class="input-requirements">
+                                        <li>Un nombre solo contiene letras</li>
+                                    </ul>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Apellido:</th>
+                                <td id="td-surname"><input type="text" class="form-control" id="surname-input"
+                                        name="surname" maxlength="30" disabled>
+                                    <ul class="input-requirements">
+                                        <li>Un apellido solo contiene letras</li>
+                                    </ul>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Telefono:</th>
+                                <td id="td-phoneNumber"><input type="text" class="form-control" id="phone-input"
+                                        name="phone_number" maxlength="10" disabled>
+                                    <ul class="input-requirements">
+                                        <li>
+                                            Un numero de telefono solo contiene numeros y tiene 10 digitos
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Dirección:</th>
+                                <td id="td-address"><input type="text" class="form-control" id="address-input"
+                                        name="address" maxlength="70" disabled>
+                                    <ul class="input-requirements">
+                                        <li>La dirección debe tener un máximo de 70 caracteres</li>
+                                    </ul>
+                                </td>
+                                <td><button class="btn btn-primary" id="btn-editar">Editar</button></td>
+                                <td><button class="btn btn-success" id="btn-confirm-edit" disabled>Confirmar</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalAlert">
+                            Eliminar cliente
+                        </button> -->
+                        <button type="button" class="btn btn-default" id="btn-close-modal"
+                            data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Alert on Delete Client-->
+        <div class="modal fade" id="modalAlert">
+            <div class="modal-dialog modal-dialog-custom">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">¿Estas seguro de proceder?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="btn-delete-confirm">Delete
+                            Client</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Alert on Edit Client-->
+        <div class="modal fade" id="modalEdit">
+            <div class="modal-dialog modal-dialog-custom">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">¿Estas seguro de editar los datos?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal"
+                            id="btn-edit-confirm">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                <li class="page-item-prev">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link-current" href="#"></a></li>
+                <li class="page-item-next">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script>
+        if (typeof module === "object") {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <script src="../app.js"></script>
+    <script src="../assets/js/inputsCustomValidationsClient.js"></script>
+    <script src="../../assets/js/jquery.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

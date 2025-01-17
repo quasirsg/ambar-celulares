@@ -27,10 +27,84 @@ const getAllDnis = async () => {
   }
 }
 
+const getAllClientsOrFiltered = async (page, limit, searchType, searchValue) => {
+  try {
+    const conn = await getConnection();
+    const offset = (page - 1) * limit;
+
+    let query = 'SELECT * FROM clients';
+    let params = [];
+
+    if (searchType === 'name' && searchValue) {
+      const [name, surname] = searchValue.split(' ')
+      query += ' WHERE name LIKE ? OR surname LIKE ?';
+      params.push(`%${name}%`, `%${surname}%`);
+    } else if (searchValue) {
+      query += ` WHERE ${searchType} LIKE ?`;
+      params.push(`%${searchValue}%`);
+    }
+
+    query += ' LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const resultsClients = await conn.query(query, params);
+    return resultsClients;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+const getTotalClients = async (searchType, searchValue) => {
+  try {
+    const conn = await getConnection();
+
+    let query = 'SELECT COUNT(*) as total FROM ambar.clients';
+    let params = [];
+
+    if (searchValue) {
+      query += ` WHERE ${searchType} LIKE ?`;
+      params.push(`%${searchValue}%`);
+    }
+
+    const resultsCountClients = await conn.query(query, params);
+    return resultsCountClients;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+const updateClientField = async (dni, field, newValue) => {
+  try {
+    const conn = await getConnection();
+    const updateClientFieldQuery = await conn.query(`
+      UPDATE ambar.clients
+      SET ${field} = '${newValue}'
+      WHERE dni = '${dni}'
+    `);
+    return updateClientFieldQuery;
+  } catch (error) {
+    throw error;
+  }
+}
+
 const saveClient = async (client) => {
   try {
     const conn = await getConnection();
     await conn.query("INSERT INTO clients SET ?", client);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteClientByDni = async (dni) => {
+  try {
+    const conn = await getConnection();
+    const benefitDeleted = await conn.query("DELETE FROM ambar.benefits WHERE dni = ?", [dni]);
+    const clientDeleted = await conn.query("DELETE FROM ambar.clients WHERE dni = ?", [dni]);
+    return { clientDeleted, benefitDeleted };
   } catch (error) {
     throw error;
   }
@@ -174,6 +248,17 @@ const updateObservationsAndDateFixed = async (observation, dateFixed, id) => {
   }
 }
 
+const deleteBenefitByIdBenefits = async (id) => {
+  try {
+    const conn = await getConnection();
+    const benefitToDelete = await conn.query("DELETE FROM ambar.benefits WHERE idbenefits = ?", [id]);
+    return benefitToDelete;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const get2faUser = async () => {
   try {
     const user2fa = await axios.post("http://localhost:3000/api/register");
@@ -232,8 +317,12 @@ const get2faUserInLocalStorage = () => {
 module.exports = {
   getClient,
   getAllDnis,
+  getAllClientsOrFiltered,
+  getTotalClients,
+  updateClientField,
   saveClient,
   saveBenefit,
+  deleteClientByDni,
   getBenefits,
   getTotalBenefits,
   getPhoneBrands,
@@ -241,6 +330,7 @@ module.exports = {
   updateDepositedMoney,
   updateChecks,
   updateObservationsAndDateFixed,
+  deleteBenefitByIdBenefits,
   verifyUser,
   validateToken,
   get2faUser,

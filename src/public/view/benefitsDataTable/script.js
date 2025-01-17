@@ -11,6 +11,7 @@ const totalAmountButtons = document.getElementsByClassName("totalAmount-button")
 const problemButtons = document.getElementsByClassName("problem-button");
 const fixedButtons = document.getElementsByClassName("fixed-button");
 const inputDataClient = document.getElementsByClassName("reset-client");
+const buttonsDeleteBenefits = document.getElementsByClassName("delete-benefit-button");
 
 let dni;
 let checks = [];
@@ -25,6 +26,7 @@ const paginationState = {
 let filter = {};
 let isSearching = false;
 let currentInputValue = '';
+let verifyDataClientLength;
 /* ----------------------------
   Control errors
 ---------------------------- */
@@ -33,7 +35,6 @@ const errorsMap = new Map();
 
 errorsMap.set("dni_incomplete", "Porfavor ingrese el dni correctamente para poder avanzar");
 errorsMap.set("client_inexistent", "El cliente seleccionado no cuenta con dispositivos asociados");
-errorsMap.set("invalide_user", "Los datos proporcionados son incorrectos");
 errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 /* ----------------------------
@@ -42,8 +43,13 @@ errorsMap.set("invalid_number", "Debe ingresar unicamente numeros");
 
 async function clientExist(dni) {
   let exists = await getClient(dni);
-  updateClientData(exists[0]);
-  return exists[0].dni.length !== 0 ? 1 : invalidToaster({ code: "client_inexistent" });
+
+  if (exists.length !== 0) {
+    updateClientData(exists[0])
+    return 1
+  } else {
+    invalidToaster({ code: "client_inexistent" })
+  }
 }
 
 async function getBenefitArr(dni, state, filter) {
@@ -56,6 +62,7 @@ async function reloadData(dni, state, filter = {}) {
   if (await clientExist(dni)) {
     const benefitsArr = await getBenefitArr(dni, state, filter);
     if (benefitsArr.length) {
+      verifyDataClientLength = benefitsArr.length;
       $("#example").dataTable().fnClearTable();
       $("#example").dataTable().fnAddData(benefitsArr);
       $("#example").DataTable().draw();
@@ -63,6 +70,7 @@ async function reloadData(dni, state, filter = {}) {
       paginationSettingsToButtons(dni, paginationState, filter);
       toggleModals();
     } else {
+      $("#example").dataTable().fnClearTable();
       invalidToaster({ code: "client_inexistent" });
     }
   }
@@ -93,16 +101,11 @@ async function editTotalAmount(id, amountInput, change, buttonToDisable) {
   }
 }
 
-
-
 /* ----------------------------
   Básic Validations
 ---------------------------- */
-function isNumber(toValidate) {
-  return typeof toValidate === "number";
-}
-
 function verifyIsValidDni(e) {
+  if (!e) return false;
   if (e.length >= 7 && e.length <= 9 && !isNaN(e)) return true;
   else {
     invalidToaster({ code: "dni_incomplete" });
@@ -110,51 +113,36 @@ function verifyIsValidDni(e) {
   }
 }
 
-function isValidTokenAnd2faUser(token, get2faUser) {
-  return typeof isNumber(token) && get2faUser;
+/**
+ * Function to delete a benefit selected
+ */
+function toggleDeleteButtonsModal(buttons, deleteButton) {
+  Array.from(buttons).forEach((button) => {
+    button.addEventListener("click", async function (e) {
+      e.preventDefault();
+      const idBenefitDelete = e.target.value;
+
+      deleteButton.addEventListener("click", async function (e) {
+        e.preventDefault();
+        const totalClients = await getTotalBenefits(dni, filter);
+        const totalPages = Math.ceil(totalClients[0].total / paginationState.rowsPerPage);
+
+        if (verifyDataClientLength === 1 && paginationState.currentPage === totalPages) {
+          paginationState.currentPage = Math.max(paginationState.currentPage - 1, 1);
+        }
+        await deleteBenefitByIdBenefits(idBenefitDelete);
+        await reloadData(dni, paginationState, filter);
+        await paginationSettingsToButtons(dni, paginationState, filter);
+      })
+    });
+  })
 }
 
 /* ----------------------------
 Add events to fields of dataTables
 ---------------------------- */
 
-async function validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt) {
-  const get2faUser = get2faUserInLocalStorage();
-  const token = parseInt(codeInput.value);
-  try {
-    const isUser = await validateToken(get2faUser, token);
-    if (isUser === true) {
-      $(`#${dt}`).modal("hide");
-      $(`#${modalId}`).modal("show");
-    } else if (dt === "tokenModalForDeposited") {
-      invalidToaster({ code: "invalide_user" }, "second_alert");
-    } else {
-      invalidToaster({ code: "invalide_user" }, "first_alert");
-    }
-  } catch (error) {
-    console.log(error); // TODO: Tirar un toast de error // pendiente a posibles errores
-  }
-}
-
-function verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt) {
-  const verifyCodesModal = document.getElementById(
-    `verify-code-for-edit-${modalId}`
-  );
-  const codeInput = document.getElementById(`code-${modalId}`);
-
-  async function name(e) {
-    e.preventDefault();
-    await validateTokenAndToggleEditTotalAmountModal(codeInput, modalId, dt);
-    codeInput.value = "";
-  }
-
-  verifyCodesModal.addEventListener("submit", name);
-}
-
-function toggleModalsOfTotalAmountAndDeposited(buttons, modalId, dt) {
-  const editMountHidden = document.getElementById("edit-amount-hidden");
-
-  verifyCodesModalAddEventToShowDepositedOrTotalAmountModal(modalId, dt);
+function toggleModalsOfTotalAmountAndDeposited(buttons, modalId) {
   Array.from(buttons).forEach((button) => {
     button.addEventListener("click", async function (e) {
       e.preventDefault();
@@ -189,7 +177,7 @@ function addUpdateStateToEventClick(check, columnName) {
 async function updateObsAndDateFixed(id, observationInput, submitButton) {
   try {
     validToaster("la observacion");
-    let fechaActual = Number(moment.utc().format('YYYYMMDD'));
+    let fechaActual = Number(moment().format('YYYYMMDD'));
     await updateChecks(id, "fixed");
     await updateObservationsAndDateFixed(observationInput.value, fechaActual, id);
     submitButton.disabled = "disabled";
@@ -212,7 +200,7 @@ function toggleModalOfObservation(buttons) {
     button.addEventListener("click", function (e) {
       e.preventDefault();
       let valueToSplit = button.value.split("|");
-      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('YYYY/MM/DD');
+      const isoDateObservation = moment(valueToSplit[0], 'YYYYMMDD').format('DD/MM/YYYY');
       $(`#date-fixed-input`).text(`Fecha arreglado: ${isoDateObservation}`);
       $(`#fixed-input`).text(`${valueToSplit[1]}`);
     });
@@ -330,6 +318,7 @@ function toggleModals() {
   const submitButtonDepositedMoney = document.getElementById("submit_button_deposited_money");
   const submitButtonObservation = document.getElementById("submit_button_observation");
   const closeButtons = document.getElementsByClassName("close_modal");
+  const confirmDeleteBenefit = document.getElementById("delete-benefit");
 
   editTotalAmountModal.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -359,18 +348,18 @@ function toggleModals() {
     });
   });
 
-  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal", "tokenModal");
-  toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal", "tokenModalForDeposited");
+  toggleModalsOfTotalAmountAndDeposited(totalAmountButtons, "totalAmountModal");
+  toggleModalsOfTotalAmountAndDeposited(depositedButtons, "depositedModal");
   validateIfChecksComeTrue(checksOfFixed, addUpdateStateToEventClick, "fixed");
   validateIfChecksComeTrue(checksOfRetired, addUpdateStateToEventClick, "retired");
   toggleModalOfObservation(fixedButtons);
   toggleModalOfProblem(problemButtons);
+  toggleDeleteButtonsModal(buttonsDeleteBenefits, confirmDeleteBenefit);
 }
 
 /* ----------------------------
   Search Benefits by imei or date_received_phone for the input of dataTable
 ---------------------------- */
-
 
 function assignInputEvent() {
   $('#example_filter label input')
@@ -390,7 +379,7 @@ function assignInputEvent() {
         settingsSearchInput1(currentInputValue, paginationState, dni);
       } else if (currentInputValue.length === 0) {
         // Llamar a la función que recarga la data
-        reloadData(dni, paginationState);
+        reloadData(dni, paginationState, filter = {});
       }
     }, 1300);
   });
@@ -409,11 +398,9 @@ searchInput.addEventListener("input", function (e) {
     const isDniEmpty = dniValue.length === 0;
     const isDniValid = verifyIsValidDni(dniValue);
 
-    console.log("el empty:", isDniEmpty, "el valid:", isDniValid);
-
     dni = isDniEmpty ? null : dniValue;
     isDniValid ? await reloadData(dni, paginationState) : clearDataTable(), clearInputsView(isDniEmpty);
-  }, 1000);
+  }, 1500);
 
   function clearInputsView(isDniEmpty) {
     if (isDniEmpty) {
@@ -432,14 +419,8 @@ searchInput.addEventListener("input", function (e) {
   Toasters
 ---------------------------- */
 
-const invalidToaster = function (error, diferent) {
-  if (diferent === "first_alert") {
-    var alerta = document.getElementById("first_alert");
-  } else if (diferent === "second_alert") {
-    var alerta = document.getElementById("second_alert");
-  } else {
-    var alerta = document.getElementById("alert")
-  }
+const invalidToaster = function (error) {
+  var alerta = document.getElementById("alert")
   const errorText = errorsMap.get(error.code);
   alerta.style.cssText =
     "display: block; background-color: #f2dede; color: #a94442;";
@@ -475,7 +456,8 @@ const validToaster = function (diferent) {
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
-  if (verifyIsValidDni(dni)) await reloadData(dni, paginationState);
-  /* toggleModals(filter); */
+  if (verifyIsValidDni(dni)) {
+    await reloadData(dni, paginationState);
+  }
 });
 $(document).ready(assignInputEvent);

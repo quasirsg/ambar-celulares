@@ -61,7 +61,7 @@ $(document).ready(function () {
         title: "F. Ingreso",
         className: "text-center",
         render: function (data, type, row, meta) {
-          const isoDateReceived = moment(data, 'YYYYMMDD').format('YYYY/MM/DD');
+          const isoDateReceived = moment(data, 'YYYYMMDD').format('DD/MM/YYYY');
           return isoDateReceived;
         }
       },
@@ -73,56 +73,9 @@ $(document).ready(function () {
         render: function (data, type, row, meta) {
 
           return `
-            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#tokenModalForDeposited" value="${data[6]} ${data[9]}" >
+            <button class="btn btn-primary btn-lg deposited-button" data-toggle="modal" data-target="#depositedModal" value="${data[6]} ${data[9]}" >
              $${data[6]}
             </button>
-            <!-- Modal -->
-            <div
-              class="modal fade"
-              id="tokenModalForDeposited"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="myModalLabel"
-              aria-hidden="true"
-            >
-            
-            <div class="modal-dialog">
-            <div class="alert" role="alert" id="second_alert" style="display: none"></div>
-            <div class="modal-content">
-                  <!-- Modal Header -->
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                      <span aria-hidden="true">&times;</span>
-                      <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Verificar token</h4>
-                  </div>
-        
-                  <!-- Modal Body -->
-                  <div class="modal-body">
-                    <form role="form" id="verify-code-for-edit-depositedModal">
-                      <div class="form-group">
-                        <label for="">Verificar Token</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="code-depositedModal"
-                          placeholder="Enter 2fa code"
-                        />
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                  </div>
-        
-                  <!-- Modal Footer -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <!-- Modal 3-->
             <div
@@ -179,57 +132,9 @@ $(document).ready(function () {
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
-            <button class="btn btn-primary btn-lg totalAmount-button" data-toggle="modal" data-target="#tokenModal" data-tar value="${data[5]} ${data[9]}">
+            <button class="btn btn-primary btn-lg totalAmount-button" data-toggle="modal" data-target="#totalAmountModal" data-tar value="${data[5]} ${data[9]}">
                 $${data[5]}
-            </button>
-            <!-- Modal -->
-            <div
-              class="modal fade"
-              id="tokenModal"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="myModalLabel"
-              aria-hidden="true"
-            >
-            
-            <div class="modal-dialog">
-            <div class="alert" role="alert" id="first_alert" style="display: none"></div>
-                <div class="modal-content">
-                  <!-- Modal Header -->
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                      <span aria-hidden="true">&times;</span>
-                      <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Verificar token</h4>
-                  </div>
-        
-                  <!-- Modal Body -->
-                  <div class="modal-body">
-                    <form role="form" id="verify-code-for-edit-totalAmountModal">
-                      <div class="form-group">
-                        <label for="">Verificar Token</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="code-totalAmountModal"
-                          placeholder="Enter 2fa code"
-                        />
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                  </div>
-        
-                  <!-- Modal Footer -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+            </button>            
             <!-- Modal 2-->
             <div
               class="modal fade"
@@ -398,6 +303,52 @@ $(document).ready(function () {
           return (
             `<input type="checkbox" class="checks_of_retired" name="check" value="${data[8]}| ${data[9]}">`
           )
+        },
+        width: "1%",
+      },
+      {
+        title: "Eliminar Benefit",
+        data: null,
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `
+            <button class="btn btn-danger btn-lg delete-benefit-button" data-toggle="modal" data-target="#deleteBenefitModal" value="${data[9]}">
+                Eliminar
+            </button>   
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="deleteBenefitModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="myModalLabel"
+              aria-hidden="true"
+            >
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">¿Estas seguro de eliminar el benefit?</h4>
+                  </div>
+        
+                  <!-- Modal Footer -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="delete-benefit" data-dismiss="modal">
+                      Eliminar
+                    </button>
+                    <button type="button" class="btn btn-default close_modal" data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            `
         },
         width: "1%",
       },

@@ -13,7 +13,7 @@
 body,
 button,
 input {
-  font: 1em Hind, sans-serif;
+  font:1em Hind,sans-serif, "Arial Black" ;
   line-height: 1.5em;
 }
 
@@ -298,16 +298,7 @@ body {
   }
 }
 
-@media screen and (prefers-color-scheme: dark) {
-  body,
-  input {
-    color: #f1f1f1;
-  }
 
-  body {
-    background: #171717;
-  }
-}
 .alert {
   background-color: #dff0d8;
   color: #3c763d;

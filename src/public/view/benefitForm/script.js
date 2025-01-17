@@ -17,6 +17,8 @@ $(document).ready(async function () {
     }
   });
 
+  let dni;
+
   /* ----------------------------
   BD
 ---------------------------- */
@@ -45,7 +47,7 @@ $(document).ready(async function () {
       device,
       imei,
       problem,
-      date_received_phone: Number(moment(date_received_phone).format('YYYYMMDD')),
+      date_received_phone,
       brand,
       deposited_money: Number(deposited_money),
       total_amount_for_service: Number(total_amount_for_service),
@@ -54,11 +56,16 @@ $(document).ready(async function () {
     };
   }
 
+  // Function to assign the current date
+  function setCurrentDate() {
+    return Number(moment().format('YYYYMMDD'));
+  }
+
   function controlInputs(dni, problem) {
-    if (dni === "null")
-      throw new Error(invalidToaster({ code: "client_incomplete" }));
+    if (dni === NaN)
+      (invalidToaster({ code: "client_incomplete" }));
     if (problem === "")
-      throw new Error(invalidToaster({ code: "problem_incomplete" }));
+      (invalidToaster({ code: "problem_incomplete" }));
   }
 
   // Error Control and Validate
@@ -114,10 +121,6 @@ $(document).ready(async function () {
     "Porfavor ingrese el deposito correctamente para poder avanzar"
   );
   errorsMap.set(
-    "date_received_phone_incomplete",
-    "Porfavor ingrese una fecha correctamente para poder avanzar"
-  );
-  errorsMap.set(
     "total_amount_incomplete",
     "Porfavor ingrese el importe correctamente para poder avanzar"
   );
@@ -145,7 +148,7 @@ $(document).ready(async function () {
   const clientValidityChecks = [
     {
       isInvalid: function (input) {
-        const regex = /^[A-z-0-9]{5,30}$/;
+        const regex = /^[0-9]{7,8}$/;
         const caracters = input.value;
         const test = regex.test(caracters);
         return test ? false : true;
@@ -228,21 +231,6 @@ $(document).ready(async function () {
     },
   ];
 
-  const dateReceivedPhoneValidityChecks = [
-    {
-      isInvalid: function (input) {
-        const regex = /^((?:19|20)\d\d)[-\/\.](0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])$/;
-        const caracters = input.value;
-        const test = regex.test(caracters);
-        return test ? false : true;
-      },
-      invalidityMessage: "YYYY/MM/DD",
-      element: document.querySelector(
-        'div[id="div-date_received_phone"] .input-requirements li:nth-child(1)'
-      ),
-    },
-  ];
-
   const brandValidityChecks = [
     {
       isInvalid: function (input) {
@@ -312,7 +300,6 @@ $(document).ready(async function () {
   const imeiInput = document.getElementById("imei");
   const problemInput = document.getElementById("problem");
   const depositedMoneyInput = document.getElementById("deposited_money");
-  const dateReceivedPhoneInput = document.getElementById("date_received_phone");
   const brandInput = document.getElementById("brand");
   const totalAmountInput = document.getElementById("total_amount");
 
@@ -322,7 +309,6 @@ $(document).ready(async function () {
     imeiInput,
     problemInput,
     depositedMoneyInput,
-    dateReceivedPhoneInput,
     brandInput,
     totalAmountInput,
   ].forEach((input) => (input.CustomValidation = new CustomValidation(input)));
@@ -332,7 +318,6 @@ $(document).ready(async function () {
   imeiInput.CustomValidation.validityChecks = imeiValidityChecks;
   problemInput.CustomValidation.validityChecks = problemValidityChecks;
   depositedMoneyInput.CustomValidation.validityChecks = depositedMoneyValidityChecks;
-  dateReceivedPhoneInput.CustomValidation.validityChecks = dateReceivedPhoneValidityChecks;
   brandInput.CustomValidation.validityChecks = brandValidityChecks;
   totalAmountInput.CustomValidation.validityChecks = totalAmountValidityChecks;
   /* ----------------------------
@@ -376,6 +361,7 @@ $(document).ready(async function () {
 
   //Event Listener
   clientSelect.addEventListener("change", function (e) {
+    dni = clientInput.value
     clientInput.value = e.target.value;
     clientInput.CustomValidation.checkInput();
   });
@@ -427,20 +413,22 @@ $(document).ready(async function () {
         deviceInput.value,
         imeiInput.value,
         problemInput.value,
-        dateReceivedPhoneInput.value,
+        setCurrentDate(),
         brandInput.value,
         depositedMoneyInput.value,
         totalAmountInput.value
       );
 
-      validToaster();
-      new Notification("Registro Exitoso", {
-        body: "Haz ingresado con exito un nuevo cliente",
-      });
-      resetForm();
-      console.log(benefit);
-
-      await saveBenefit(benefit);
+      if (dni !== undefined) {
+        validToaster();
+        new Notification("Registro Exitoso", {
+          body: "Haz ingresado con exito un nuevo cliente",
+        });
+        resetForm();
+        await saveBenefit(benefit);
+      } else {
+        (invalidToaster({ code: "client_incomplete" }))
+      }
     } catch (error) {
       console.log(error);
     }

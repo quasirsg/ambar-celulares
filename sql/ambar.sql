@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `ambar`.`benefits` (
   `total_amount_for_service` INT NULL, /*CAMBIAMOS amount*/
   `fixed` BOOLEAN,
   `retired` BOOLEAN,
-  `observations` VARCHAR(255) NOT NULL,
-  `date_fixed` INT NOT NULL,
+  `observations` VARCHAR(255),
+  `date_fixed` INT,
   PRIMARY KEY (`idbenefits`),
   INDEX `fk_client_benefits_idx` (`dni` ASC),
   CONSTRAINT `fk_client_benefits`
@@ -38,9 +38,30 @@ CREATE TABLE IF NOT EXISTS `ambar`.`brands` (
   PRIMARY KEY (`idbrand`)
 ) ENGINE = InnoDB;
 
-
-
 INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (42523334, 'Alexis', 'Romano', '3813302319', 'Republica de Libano 1304');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (12345678, 'John', 'Doe', '1234567890', '123 Main St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (87654321, 'Jane', 'Smith', '0987654321', '456 Oak Rd');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (98765432, 'Michael', 'Johnson', '5555555555', '789 Elm St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (45678901, 'Emily', 'Brown', '1112223333', '321 Pine Ln');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (67890123, 'David', 'Wilson', '4447778888', '159 Oak Ave');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (23456789, 'Sophia', 'Davis', '9991112222', '753 Maple Rd');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (56789012, 'William', 'Anderson', '8887776666', '951 Elm Ct');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (34567890, 'Olivia', 'Taylor', '2223334444', '357 Oak St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (78901234, 'Daniel', 'Thompson', '6665557777', '159 Pine Ave');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (45612378, 'Isabella', 'Garcia', '3334445555', '753 Maple Ln');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (78912345, 'Alexander', 'Hernandez', '7778889999', '951 Elm St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (56781234, 'Ava', 'Gonzalez', '2221113333', '357 Oak Rd');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (23456781, 'Jacob', 'Diaz', '6667778888', '159 Pine Ln');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (67812345, 'Mia', 'Reyes', '3335557777', '753 Maple Ave');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (34567812, 'Benjamin', 'Morales', '9998887777', '951 Elm Ct');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (78123456, 'Emma', 'Castillo', '2224445555', '357 Oak St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (12345678, 'John', 'Doe', '1234567890', '159 Pine Ave');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (56781234, 'Isabella', 'Gutierrez', '2221113333', '753 Maple Ln');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (23456781, 'Jacob', 'Diaz', '6667778888', '951 Elm St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (67812345, 'Olivia', 'Sanchez', '2223334444', '357 Oak Rd');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (12345678, 'John', 'Doe', '1234567890', '123 Main St');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (87654321, 'Jane', 'Smith', '0987654321', '456 Oak Rd');
+INSERT INTO `ambar`.`clients` (`dni`, `name`, `surname`, `phone_number`, `address`) VALUES (98765432, 'Michael', 'Johnson', '5555555555', '789 Elm St');
 
 SELECT dni FROM `ambar`.`clients`;
 

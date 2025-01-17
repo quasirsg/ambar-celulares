@@ -29,6 +29,22 @@ async function getAllDnis() {
   return await main.getAllDnis();
 }
 
+async function getAllClientsOrFiltered(page, limit, searchType, searchValue) {
+  return await main.getAllClientsOrFiltered(page, limit, searchType, searchValue);
+}
+
+async function getTotalClients(searchType, searchValue) {
+  return await main.getTotalClients(searchType, searchValue);
+}
+
+async function updateClientField(dni, field, newValue) {
+  return await main.updateClientField(dni, field, newValue);
+}
+
+async function deleteClientByDni(dni) {
+  return await main.deleteClientByDni(dni);
+}
+
 /* ----------------------------
   Benefit and BenefitDataTable
 ---------------------------- */
@@ -75,6 +91,10 @@ async function updateDepositedMoney(id, depositedMoney) {
 
 async function updateObservationsAndDateFixed(observation, dateFixed, id) {
   return await main.updateObservationsAndDateFixed(observation, dateFixed, id);
+}
+
+async function deleteBenefitByIdBenefits(id) {
+  return await main.deleteBenefitByIdBenefits(id);
 }
 
 /* ----------------------------
